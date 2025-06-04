@@ -23,6 +23,11 @@ export type TokenConstants = {
     Symbols: string[];
   };
   Addresses: CommonTokens;
+  Wrappers?: {
+    underlying: string;
+    wrapper: string;
+    aToken?: string;
+  }[];
   InitialSwapTokens: {
     input: string;
     output: string;

@@ -4,16 +4,12 @@ import { WeiPerEther as ONE } from '@ethersproject/constants';
 import { configService } from '@/services/config/config.service';
 import { rpcProviderService } from '@/services/rpc-provider/rpc-provider.service';
 
-const { erc4626Wrappers } = configService.network.tokens.Addresses;
-
 type ConversionParams = {
   amount: BigNumber;
   isWrap: boolean; // e.g. is stETH to wstETH
 };
 
 function getRateProviderAddress(wrapper: string) {
-  if (!erc4626Wrappers)
-    throw new Error('No erc4626Wrappers, cannot perform unwrap');
   const rateProviderInfo =
     configService.network.rateProviders[wrapper.toLowerCase()];
   if (!rateProviderInfo || Object.keys(rateProviderInfo).length === 0)
@@ -78,6 +74,8 @@ export async function convertERC4626Wrap(
   { amount, isWrap }: ConversionParams
 ) {
   try {
+    console.log('convertERC4626Wrap', wrapper, amount, isWrap);
+    console.log(getRateProviderAddress(wrapper));
     const rateProvider = new Contract(
       getRateProviderAddress(wrapper),
       ['function getRate() external view returns (uint256)'],

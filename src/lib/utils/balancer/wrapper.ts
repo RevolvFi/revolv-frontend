@@ -26,11 +26,34 @@ export const isNativeAssetWrap = (
   return tokenIn === nativeAddress && tokenOut === wNativeAddress;
 };
 
+export const isERC4626Wrapper = (token: string): boolean => {
+  return (
+    configService.network.tokens.Wrappers?.some(
+      w => w.wrapper.toLowerCase() === token.toLowerCase()
+    ) ?? false
+  );
+};
+
 export const getWrapAction = (tokenIn: string, tokenOut: string): WrapType => {
   const nativeAddress = configService.network.tokens.Addresses.nativeAsset;
   const wNativeAddress = configService.network.tokens.Addresses.wNativeAsset;
   const { stETH, wstETH, erc4626Wrappers } =
     configService.network.tokens.Addresses;
+
+  const wrapper = configService.network.tokens.Wrappers?.find(
+    w =>
+      (w.underlying.toLowerCase() === tokenIn.toLowerCase() &&
+        w.wrapper.toLowerCase() === tokenOut.toLowerCase()) ||
+      (w.wrapper.toLowerCase() === tokenIn.toLowerCase() &&
+        w.underlying.toLowerCase() === tokenOut.toLowerCase())
+  );
+
+  if (wrapper) {
+    return tokenIn.toLowerCase() === wrapper.underlying.toLowerCase()
+      ? WrapType.Wrap
+      : WrapType.Unwrap;
+  }
+
   console.log(nativeAddress, wNativeAddress);
   if (tokenIn === nativeAddress && tokenOut === wNativeAddress)
     return WrapType.Wrap;
@@ -66,7 +89,7 @@ export const getWrapOutput = async (
 ): Promise<BigNumber> => {
   if (wrapType === WrapType.NonWrap) throw new Error('Invalid wrap type');
   const wNativeAddress = configService.network.tokens.Addresses.wNativeAsset;
-  const { wstETH, erc4626Wrappers } = configService.network.tokens.Addresses;
+  const { wstETH } = configService.network.tokens.Addresses;
 
   if (wrapper === wNativeAddress) return BigNumber.from(wrapAmount);
   if (wrapper === wstETH) {
@@ -76,11 +99,8 @@ export const getWrapOutput = async (
     });
   }
 
-  if (
-    erc4626Wrappers &&
-    Object.values(erc4626Wrappers).includes(wrapper.toLowerCase())
-  ) {
-    return convertERC4626Wrap(wrapper.toLowerCase(), {
+  if (isERC4626Wrapper(wrapper)) {
+    return convertERC4626Wrap(wrapper, {
       amount: wrapAmount,
       isWrap: wrapType === WrapType.Wrap,
     });
@@ -99,13 +119,8 @@ export async function wrap(
       return wrapNative(network, web3, amount);
     } else if (wrapper === configs[network].tokens.Addresses.wstETH) {
       return wrapLido(network, web3, amount);
-    } else if (
-      configs[network].tokens.Addresses.erc4626Wrappers &&
-      Object.values(configs[network].tokens.Addresses.erc4626Wrappers).includes(
-        wrapper.toLowerCase()
-      )
-    ) {
-      return wrapERC4626(network, web3, wrapper.toLowerCase(), amount);
+    } else if (isERC4626Wrapper(wrapper)) {
+      return wrapERC4626(wrapper, web3, amount);
     }
     throw new Error('Unrecognised wrapper contract');
   } catch (e) {
@@ -125,13 +140,8 @@ export async function unwrap(
       return unwrapNative(network, web3, amount);
     } else if (wrapper === configs[network].tokens.Addresses.wstETH) {
       return unwrapLido(network, web3, amount);
-    } else if (
-      configs[network].tokens.Addresses.erc4626Wrappers &&
-      Object.values(configs[network].tokens.Addresses.erc4626Wrappers).includes(
-        wrapper.toLowerCase()
-      )
-    ) {
-      return unwrapERC4626(network, web3, wrapper.toLowerCase(), amount);
+    } else if (isERC4626Wrapper(wrapper)) {
+      return unwrapERC4626(wrapper, web3, amount);
     }
     throw new Error('Unrecognised wrapper contract');
   } catch (e) {
@@ -196,31 +206,63 @@ const unwrapLido = async (
   });
 };
 
+// const wrapERC4626 = async (
+//   network: string,
+//   web3: WalletProvider,
+//   wrapper: string,
+//   amount: BigNumber
+// ): Promise<TransactionResponse> => {
+//   const txBuilder = new TransactionBuilder(web3.getSigner());
+//   const userAddress = await web3.getSigner().getAddress();
+//   return await txBuilder.contract.sendTransaction({
+//     contractAddress: wrapper,
+//     abi: [
+//       'function deposit(uint256 assets, address receiver) returns (uint256)',
+//     ],
+//     action: 'deposit',
+//     params: [amount, userAddress],
+//   });
+// };
+
+// const unwrapERC4626 = async (
+//   network: string,
+//   web3: WalletProvider,
+//   wrapper: string,
+//   amount: BigNumber
+// ): Promise<TransactionResponse> => {
+//   const userAddress = await web3.getSigner().getAddress();
+//   const txBuilder = new TransactionBuilder(web3.getSigner());
+//   return await txBuilder.contract.sendTransaction({
+//     contractAddress: wrapper,
+//     abi: [
+//       'function redeem(uint256 shares, address receiver, address owner) returns (uint256 assets)',
+//     ],
+//     action: 'redeem',
+//     params: [amount, userAddress, userAddress],
+//   });
+// };
+
 const wrapERC4626 = async (
-  network: string,
-  web3: WalletProvider,
   wrapper: string,
+  web3: WalletProvider,
   amount: BigNumber
 ): Promise<TransactionResponse> => {
   const txBuilder = new TransactionBuilder(web3.getSigner());
-  const userAddress = await web3.getSigner().getAddress();
   return await txBuilder.contract.sendTransaction({
     contractAddress: wrapper,
     abi: [
-      'function deposit(uint256 assets, address receiver) returns (uint256)',
+      'function deposit(uint256 assets, address receiver) returns (uint256 shares)',
     ],
     action: 'deposit',
-    params: [amount, userAddress],
+    params: [amount, await web3.getSigner().getAddress()],
   });
 };
 
 const unwrapERC4626 = async (
-  network: string,
-  web3: WalletProvider,
   wrapper: string,
+  web3: WalletProvider,
   amount: BigNumber
 ): Promise<TransactionResponse> => {
-  const userAddress = await web3.getSigner().getAddress();
   const txBuilder = new TransactionBuilder(web3.getSigner());
   return await txBuilder.contract.sendTransaction({
     contractAddress: wrapper,
@@ -228,6 +270,10 @@ const unwrapERC4626 = async (
       'function redeem(uint256 shares, address receiver, address owner) returns (uint256 assets)',
     ],
     action: 'redeem',
-    params: [amount, userAddress, userAddress],
+    params: [
+      amount,
+      await web3.getSigner().getAddress(),
+      await web3.getSigner().getAddress(),
+    ],
   });
 };
