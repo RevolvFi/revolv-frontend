@@ -1,12 +1,12 @@
 import {
   EncodeJoinPoolInput,
   JoinPoolRequest,
+  Relayer,
   SimulationType,
 } from '@symmetric-v3/sdk';
 import { JsonRpcSigner } from '@ethersproject/providers';
 import { BigNumberish } from '@ethersproject/bignumber';
 import { Pool } from '@/services/pool/types';
-import { Relayer } from '@symmetric-v3/sdk';
 
 export const erc4626JoinCalls = async (
   pool: Pool,

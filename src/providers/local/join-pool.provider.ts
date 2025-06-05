@@ -8,6 +8,7 @@ import {
   fiatValueOf,
   isDeep,
   isStableLike,
+  isErc4626,
 } from '@/composables/usePoolHelpers';
 import { useTxState } from '@/composables/useTxState';
 import {
@@ -128,6 +129,8 @@ export const joinPoolProvider = (
    */
   const isDeepPool = computed((): boolean => isDeep(pool.value));
 
+  const isErc4626Pool = computed((): boolean => isErc4626(pool.value));
+
   // List of token addresses that can be used to join the pool.
   const poolJoinTokens = computed((): string[] => joinTokens(pool.value));
 
@@ -194,10 +197,11 @@ export const joinPoolProvider = (
 
   const shouldSignRelayer = computed(
     (): boolean =>
-      isDeepPool.value &&
-      !isSingleAssetJoin.value &&
-      // Check if Batch Relayer is either approved, or signed
-      !(relayerApproval.isUnlocked.value || relayerSignature.value)
+      isErc4626Pool.value ||
+      (isDeepPool.value &&
+        !isSingleAssetJoin.value &&
+        // Check if Batch Relayer is either approved, or signed
+        !(relayerApproval.isUnlocked.value || relayerSignature.value))
   );
 
   const amountsToApprove = computed(() => {
@@ -217,6 +221,9 @@ export const joinPoolProvider = (
   );
 
   const joinHandlerType = computed((): JoinHandler => {
+    if (isErc4626Pool.value) {
+      return JoinHandler.Erc4626;
+    }
     if (isDeepPool.value) {
       if (isSingleAssetJoin.value) {
         return JoinHandler.Swap;

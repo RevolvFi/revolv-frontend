@@ -6,6 +6,7 @@ export enum Protocol {
   Yearn = 'yearn',
   Gearbox = 'gearbox',
   Idle = 'idle',
+  Meridian = 'meridian',
   Morpho = 'morpho',
   Tessera = 'tessera',
   Sturdy = 'sturdy',
@@ -45,6 +46,10 @@ export const protocolIconPaths: Record<Protocol, string> = {
   ).href,
   [Protocol.Idle]: new URL(
     '@/assets/images/icons/protocols/idle.svg',
+    import.meta.url
+  ).href,
+  [Protocol.Meridian]: new URL(
+    '@/assets/images/icons/protocols/meridian.svg',
     import.meta.url
   ).href,
   [Protocol.Morpho]: new URL(

@@ -1,4 +1,5 @@
-import { Pools } from '@/types/pools';
+import { Pools, PoolFeature } from '@/types/pools';
+import { Protocol } from '@/composables/useProtocols';
 
 const pools: Pools = {
   IdsMap: {
@@ -75,10 +76,55 @@ const pools: Pools = {
       '0x0de0a7139287d7a5c4355872da97aa10e18116b500000000000000000000000e', // S-USDC.e-USDT
     ],
   },
-  Metadata: {},
+  Metadata: {
+    '0x167c36cd8c47cbac4555fb84b96fb4a632b2c2d4000000000000000000000011': {
+      features: {
+        [PoolFeature.YieldAccelerated]: {
+          featureProtocols: [Protocol.Meridian],
+        },
+      },
+    },
+    '0x7549ed894be102568e482a523f648f25f443a0f2000000000000000000000012': {
+      features: {
+        [PoolFeature.YieldAccelerated]: {
+          featureProtocols: [Protocol.Meridian],
+        },
+      },
+    },
+  },
   Deep: [
     // '0x5e99843486cf052baf0925a0cdeb40920477295900000000000000000000000b', // USDM/USDC-USDT
   ],
+  Erc4626: {
+    '0x167c36cd8c47cbac4555fb84b96fb4a632b2c2d4000000000000000000000011': {
+      underlying: [
+        '0xf1815bd50389c46847f0bda824ec8da914045d14', // USDC.e
+        '0x674843c06ff83502ddb4d37c2e09c01cda38cbc8', // USDT
+      ],
+      wrappers: [
+        '0x59716b2745ab9639b1685609863b3bd63873ad02',
+        '0x738471f8cb40aefc54a95e08c574619495958e31',
+      ],
+      tokensList: [
+        '0x167c36cd8c47cbac4555fb84b96fb4a632b2c2d4',
+        '0x59716b2745ab9639b1685609863b3bd63873ad02',
+        '0x738471f8cb40aefc54a95e08c574619495958e31',
+      ],
+    }, // S-woUSDC.e-woUSDT
+    '0x7549ed894be102568e482a523f648f25f443a0f2000000000000000000000012': {
+      underlying: [
+        '0xd102ce6a4db07d247fcc28f366a623df0938ca9e', // WTLOS
+      ],
+      wrappers: [
+        '0xd9d50bc52061bb29045da753776b1367fa6e3ad0', // woWTLOS
+      ],
+      tokensList: [
+        '0x7549ed894be102568e482a523f648f25f443a0f2',
+        '0xb4b01216a5bc8f1c8a33cd990a1239030e60c905',
+        '0xd9d50bc52061bb29045da753776b1367fa6e3ad0',
+      ],
+    }, // S-STLOS-woWTLOS
+  },
   Deprecated: {},
   GaugeMigration: {},
   BoostedApr: [],

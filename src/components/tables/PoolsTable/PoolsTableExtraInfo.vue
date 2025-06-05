@@ -7,6 +7,7 @@ import {
   isTrailblazerXP,
   protocolsFor,
   isGyro,
+  isYieldAccelerated,
   //isLpVaultPool,
 } from '@/composables/usePoolHelpers';
 import { Pool } from '@/services/pool/types';
@@ -89,6 +90,20 @@ defineProps<Props>();
           :feature="PoolFeature.CLP"
           :protocols="[Protocol.Gyro]"
           class="ml-1"
+        />
+      </template>
+    </BalTooltip>
+
+    <BalTooltip
+      v-if="isYieldAccelerated(pool)"
+      :text="$t('yieldAcceleratedTooltip')"
+      width="56"
+    >
+      <template #activator>
+        <PoolFeatureChip
+          :feature="PoolFeature.YieldAccelerated"
+          class=""
+          :protocols="[Protocol.Meridian]"
         />
       </template>
     </BalTooltip>

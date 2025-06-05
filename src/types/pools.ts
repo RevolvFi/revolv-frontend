@@ -43,6 +43,7 @@ export enum PoolFeature {
   TBXP = 'tbxp',
   Points40k = 'points40k',
   Points20k = 'points20k',
+  YieldAccelerated = 'yieldAccelerated',
 }
 
 export type PoolFeatures = {
@@ -170,6 +171,13 @@ export type Pools = {
   PointsGauges?: Record<string, { gauge: string; symbol: string }>;
   Metadata: Record<string, PoolMetadata>;
   Deep: string[];
+  Erc4626?: {
+    [key: string]: {
+      underlying: string[];
+      wrappers: string[];
+      tokensList: string[];
+    };
+  };
   BoostedApr: string[];
   DisabledJoins: string[];
   ExitViaInternalBalance?: string[];
