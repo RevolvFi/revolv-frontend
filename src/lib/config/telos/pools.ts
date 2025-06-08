@@ -56,6 +56,7 @@ const pools: Pools = {
       '0x61fc76a676ef4a4692d811b6c102edcf9e8c4c3b00010000000000000000000d', //S-40WBTC-40WETH-20USDC.e
       '0x38fcff8799e92dde4be5cfcf9bcd69f1c9bc9d7a00020000000000000000000c', // S-60WTLOS-40USDC.e
       '0x64a819210c9c3a198cc0efedaca48a8a8d47511000020000000000000000000b', //S-80WTLOS-20USDT
+      '0xcf6f341edc35b4554b823be127956a37eeb9ac8d000200000000000000000013', // S-50USDC.e-50STLOS
     ],
   },
   Factories: {
@@ -85,6 +86,13 @@ const pools: Pools = {
       },
     },
     '0x7549ed894be102568e482a523f648f25f443a0f2000000000000000000000012': {
+      features: {
+        [PoolFeature.YieldAccelerated]: {
+          featureProtocols: [Protocol.Meridian],
+        },
+      },
+    },
+    '0xcf6f341edc35b4554b823be127956a37eeb9ac8d000200000000000000000013': {
       features: {
         [PoolFeature.YieldAccelerated]: {
           featureProtocols: [Protocol.Meridian],
@@ -124,6 +132,16 @@ const pools: Pools = {
         '0xd9d50bc52061bb29045da753776b1367fa6e3ad0',
       ],
     }, // S-STLOS-woWTLOS
+    '0xcf6f341edc35b4554b823be127956a37eeb9ac8d000200000000000000000013': {
+      underlying: [
+        '0xf1815bd50389c46847f0bda824ec8da914045d14', // USDC.e
+      ],
+      wrappers: ['0x59716b2745ab9639b1685609863b3bd63873ad02'], // woUSDC.e
+      tokensList: [
+        '0x59716b2745ab9639b1685609863b3bd63873ad02', // woUSDC.e
+        '0xb4b01216a5bc8f1c8a33cd990a1239030e60c905', // STLOS
+      ],
+    }, // S-50USDC.e-50STLOS
   },
   Deprecated: {},
   GaugeMigration: {},

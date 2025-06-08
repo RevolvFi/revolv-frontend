@@ -69,6 +69,7 @@ export class Erc4626JoinHandler implements JoinPoolHandler {
 
     // Static call simulation is more accurate than VaultModel, but requires relayer approval,
     // token approvals, and account to have enought token balance.
+    console.log('approvalActions', approvalActions);
     const simulationType = this.getSimulationType({
       isNativeAssetJoin,
       hasInvalidAmounts,
@@ -117,6 +118,9 @@ export class Erc4626JoinHandler implements JoinPoolHandler {
     hasInvalidAmounts: boolean;
     approvalActionsLength: number;
   }): SimulationType {
+    console.log('isNativeAssetJoin', isNativeAssetJoin);
+    console.log('hasInvalidAmounts', hasInvalidAmounts);
+    console.log('approvalActionsLength', approvalActionsLength);
     if (isNativeAssetJoin) {
       return SimulationType.VaultModel;
     }

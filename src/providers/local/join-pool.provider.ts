@@ -50,6 +50,7 @@ import { useApp } from '@/composables/useApp';
 import { throwQueryError } from '@/lib/utils/queries';
 import { ApprovalAction } from '@/composables/approvals/types';
 import { captureBalancerException } from '@/lib/utils/errors';
+import { configService } from '@/services/config/config.service';
 
 /**
  * TYPES
@@ -118,11 +119,14 @@ export const joinPoolProvider = (
   const { transactionDeadline } = useApp();
   const { txState, txInProgress, resetTxState } = useTxState();
   const relayerApproval = useRelayerApprovalTx(RelayerType.BATCH);
+  console.log('relayerApproval', relayerApproval.isUnlocked.value);
   const { getTokenApprovalActions, updateAllowancesFor } =
     useTokenApprovalActions();
   const { relayerSignature, relayerApprovalAction } = useRelayerApproval(
     RelayerType.BATCH
   );
+  console.log('relayerSignature', relayerSignature.value);
+  console.log('relayerApprovalAction', relayerApprovalAction.value);
 
   /**
    * COMPUTED
@@ -197,19 +201,45 @@ export const joinPoolProvider = (
 
   const shouldSignRelayer = computed(
     (): boolean =>
-      isErc4626Pool.value ||
-      (isDeepPool.value &&
-        !isSingleAssetJoin.value &&
-        // Check if Batch Relayer is either approved, or signed
-        !(relayerApproval.isUnlocked.value || relayerSignature.value))
+      (isErc4626Pool.value || isDeepPool.value) &&
+      !isSingleAssetJoin.value &&
+      // Check if Batch Relayer is either approved, or signed
+      !(relayerApproval.isUnlocked.value || relayerSignature.value)
   );
 
   const amountsToApprove = computed(() => {
-    return amountsIn.value.map(amountIn => ({
+    const approvals = amountsIn.value.map(amountIn => ({
       address: amountIn.address,
       amount: amountIn.value,
       spender: appNetworkConfig.addresses.vault,
     }));
+
+    // For ERC4626 pools, we also need to approve the wrapper tokens
+    if (isErc4626Pool.value) {
+      const erc4626Pool = configService.network.pools?.Erc4626?.[pool.value.id];
+      if (erc4626Pool) {
+        // Add wrapper tokens to approvals
+        erc4626Pool.wrappers.forEach((wrapper, i) => {
+          console.log('amountsIn', amountsIn.value);
+          const underlyingToken = erc4626Pool.underlying[i];
+          const amountIn = amountsIn.value.find(
+            a => a.address.toLowerCase() === underlyingToken.toLowerCase()
+          );
+          console.log('amountIn', amountIn);
+          if (amountIn) {
+            approvals.push({
+              address: wrapper,
+              amount: amountIn.value, // Use same amount as underlying
+              spender: appNetworkConfig.addresses.vault,
+            });
+          }
+        });
+      }
+    }
+
+    console.log('approvals', approvals);
+
+    return approvals;
   });
 
   const isLoadingQuery = computed(
@@ -318,6 +348,8 @@ export const joinPoolProvider = (
       await setApprovalActions();
 
       if (!validateAmountsIn()) return null;
+      console.log('amountsInWithValue', amountsInWithValue.value);
+      console.log('tokensIn', tokensIn.value);
       const output = await joinPoolService.queryJoin({
         amountsIn: amountsInWithValue.value,
         tokensIn: tokensIn.value,

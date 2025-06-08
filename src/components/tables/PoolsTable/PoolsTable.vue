@@ -316,21 +316,44 @@ function getTokensForDisplay(pool: Pool): PoolToken[] {
 
     return nonBptTokens.map((token, i) => {
       const wrapperIndex = erc4626Pool.wrappers.indexOf(token);
-      // If it's a wrapper token, use its underlying address, otherwise use the token address itself
-      const address =
-        wrapperIndex >= 0 ? erc4626Pool.underlying[wrapperIndex] : token;
+
+      // If it's not a wrapper token, return the original pool token
+      if (wrapperIndex === -1) {
+        const originalToken = pool.tokens.find(t => t.address === token);
+        return (
+          originalToken || {
+            address: token,
+            balance: '0',
+            decimals: 18,
+            id: `${pool.id}-${i}`,
+            index: i,
+            name: '',
+            priceRate: '1',
+            symbol: '',
+            totalBalance: '0',
+            weight: null,
+            token: {
+              pool: null,
+            },
+          }
+        );
+      }
+
+      // For wrapper tokens, use the underlying address and keep the wrapper's weight
+      const underlyingAddress = erc4626Pool.underlying[wrapperIndex];
+      const wrapperToken = pool.tokens.find(t => t.address === token);
 
       return {
-        address,
-        balance: '0',
-        decimals: 18,
+        address: underlyingAddress,
+        balance: wrapperToken?.balance || '0',
+        decimals: wrapperToken?.decimals || 18,
         id: `${pool.id}-${i}`,
         index: i,
         name: '',
-        priceRate: '1',
+        priceRate: wrapperToken?.priceRate || '1',
         symbol: '',
-        totalBalance: '0',
-        weight: null,
+        totalBalance: wrapperToken?.balance || '0',
+        weight: wrapperToken?.weight || null,
         token: {
           pool: null,
         },

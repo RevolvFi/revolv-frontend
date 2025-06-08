@@ -1,17 +1,18 @@
 import { Contract } from 'ethers';
 import { BigNumber } from '@ethersproject/bignumber';
+import { defaultAbiCoder } from '@ethersproject/abi';
 import { WeiPerEther as ONE } from '@ethersproject/constants';
 import { configService } from '@/services/config/config.service';
 import { rpcProviderService } from '@/services/rpc-provider/rpc-provider.service';
+import { isSameAddress } from '@/lib/utils';
 import {
   BalancerSDK,
   BalancerRelayer__factory,
   EncodeJoinPoolInput,
-  JoinPoolRequest,
   Relayer,
   SimulationType,
-  StablePoolEncoder,
-  WeightedPoolEncoder,
+  StablePoolJoinKind,
+  WeightedPoolJoinKind,
 } from '@symmetric-v3/sdk';
 import { JsonRpcSigner } from '@ethersproject/providers';
 import { BigNumberish } from '@ethersproject/bignumber';
@@ -45,8 +46,6 @@ export async function convertERC4626Wrap(
   { amount, isWrap }: ConversionParams
 ) {
   try {
-    console.log('convertERC4626Wrap', wrapper, amount, isWrap);
-    console.log(getRateProviderAddress(wrapper));
     const rateProvider = new Contract(
       getRateProviderAddress(wrapper),
       ['function getRate() external view returns (uint256)'],
@@ -59,6 +58,13 @@ export async function convertERC4626Wrap(
   } catch (error) {
     throw new Error('Failed to convert to ERC4626 wrapper', { cause: error });
   }
+}
+
+/**
+ * Get pool kind based on pool type
+ */
+function getPoolKind(poolType: string): number {
+  return poolType === 'Weighted' ? 0 : 3; // 0 for Weighted, 3 for ComposableStable V2
 }
 
 /**
@@ -76,7 +82,7 @@ export async function convertERC4626Wrap(
  */
 export const erc4626PoolJoin = async (
   pool: Pool,
-  tokenAddresses: string[],
+  tokensIn: string[],
   amountsIn: string[],
   signerAddress: string,
   slippage: string,
@@ -94,13 +100,12 @@ export const erc4626PoolJoin = async (
   priceImpact: string;
   value: BigNumberish;
 }> => {
-  console.log('tokenAddresses', tokenAddresses);
-  console.log('amountsIn', amountsIn);
-
   const erc4626Pool = configService.network.pools?.Erc4626?.[pool.id];
   if (!erc4626Pool) {
     throw new Error(`Pool ${pool.id} is not configured as an ERC4626 pool`);
   }
+
+  const tokenAddresses = tokensIn.map(token => token.toLowerCase());
 
   const estimatedWrapperAmounts = await Promise.all(
     erc4626Pool.wrappers.map(async (wrapper, index) => {
@@ -133,7 +138,7 @@ export const erc4626PoolJoin = async (
     signerAddress,
     slippage,
     signer,
-    simulationType,
+    1,
     relayerSignature
   );
 
@@ -157,49 +162,90 @@ export const erc4626PoolJoin = async (
     });
   });
 
-  // For userData, include both wrapper references and non-wrapper amounts (no BPT)
-  const userDataAmounts = erc4626Pool.tokensList
-    .filter(token => token !== pool.address) // Exclude BPT
-    .map(token => {
-      const wrapperIndex = erc4626Pool.wrappers.indexOf(token);
-      if (wrapperIndex >= 0) {
-        return chainedReferences[wrapperIndex]; // Use chainedReference for wrappers
-      }
-      const tokenIndex = tokenAddresses.indexOf(token);
-      return tokenIndex >= 0 ? amountsIn[tokenIndex] : '0'; // Use actual amount for non-wrapper tokens
-    });
+  // Get non-wrapper tokens (excluding BPT)
+  const nonWrapperTokens = erc4626Pool.tokensList.filter(
+    token =>
+      token !== pool.address && // Not BPT
+      !erc4626Pool.wrappers.some(w => isSameAddress(w, token)) // Not a wrapper
+  );
+
+  // Create ordered token lists for join
+  const baseTokens = [...nonWrapperTokens, ...erc4626Pool.wrappers].sort(
+    (a, b) => (a.toLowerCase() < b.toLowerCase() ? -1 : 1)
+  );
+
+  // For stable pools, include BPT and sort all tokens together
+  // For weighted pools, exclude BPT
+  const joinTokens =
+    pool.poolType === 'Weighted'
+      ? baseTokens
+      : [...baseTokens, pool.address].sort((a, b) =>
+          a.toLowerCase() < b.toLowerCase() ? -1 : 1
+        );
+
+  // Create ordered amounts list matching joinTokens order
+  const joinAmounts = joinTokens.map(token => {
+    if (isSameAddress(token, pool.address)) {
+      return '0'; // BPT amount is always 0 for joins
+    }
+    const wrapperIndex = erc4626Pool.wrappers.indexOf(token);
+    if (wrapperIndex >= 0) {
+      return chainedReferences[wrapperIndex]; // Use reference for wrapper tokens
+    }
+    const tokenIndex = tokenAddresses.indexOf(token);
+    return tokenIndex >= 0 ? amountsIn[tokenIndex] : '0'; // Use actual amount for non-wrapper tokens
+  });
+
+  // For userData, we always exclude BPT from the amounts array
+  const sortedAmountsWithoutBpt = baseTokens.map(token => {
+    const wrapperIndex = erc4626Pool.wrappers.indexOf(token);
+    if (wrapperIndex >= 0) {
+      return chainedReferences[wrapperIndex];
+    }
+    const tokenIndex = tokenAddresses.indexOf(token);
+    return tokenIndex >= 0 ? amountsIn[tokenIndex] : '0';
+  });
+
+  console.log('sortedAmountsWithoutBpt', sortedAmountsWithoutBpt);
 
   let userData: string;
   if (pool.poolType === 'Weighted') {
-    userData = WeightedPoolEncoder.joinExactTokensInForBPTOut(
-      userDataAmounts,
-      '0'
+    userData = defaultAbiCoder.encode(
+      ['uint256', 'uint256[]', 'uint256'],
+      [
+        WeightedPoolJoinKind.EXACT_TOKENS_IN_FOR_BPT_OUT,
+        sortedAmountsWithoutBpt,
+        minOut,
+      ]
     );
   } else {
-    userData = StablePoolEncoder.joinExactTokensInForBPTOut(
-      userDataAmounts,
-      '0'
+    userData = defaultAbiCoder.encode(
+      ['uint256', 'uint256[]', 'uint256'],
+      [
+        StablePoolJoinKind.EXACT_TOKENS_IN_FOR_BPT_OUT,
+        sortedAmountsWithoutBpt,
+        minOut,
+      ]
     );
   }
 
-  // For assets and maxAmountsIn, include all tokens (including BPT)
-  const joinPoolCall: EncodeJoinPoolInput = Relayer.formatJoinPoolInput({
+  const joinPoolRequest = {
+    assets: joinTokens,
+    maxAmountsIn: joinAmounts,
+    userData,
+    fromInternalBalance: false,
+  };
+  console.log('joinPoolRequest', joinPoolRequest);
+
+  const joinPoolCall: EncodeJoinPoolInput = {
     poolId: pool.id,
-    kind: 0,
+    kind: getPoolKind(pool.poolType),
     sender: signerAddress,
     recipient: signerAddress,
     value: '0',
     outputReference: '0',
-    joinPoolRequest: {} as JoinPoolRequest,
-    assets: erc4626Pool.tokensList,
-    maxAmountsIn: erc4626Pool.tokensList.map(token => {
-      if (token === pool.address) return '0'; // BPT token
-      const wrapperIndex = erc4626Pool.wrappers.indexOf(token);
-      return wrapperIndex >= 0 ? chainedReferences[wrapperIndex] : '0';
-    }),
-    userData,
-    fromInternalBalance: false,
-  });
+    joinPoolRequest,
+  };
 
   const encodedJoinPoolCall = Relayer.encodeJoinPool(joinPoolCall);
 
@@ -213,6 +259,7 @@ export const erc4626PoolJoin = async (
     );
     encodedCalls.unshift(relayerCall);
   }
+
   const encodedCall = relayerInterface.encodeFunctionData('multicall', [
     encodedCalls,
   ]);
@@ -227,5 +274,194 @@ export const erc4626PoolJoin = async (
     expectedOut,
     priceImpact,
     value: '0',
+  };
+};
+
+export const erc4626PoolExit = async (
+  pool: Pool,
+  amount: string,
+  userAddress: string,
+  slippage: string,
+  signer: JsonRpcSigner,
+  sdk: BalancerSDK,
+  authorisation?: string
+) => {
+  const erc4626Pool = configService.network.pools?.Erc4626?.[pool.id];
+  if (!erc4626Pool) {
+    throw new Error(`Pool ${pool.id} is not configured as an ERC4626 pool`);
+  }
+  console.log('pool.id', pool.id);
+  console.log('amount', amount);
+  console.log('userAddress', userAddress);
+
+  const { estimatedAmountsOut, tokensOut, priceImpact } =
+    await sdk.pools.getExitInfo(pool.id, amount, userAddress, signer);
+
+  console.log('SDK Exit Info:', {
+    estimatedAmountsOut,
+    tokensOut,
+    priceImpact,
+  });
+
+  // Create output references for wrapper tokens and store mapping
+  const wrapperToReference = new Map<string, BigNumber>();
+  const outputReferences = erc4626Pool.wrappers.map((wrapper, i) => {
+    const wrapperIndex = erc4626Pool.tokensList.indexOf(wrapper);
+    const key = BigNumber.from(
+      `0xba1000000000000000000000000000000000000000000000000000000000000${
+        i + 1
+      }`
+    );
+    wrapperToReference.set(wrapper.toLowerCase(), key);
+    console.log('Wrapper Output Reference:', {
+      wrapper,
+      wrapperIndex,
+      key: key.toHexString(),
+    });
+    return {
+      index: wrapperIndex,
+      key,
+    };
+  });
+
+  let userData: string;
+  if (pool.poolType === 'Weighted') {
+    userData = defaultAbiCoder.encode(
+      ['uint256', 'uint256'],
+      [1, amount] // 1 = EXACT_BPT_IN_FOR_ALL_TOKENS_OUT
+    );
+  } else {
+    userData = defaultAbiCoder.encode(
+      ['uint256', 'uint256'],
+      [2, amount] // 2 = EXACT_BPT_IN_FOR_ALL_TOKENS_OUT
+    );
+  }
+
+  const exitPoolRequest = {
+    assets: erc4626Pool.tokensList,
+    minAmountsOut: erc4626Pool.tokensList.map(token => {
+      if (isSameAddress(token, pool.address)) {
+        return '0'; // BPT amount
+      }
+      // Find the index in tokensOut that matches this token
+      const tokenOutIndex = tokensOut.findIndex(t => isSameAddress(t, token));
+      if (tokenOutIndex >= 0) {
+        return BigNumber.from(estimatedAmountsOut[tokenOutIndex])
+          .mul(BigNumber.from(1000 - Number(slippage) * 10))
+          .div(1000)
+          .toString();
+      }
+      return '0';
+    }),
+    userData,
+    toInternalBalance: false,
+  };
+
+  const exitCall = {
+    poolId: pool.id,
+    poolKind: getPoolKind(pool.poolType),
+    sender: userAddress,
+    recipient: userAddress,
+    outputReferences,
+    exitPoolRequest,
+  };
+
+  const encodedExitCall = Relayer.encodeExitPool(exitCall);
+
+  // Create unwrap calls for each wrapper using the output references
+  const unwrapCalls = erc4626Pool.wrappers.map(wrapper => {
+    const referenceKey = wrapperToReference.get(wrapper.toLowerCase());
+    if (!referenceKey) {
+      throw new Error(`No output reference found for wrapper ${wrapper}`);
+    }
+    return Relayer.encodeUnwrapErc4626({
+      wrappedToken: wrapper,
+      sender: userAddress,
+      recipient: userAddress,
+      amount: referenceKey,
+      outputReference: '0',
+    });
+  });
+
+  const encodedCalls = [encodedExitCall, ...unwrapCalls];
+
+  if (authorisation) {
+    const relayerCall = Relayer.encodeSetRelayerApproval(
+      configService.network.addresses.batchRelayer,
+      true,
+      authorisation
+    );
+    encodedCalls.unshift(relayerCall);
+  }
+
+  const encodedCall = relayerInterface.encodeFunctionData('multicall', [
+    encodedCalls,
+  ]);
+  // Convert wrapper amounts to underlying amounts for display
+  const convertedAmountsOut = await Promise.all(
+    erc4626Pool.wrappers.map(async (wrapper, i) => {
+      const underlyingToken = erc4626Pool.underlying[i];
+      const wrapperAmount = estimatedAmountsOut[i];
+      const underlyingAmount = await convertERC4626Wrap(wrapper, {
+        amount: BigNumber.from(wrapperAmount),
+        isWrap: false,
+      });
+      return {
+        token: underlyingToken,
+        amount: underlyingAmount.toString(),
+      };
+    })
+  );
+
+  // Create map of wrapper addresses to their underlying tokens
+  const wrapperToUnderlying = Object.fromEntries(
+    erc4626Pool.wrappers.map((w, i) => [
+      w.toLowerCase(),
+      erc4626Pool.underlying[i],
+    ])
+  );
+
+  // Process all tokens (both wrapper and non-wrapper)
+  const processedAmounts = tokensOut.map((token, i) => {
+    const isWrapper = erc4626Pool.wrappers.some(w => isSameAddress(w, token));
+    if (isWrapper) {
+      // Find the converted amount for this wrapper
+      const convertedAmount = convertedAmountsOut.find(
+        ({ token: underlyingToken }) =>
+          isSameAddress(
+            underlyingToken,
+            wrapperToUnderlying[token.toLowerCase()]
+          )
+      );
+      return {
+        amount: convertedAmount?.amount || '0',
+        token: wrapperToUnderlying[token.toLowerCase()],
+      };
+    } else {
+      // Keep original amount and token for non-wrappers
+      return {
+        amount: estimatedAmountsOut[i],
+        token,
+      };
+    }
+  });
+  // Calculate min amounts for all tokens
+  const minAmountsOut = processedAmounts.map(({ amount }) =>
+    BigNumber.from(amount)
+      .mul(BigNumber.from(1000 - Number(slippage) * 10))
+      .div(1000)
+      .toString()
+  );
+
+  return {
+    expectedAmountsOut: processedAmounts.map(({ amount }) => amount),
+    minAmountsOut,
+    tokensOut: processedAmounts.map(({ token }) => token),
+    priceImpact: priceImpact.toString(),
+    txReady: true,
+    to: configService.network.addresses.batchRelayer,
+    encodedCall,
+    rawCalls: [],
+    encodedCalls,
   };
 };

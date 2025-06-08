@@ -12,6 +12,7 @@ import {
 import { ExactInExitHandler } from './handlers/exact-in-exit.handler';
 import { ExactOutExitHandler } from './handlers/exact-out-exit.handler';
 import { RecoveryExitHandler } from './handlers/recovery-exit.handler';
+import { Erc4626ExitHandler } from './handlers/erc4626-exit.handler';
 
 export enum ExitHandler {
   Swap = 'Swap',
@@ -19,6 +20,7 @@ export enum ExitHandler {
   ExactOut = 'ExactOut',
   ExactIn = 'ExactIn',
   Recovery = 'Recovery',
+  Erc4626 = 'Erc4626',
 }
 
 /**
@@ -47,6 +49,7 @@ export class ExitPoolService {
       [ExitHandler.ExactIn]: new ExactInExitHandler(pool, sdk),
       [ExitHandler.ExactOut]: new ExactOutExitHandler(pool, sdk),
       [ExitHandler.Recovery]: new RecoveryExitHandler(pool, sdk),
+      [ExitHandler.Erc4626]: new Erc4626ExitHandler(pool, sdk),
     };
     this.exitHandler = this.setExitHandler(ExitHandler.Generalised);
   }

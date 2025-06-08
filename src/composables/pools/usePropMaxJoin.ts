@@ -8,6 +8,7 @@ import { OnchainTokenDataMap, Pool } from '@/services/pool/types';
 import { TokenInfoMap } from '@/types/TokenList';
 import { AmountIn } from '@/providers/local/join-pool.provider';
 import { useTokens } from '@/providers/tokens.provider';
+import { isErc4626 } from '@/composables/usePoolHelpers';
 
 export default function usePropMaxJoin(
   pool: Pool,
@@ -46,24 +47,52 @@ export default function usePropMaxJoin(
   const poolTokenBalances = computed((): Record<string, BigNumber> => {
     if (!pool.onchain?.tokens) return {};
 
+    const balancesMap: Record<string, BigNumber> = {};
     const wNativeAsset = selectByAddress(
       poolTokens.value,
       config.network.tokens.Addresses.wNativeAsset
     );
 
     // Set pool native asset balance to be the same as its WETH balance
-    const balancesMap = {
-      [config.network.nativeAsset.address]: parseUnits(
-        wNativeAsset?.balance || '0',
-        wNativeAsset?.decimals || 18
-      ),
-    };
+    balancesMap[config.network.nativeAsset.address] = parseUnits(
+      wNativeAsset?.balance || '0',
+      wNativeAsset?.decimals || 18
+    );
 
-    Object.keys(poolTokens.value).forEach(item => {
-      const address = getAddress(item);
+    // Handle ERC4626 pools
+    if (isErc4626(pool)) {
+      const erc4626Pool = config.network.pools?.Erc4626?.[pool.id];
+      if (erc4626Pool) {
+        // Map balances for both wrapper and underlying tokens
+        Object.keys(poolTokens.value).forEach(address => {
+          const poolToken = selectByAddress(poolTokens.value, address);
+          if (!poolToken) return;
+
+          // Add wrapper token balance
+          balancesMap[address] = parseUnits(
+            poolToken.balance,
+            poolToken.decimals || 18
+          );
+
+          // If this is a wrapper token, also add its underlying token balance
+          const wrapperIndex = erc4626Pool.wrappers.indexOf(address);
+          if (wrapperIndex >= 0) {
+            const underlyingAddress = erc4626Pool.underlying[wrapperIndex];
+            balancesMap[underlyingAddress] = parseUnits(
+              poolToken.balance,
+              poolToken.decimals || 18
+            );
+          }
+        });
+        return balancesMap;
+      }
+    }
+
+    // Handle regular pools
+    Object.keys(poolTokens.value).forEach(address => {
       const poolToken = selectByAddress(poolTokens.value, address);
       if (poolToken) {
-        balancesMap[address] = parseUnits(
+        balancesMap[getAddress(address)] = parseUnits(
           poolToken.balance,
           poolToken.decimals || 18
         );

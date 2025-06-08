@@ -720,9 +720,30 @@ export function tokenWeight(pool: Pool, tokenAddress: string): number {
 
   const { nativeAsset, wNativeAsset } = configService.network.tokens.Addresses;
 
+  // Handle ERC4626 pools
+  if (isErc4626(pool)) {
+    const erc4626Pool = configService.network.pools?.Erc4626?.[pool.id];
+    if (!erc4626Pool) return 0;
+
+    // If it's a wrapper token, get its weight directly
+    const wrapperIndex = erc4626Pool.wrappers.indexOf(tokenAddress);
+    if (wrapperIndex >= 0) {
+      return selectByAddress(pool.onchain.tokens, tokenAddress)?.weight || 1;
+    }
+
+    // If it's an underlying token, find its wrapper and get the wrapper's weight
+    const underlyingIndex = erc4626Pool.underlying.indexOf(tokenAddress);
+    if (underlyingIndex >= 0) {
+      const wrapperAddress = erc4626Pool.wrappers[underlyingIndex];
+      return selectByAddress(pool.onchain.tokens, wrapperAddress)?.weight || 1;
+    }
+  }
+
+  // Handle native asset case
   if (isSameAddress(tokenAddress, nativeAsset)) {
     return selectByAddress(pool.onchain.tokens, wNativeAsset)?.weight || 1;
   }
+
   return selectByAddress(pool.onchain.tokens, tokenAddress)?.weight || 1;
 }
 
@@ -749,7 +770,6 @@ export function joinTokens(pool: Pool): string[] {
   } else {
     addresses = isDeep(pool) ? tokenTreeNodes(pool.tokens) : pool.tokensList;
   }
-
   return removeAddress(pool.address, addresses);
 }
 

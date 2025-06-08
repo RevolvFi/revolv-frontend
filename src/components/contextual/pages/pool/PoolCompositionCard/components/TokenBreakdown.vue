@@ -141,22 +141,28 @@ async function addTokenToWallet(tokenAddress: string) {
       </button>
     </div>
     <div v-if="isWeighted" class="justify-self-end">
-      {{ tokenData.tokenWeightLabel }}
+      {{ tokenData?.tokenWeightLabel || '' }}
     </div>
     <div class="justify-self-end">
-      {{ showUserShares ? tokenData.userBalanceLabel : tokenData.balanceLabel }}
+      {{
+        showUserShares
+          ? tokenData?.userBalanceLabel
+          : tokenData?.balanceLabel || ''
+      }}
     </div>
     <div class="justify-self-end">
-      {{ showUserShares ? tokenData.userFiatLabel : tokenData.fiatLabel }}
+      {{
+        showUserShares ? tokenData?.userFiatLabel : tokenData?.fiatLabel || ''
+      }}
     </div>
     <div class="justify-self-end">
-      {{ tokenData.getTokenPercentageLabel() }}
+      {{ tokenData?.getTokenPercentageLabel?.() || '' }}
     </div>
   </div>
 
-  <template v-if="isDeepPool">
+  <template v-if="isDeepPool && token.token?.pool?.tokens?.length">
     <TokenBreakdown
-      v-for="nestedToken in token.token?.pool?.tokens"
+      v-for="nestedToken in token.token.pool.tokens"
       :key="nestedToken.address"
       :token="nestedToken"
       :parentLevel="currentLevel"

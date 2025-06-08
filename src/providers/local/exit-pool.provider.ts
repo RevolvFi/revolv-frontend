@@ -5,8 +5,10 @@ import {
   flatTokenTree,
   isComposableStableV1,
   isDeep,
+  isErc4626,
   isPreMintedBptType,
   isRecoveryExitsOnly,
+  joinTokens,
   tokenTreeLeafs,
   tokenTreeNodes,
 } from '@/composables/usePoolHelpers';
@@ -47,6 +49,7 @@ import { safeInject } from '../inject';
 import { useApp } from '@/composables/useApp';
 import { POOLS } from '@/constants/pools';
 import { captureBalancerException } from '@/lib/utils/errors';
+import { configService } from '@/services/config/config.service';
 
 /**
  * TYPES
@@ -176,9 +179,12 @@ export const exitPoolProvider = (
 
   const isDeepPool = computed((): boolean => isDeep(pool.value));
 
+  const isErc4626Pool = computed((): boolean => isErc4626(pool.value));
+
   const shouldSignRelayer = computed(
     (): boolean =>
-      exitHandlerType.value === ExitHandler.Generalised &&
+      (exitHandlerType.value === ExitHandler.Generalised ||
+        exitHandlerType.value === ExitHandler.Erc4626) &&
       // Check if Batch Relayer is either approved, or signed
       !(relayerApprovalTx.isUnlocked.value || relayerSignature.value)
   );
@@ -225,6 +231,7 @@ export const exitPoolProvider = (
     if (shouldUseRecoveryExit.value) return ExitHandler.Recovery;
     if (shouldUseSwapExit.value) return ExitHandler.Swap;
     if (shouldUseGeneralisedExit.value) return ExitHandler.Generalised;
+    if (isErc4626Pool.value) return ExitHandler.Erc4626;
     if (isSingleAssetExit.value) {
       // If 'max' is clicked we want to pass in the full bpt balance.
       if (singleAssetMaxed.value) return ExitHandler.ExactIn;
@@ -237,9 +244,13 @@ export const exitPoolProvider = (
   const exitTokenAddresses = computed((): string[] => {
     let addresses: string[] = [];
 
-    addresses = isDeep(pool.value)
-      ? tokenTreeNodes(pool.value.tokens)
-      : pool.value.tokensList;
+    if (isErc4626Pool.value) {
+      addresses = joinTokens(pool.value);
+    } else {
+      addresses = isDeep(pool.value)
+        ? tokenTreeNodes(pool.value.tokens)
+        : pool.value.tokensList;
+    }
 
     return removeAddress(pool.value.address, addresses);
   });
@@ -373,6 +384,7 @@ export const exitPoolProvider = (
     exitPoolService.setExitHandler(exitHandlerType.value);
 
     try {
+      console.log('relayerSignature', relayerSignature.value);
       await nextTick();
       const output = await exitPoolService.queryExit({
         exitType: exitType.value,
@@ -389,6 +401,7 @@ export const exitPoolProvider = (
       });
 
       priceImpact.value = output.priceImpact;
+      console.log('output.amountsOut', output.amountsOut);
       propAmountsOut.value = Object.keys(output.amountsOut).map(address => ({
         address,
         value: output.amountsOut[address],
@@ -477,6 +490,36 @@ export const exitPoolProvider = (
   }
 
   function setInitialPropAmountsOut() {
+    if (isErc4626Pool.value) {
+      const erc4626Pool = configService.network.pools?.Erc4626?.[pool.value.id];
+      if (!erc4626Pool) {
+        throw new Error(
+          `Pool ${pool.value.id} is not configured as an ERC4626 pool`
+        );
+      }
+
+      // Get all underlying tokens for wrappers
+      const underlyingTokens = erc4626Pool.underlying;
+
+      // Get non-wrapper tokens that aren't BPT
+      const nonWrapperTokens = pool.value.tokensList.filter(
+        token =>
+          !isSameAddress(token, pool.value.address) && // Not BPT
+          !erc4626Pool.wrappers.some(w => isSameAddress(w, token)) // Not a wrapper
+      );
+
+      // Combine underlying and non-wrapper tokens
+      propAmountsOut.value = [...underlyingTokens, ...nonWrapperTokens].map(
+        token => ({
+          address: token,
+          value: '0',
+          max: '',
+          valid: true,
+        })
+      );
+      return;
+    }
+
     const leafNodes: string[] = isDeepPool.value
       ? tokenTreeLeafs(pool.value.tokens)
       : pool.value.tokensList.filter(
