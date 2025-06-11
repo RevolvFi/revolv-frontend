@@ -30,7 +30,7 @@ export default function useRelayerApprovalTx(
    * COMPOSABLES
    */
   const { getSigner, account } = useWeb3();
-  const relayerAddress = ref(relayerAddressMap[relayer]);
+  const relayerAddress = ref(relayerAddressMap[relayer] || '');
   const { txListener } = useEthers();
   const { addTransaction } = useTransactions();
   const { t } = useI18n();

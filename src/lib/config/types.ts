@@ -46,6 +46,7 @@ export interface Contracts {
   vault: string;
   weightedPoolFactory: string;
   stablePoolFactory: string;
+  erc4626Relayer?: string;
   lidoRelayer: string;
   balancerHelpers: string;
   batchRelayer: string;

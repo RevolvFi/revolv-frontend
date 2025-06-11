@@ -20,12 +20,14 @@ export enum RelayerType {
   COWSWAP = 'Cowswap',
   LIDO = 'Lido',
   BATCH = 'Batch',
+  ERC4626 = 'ERC4626',
 }
 
 export const relayerAddressMap = {
   [RelayerType.COWSWAP]: COW_RELAYER_CONTRACT_ADDRESS,
   [RelayerType.LIDO]: configService.network.addresses.lidoRelayer,
   [RelayerType.BATCH]: configService.network.addresses.batchRelayer,
+  [RelayerType.ERC4626]: configService.network.addresses.erc4626Relayer,
 };
 
 /**
@@ -70,7 +72,7 @@ export default function useRelayerApproval(relayerType: RelayerType) {
    */
   async function signRelayerApproval(): Promise<void> {
     const Relayer = getRelayer();
-    const relayerAddress = relayerAddressMap[relayerType];
+    const relayerAddress = relayerAddressMap[relayerType] || '';
     const signer = getSigner();
     const signerAddress = await signer.getAddress();
     const signature = await Relayer.signRelayerApproval(

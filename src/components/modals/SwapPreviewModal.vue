@@ -277,6 +277,11 @@ const cowswapRelayerApproval = useRelayerApprovalTx(
 
 const lidoRelayerApproval = useRelayerApprovalTx(RelayerType.LIDO, isStETHSwap);
 
+const erc4626RelayerApproval = useRelayerApprovalTx(
+  RelayerType.ERC4626,
+  ref(true)
+);
+
 const pools = computed<SubgraphPoolBase[]>(() => {
   return props.swapping.sor.pools.value;
 });
@@ -298,6 +303,12 @@ const requiresCowswapRelayerApproval = computed(
 const requiresLidoRelayerApproval = computed(
   () =>
     props.swapping.isBalancerSwap.value && !lidoRelayerApproval.isUnlocked.value
+);
+
+const requiresErc4626RelayerApproval = computed(
+  () =>
+    props.swapping.isBalancerSwap.value &&
+    !erc4626RelayerApproval.isUnlocked.value
 );
 
 const showBatchRelayerApprovalStep = computed(
@@ -323,11 +334,21 @@ const showLidoRelayerApprovalStep = computed(
       lidoRelayerApproval.approving.value)
 );
 
+const showErc4626RelayerApprovalStep = computed(
+  () =>
+    !props.swapping.isJoinExitSwap.value &&
+    (requiresErc4626RelayerApproval.value ||
+      erc4626RelayerApproval.init.value ||
+      erc4626RelayerApproval.approved.value ||
+      erc4626RelayerApproval.approving.value)
+);
+
 const requiresApproval = computed(
   () =>
     requiresBatchRelayerApproval.value ||
     requiresCowswapRelayerApproval.value ||
-    requiresLidoRelayerApproval.value
+    requiresLidoRelayerApproval.value ||
+    requiresErc4626RelayerApproval.value
 );
 
 const showPriceUpdateError = computed(
@@ -340,6 +361,8 @@ const actions = computed((): TransactionActionInfo[] => {
 
   if (showCowswapRelayerApprovalStep.value) {
     actions.push(cowswapRelayerApproval.action.value);
+  } else if (showErc4626RelayerApprovalStep.value) {
+    actions.push(erc4626RelayerApproval.action.value);
   } else if (showLidoRelayerApprovalStep.value) {
     actions.push(lidoRelayerApproval.action.value);
   } else if (showBatchRelayerApprovalStep.value) {

@@ -10,6 +10,7 @@ const contracts: Contracts = {
   vault: telos.Vault,
   weightedPoolFactory: telos.WeightedPoolFactory,
   stablePoolFactory: telos.ComposableStablePoolFactory,
+  erc4626Relayer: '0x1cC9c95e86656208D815b901859916Ab62920cf4',
   lidoRelayer: '',
   balancerHelpers: telos.BalancerHelpers,
   balancerQueries: telos.BalancerQueries,
