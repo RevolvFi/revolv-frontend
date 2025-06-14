@@ -46,6 +46,9 @@ export async function convertERC4626Wrap(
   { amount, isWrap }: ConversionParams
 ) {
   try {
+    console.log('wrapper', wrapper);
+    console.log('isWrap', isWrap);
+    console.log('amount', amount.toString());
     const rateProvider = new Contract(
       getRateProviderAddress(wrapper),
       ['function getRate() external view returns (uint256)'],
@@ -53,8 +56,16 @@ export async function convertERC4626Wrap(
     );
 
     const rate = await rateProvider.getRate();
-
-    return isWrap ? amount.mul(ONE).div(rate) : amount.mul(rate).div(ONE);
+    console.log('rate', rate.toString());
+    console.log(
+      'isWrap ? amount.mul(ONE).div(rate) : amount.mul(rate).div(ONE)',
+      isWrap
+        ? amount.mul(ONE).div(rate).toString()
+        : amount.mul(rate).div(ONE).toString()
+    );
+    return isWrap
+      ? amount.mul(ONE).div(rate)
+      : amount.mul(rate).div(ONE).toString();
   } catch (error) {
     throw new Error('Failed to convert to ERC4626 wrapper', { cause: error });
   }
@@ -105,30 +116,63 @@ export const erc4626PoolJoin = async (
     throw new Error(`Pool ${pool.id} is not configured as an ERC4626 pool`);
   }
 
-  const tokenAddresses = tokensIn.map(token => token.toLowerCase());
-
+  // First convert all underlying token amounts to wrapper amounts
   const estimatedWrapperAmounts = await Promise.all(
     erc4626Pool.wrappers.map(async (wrapper, index) => {
       const underlyingToken = erc4626Pool.underlying[index];
-      const tokenIndex = tokenAddresses.indexOf(underlyingToken);
-      return convertERC4626Wrap(wrapper, {
+      // Check if the input token is either the wrapper or the underlying token
+      const tokenIndex = tokensIn.findIndex(
+        t => isSameAddress(t, wrapper) || isSameAddress(t, underlyingToken)
+      );
+      console.log('Wrapper conversion:', {
+        wrapper,
+        underlyingToken,
+        tokenIndex,
+        amount: tokenIndex >= 0 ? amountsIn[tokenIndex] : undefined,
+        isSingleAssetJoin: tokensIn.length === 1,
+      });
+      if (
+        tokenIndex === -1 ||
+        !amountsIn[tokenIndex] ||
+        amountsIn[tokenIndex] === '0'
+      ) {
+        return '0';
+      }
+      const convertedAmount = await convertERC4626Wrap(wrapper, {
         amount: BigNumber.from(amountsIn[tokenIndex]),
         isWrap: true,
       });
+      console.log('Converted amount:', convertedAmount);
+      return convertedAmount;
     })
   );
+  console.log('estimatedWrapperAmounts', estimatedWrapperAmounts);
 
   // Create array of all amounts in correct order for pool tokens (excluding BPT)
   const allAmounts = erc4626Pool.tokensList
     .filter(token => token !== pool.address) // Exclude BPT
     .map(token => {
+      // Check if this is a wrapper token
       const wrapperIndex = erc4626Pool.wrappers.indexOf(token);
       if (wrapperIndex >= 0) {
-        return estimatedWrapperAmounts[wrapperIndex].toString(); // Wrapper tokens
+        const amount = estimatedWrapperAmounts[wrapperIndex]?.toString() || '0';
+        console.log('Wrapper token amount:', { token, amount });
+        return amount;
       }
-      const tokenIndex = tokenAddresses.indexOf(token);
-      return tokenIndex >= 0 ? amountsIn[tokenIndex] : '0'; // Non-wrapper tokens
+
+      // For non-wrapper tokens, check if we have a direct amount
+      const tokenIndex = tokensIn.indexOf(token);
+      if (tokenIndex >= 0 && amountsIn[tokenIndex]) {
+        const amount = amountsIn[tokenIndex];
+        console.log('Non-wrapper token amount:', { token, amount });
+        return amount;
+      }
+
+      console.log('Zero amount for token:', token);
+      return '0';
     });
+
+  console.log('allAmounts', allAmounts);
 
   // Call SDK to get expected output
   const { expectedOut, minOut, priceImpact } = await sdk.pools.generalisedJoin(
@@ -151,16 +195,26 @@ export const erc4626PoolJoin = async (
   );
 
   // Create wrapper calls with original order of chainedReferences
-  const wrapperCalls = erc4626Pool.wrappers.map((address, index) => {
-    const tokenIndex = tokenAddresses.indexOf(erc4626Pool.underlying[index]);
-    return Relayer.encodeWrapErc4626({
-      wrappedToken: address,
-      sender: signerAddress,
-      recipient: signerAddress,
-      amount: amountsIn[tokenIndex],
-      outputReference: chainedReferences[index],
-    });
-  });
+  const wrapperCalls = erc4626Pool.wrappers
+    .map((address, index) => {
+      const tokenIndex = tokensIn.indexOf(erc4626Pool.underlying[index]);
+      // Skip if this is a single asset join with a non-wrapper token
+      if (
+        tokenIndex === -1 ||
+        !amountsIn[tokenIndex] ||
+        amountsIn[tokenIndex] === '0'
+      ) {
+        return null;
+      }
+      return Relayer.encodeWrapErc4626({
+        wrappedToken: address,
+        sender: signerAddress,
+        recipient: signerAddress,
+        amount: amountsIn[tokenIndex],
+        outputReference: chainedReferences[index],
+      });
+    })
+    .filter((call): call is string => call !== null); // Type guard to ensure string[]
 
   // Get non-wrapper tokens (excluding BPT)
   const nonWrapperTokens = erc4626Pool.tokensList.filter(
@@ -190,19 +244,21 @@ export const erc4626PoolJoin = async (
     }
     const wrapperIndex = erc4626Pool.wrappers.indexOf(token);
     if (wrapperIndex >= 0) {
-      return chainedReferences[wrapperIndex]; // Use reference for wrapper tokens
+      // Only use reference if we actually have a wrapper call for this token
+      return wrapperCalls[wrapperIndex] ? chainedReferences[wrapperIndex] : '0';
     }
-    const tokenIndex = tokenAddresses.indexOf(token);
-    return tokenIndex >= 0 ? amountsIn[tokenIndex] : '0'; // Use actual amount for non-wrapper tokens
+    const tokenIndex = tokensIn.indexOf(token);
+    return tokenIndex >= 0 ? amountsIn[tokenIndex] : '0';
   });
 
   // For userData, we always exclude BPT from the amounts array
   const sortedAmountsWithoutBpt = baseTokens.map(token => {
     const wrapperIndex = erc4626Pool.wrappers.indexOf(token);
     if (wrapperIndex >= 0) {
-      return chainedReferences[wrapperIndex];
+      // Only use reference if we actually have a wrapper call for this token
+      return wrapperCalls[wrapperIndex] ? chainedReferences[wrapperIndex] : '0';
     }
-    const tokenIndex = tokenAddresses.indexOf(token);
+    const tokenIndex = tokensIn.indexOf(token);
     return tokenIndex >= 0 ? amountsIn[tokenIndex] : '0';
   });
 
@@ -249,7 +305,7 @@ export const erc4626PoolJoin = async (
 
   const encodedJoinPoolCall = Relayer.encodeJoinPool(joinPoolCall);
 
-  const encodedCalls = [...wrapperCalls, encodedJoinPoolCall];
+  const encodedCalls: string[] = [...wrapperCalls, encodedJoinPoolCall];
 
   if (relayerSignature) {
     const relayerCall = Relayer.encodeSetRelayerApproval(

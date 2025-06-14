@@ -54,10 +54,11 @@ export class Erc4626JoinHandler implements JoinPoolHandler {
 
       return parseFixed(value || '0', token.decimals).toString();
     });
-
+    console.log('evmAmountsIn', evmAmountsIn);
     const tokenAddresses: string[] = amountsIn.map(({ address }) =>
       this.formatTokenAddress(address)
     );
+    console.log('tokenAddresses', tokenAddresses);
     const signerAddress = await signer.getAddress();
     const slippage = slippageBsp.toString();
     // const poolId = this.pool.value.id;

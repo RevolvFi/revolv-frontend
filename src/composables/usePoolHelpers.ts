@@ -855,6 +855,10 @@ export function usePoolHelpers(pool: Ref<AnyPool> | Ref<undefined>) {
     (): boolean => !!pool.value && includesWstEth(pool.value.tokensList) // && isMainnet.value
   );
 
+  const isErc4626Pool = computed(
+    (): boolean => !!pool.value && isErc4626(pool.value)
+  );
+
   const poolJoinTokens = computed((): string[] =>
     pool.value ? joinTokens(pool.value) : []
   );
@@ -903,6 +907,7 @@ export function usePoolHelpers(pool: Ref<AnyPool> | Ref<undefined>) {
     isDeprecatedPool,
     isNewPoolAvailable,
     poolJoinTokens,
+    isErc4626Pool,
     // methods
     isStable,
     isMetaStable,
@@ -920,6 +925,7 @@ export function usePoolHelpers(pool: Ref<AnyPool> | Ref<undefined>) {
     orderedTokenAddresses,
     orderedPoolTokens,
     joinTokens,
+    isErc4626,
   };
 }
 

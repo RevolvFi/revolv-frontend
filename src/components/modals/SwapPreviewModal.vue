@@ -279,7 +279,7 @@ const lidoRelayerApproval = useRelayerApprovalTx(RelayerType.LIDO, isStETHSwap);
 
 const erc4626RelayerApproval = useRelayerApprovalTx(
   RelayerType.ERC4626,
-  ref(true)
+  ref(false)
 );
 
 const pools = computed<SubgraphPoolBase[]>(() => {

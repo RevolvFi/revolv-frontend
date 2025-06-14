@@ -251,6 +251,7 @@ export const joinPoolProvider = (
   );
 
   const joinHandlerType = computed((): JoinHandler => {
+    console.log('isSingleAssetJoin', isSingleAssetJoin.value);
     if (isErc4626Pool.value) {
       return JoinHandler.Erc4626;
     }

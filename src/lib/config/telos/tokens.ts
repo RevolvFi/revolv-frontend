@@ -62,8 +62,8 @@ const tokens: TokenConstants = {
     // USDC
     '0x8d97cea50351fb4329d591682b148d43a0c3611b':
       '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-    '0xd102ce6a4db07d247fcc28f366a623df0938ca9e':
-      '0x7825e833d495f3d1c28872415a4aee339d26ac88',
+    // '0xd102ce6a4db07d247fcc28f366a623df0938ca9e':
+    //   '0x7825e833d495f3d1c28872415a4aee339d26ac88',
   },
 };
 

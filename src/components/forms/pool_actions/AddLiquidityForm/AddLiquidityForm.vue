@@ -48,6 +48,7 @@ const {
   isDeepPool,
   isPreMintedBptPool,
   poolJoinTokens,
+  isErc4626Pool,
 } = usePoolHelpers(toRef(props, 'pool'));
 const { veBalTokenInfo } = useVeBal();
 const { isWalletReady, startConnectWithInjectedProvider, isMismatchedNetwork } =
@@ -106,7 +107,8 @@ const joinTokensWithBalance = computed<string[]>(() => {
     // For other tokens, check if user has balance
     return address ? includesAddress(tokensWithBalance.value, address) : false;
   });
-  if (shouldAddNativeAsset) {
+  // Only add native asset if it's not an ERC4626 pool
+  if (shouldAddNativeAsset && !isErc4626Pool.value) {
     joinTokens.push(nativeAsset.address);
   }
   return joinTokens;
@@ -228,7 +230,9 @@ watch(
 
     <MissingPoolTokensAlert
       v-if="!isSingleAssetJoin"
-      :showSingleTokenSuggestion="isDeepPool && isPreMintedBptPool"
+      :showSingleTokenSuggestion="
+        (isDeepPool || isErc4626Pool) && isPreMintedBptPool
+      "
       :poolTokensWithBalance="joinTokensWithBalance"
       :poolTokensWithoutBalance="joinTokensWithoutBalance"
     />
