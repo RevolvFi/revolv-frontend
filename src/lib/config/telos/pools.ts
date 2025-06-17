@@ -16,7 +16,9 @@ const pools: Pools = {
   DynamicFees: {
     Gauntlet: [],
   },
-  BlockList: [''],
+  BlockList: [
+    '0x7549ed894be102568e482a523f648f25f443a0f2000000000000000000000012',
+  ],
   IncludedPoolTypes: [
     'Weighted',
     'Stable',
@@ -38,7 +40,7 @@ const pools: Pools = {
       // '0xf790d27623c78780f7a6448cbc70024fdf34ce0f00000000000000000000000f', // S-USDM-USDC.e-USDT
       // '0x0de0a7139287d7a5c4355872da97aa10e18116b500000000000000000000000e', // S-USDC.e-USDT
       '0x167c36cd8c47cbac4555fb84b96fb4a632b2c2d4000000000000000000000011', // S-woUSDC.e-woUSDT
-      '0x7549ed894be102568e482a523f648f25f443a0f2000000000000000000000012', // S-STLOS-woWTLOS
+      '0x1a663197ade0f6cc259fd8418d9fe2d4a7dd05a5000000000000000000000014', // S-STLOS-woWTLOS
     ],
   },
   Investment: {
@@ -68,7 +70,6 @@ const pools: Pools = {
     AllowList: [
       '0x61fc76a676ef4a4692d811b6c102edcf9e8c4c3b00010000000000000000000d', //S-40WBTC-40WETH-20USDC.e
       '0x167c36cd8c47cbac4555fb84b96fb4a632b2c2d4000000000000000000000011', // S-woUSDC.e-woUSDT
-      '0x7549ed894be102568e482a523f648f25f443a0f2000000000000000000000012', // S-STLOS-woWTLOS
       '0xcf6f341edc35b4554b823be127956a37eeb9ac8d000200000000000000000013', // S-50USDC.e-50STLOS
     ],
   },
@@ -80,7 +81,7 @@ const pools: Pools = {
         },
       },
     },
-    '0x7549ed894be102568e482a523f648f25f443a0f2000000000000000000000012': {
+    '0x1a663197ade0f6cc259fd8418d9fe2d4a7dd05a5000000000000000000000014': {
       features: {
         [PoolFeature.YieldAccelerated]: {
           featureProtocols: [Protocol.Meridian],
@@ -114,7 +115,7 @@ const pools: Pools = {
         '0x738471f8cb40aefc54a95e08c574619495958e31',
       ],
     }, // S-woUSDC.e-woUSDT
-    '0x7549ed894be102568e482a523f648f25f443a0f2000000000000000000000012': {
+    '0x1a663197ade0f6cc259fd8418d9fe2d4a7dd05a5000000000000000000000014': {
       underlying: [
         '0xd102ce6a4db07d247fcc28f366a623df0938ca9e', // WTLOS
       ],
@@ -122,7 +123,7 @@ const pools: Pools = {
         '0xd9d50bc52061bb29045da753776b1367fa6e3ad0', // woWTLOS
       ],
       tokensList: [
-        '0x7549ed894be102568e482a523f648f25f443a0f2',
+        '0x1a663197ade0f6cc259fd8418d9fe2d4a7dd05a5',
         '0xb4b01216a5bc8f1c8a33cd990a1239030e60c905',
         '0xd9d50bc52061bb29045da753776b1367fa6e3ad0',
       ],

@@ -46,26 +46,13 @@ export async function convertERC4626Wrap(
   { amount, isWrap }: ConversionParams
 ) {
   try {
-    console.log('wrapper', wrapper);
-    console.log('isWrap', isWrap);
-    console.log('amount', amount.toString());
     const rateProvider = new Contract(
       getRateProviderAddress(wrapper),
       ['function getRate() external view returns (uint256)'],
       rpcProviderService.jsonProvider
     );
-
     const rate = await rateProvider.getRate();
-    console.log('rate', rate.toString());
-    console.log(
-      'isWrap ? amount.mul(ONE).div(rate) : amount.mul(rate).div(ONE)',
-      isWrap
-        ? amount.mul(ONE).div(rate).toString()
-        : amount.mul(rate).div(ONE).toString()
-    );
-    return isWrap
-      ? amount.mul(ONE).div(rate)
-      : amount.mul(rate).div(ONE).toString();
+    return isWrap ? amount.mul(ONE).div(rate) : amount.mul(rate).div(ONE);
   } catch (error) {
     throw new Error('Failed to convert to ERC4626 wrapper', { cause: error });
   }

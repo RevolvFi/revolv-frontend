@@ -50,6 +50,8 @@ import { useApp } from '@/composables/useApp';
 import { POOLS } from '@/constants/pools';
 import { captureBalancerException } from '@/lib/utils/errors';
 import { configService } from '@/services/config/config.service';
+import useTokenApprovalActions from '@/composables/approvals/useTokenApprovalActions';
+import { ApprovalAction } from '@/composables/approvals/types';
 
 /**
  * TYPES
@@ -90,6 +92,7 @@ export const exitPoolProvider = (
   });
   const propAmountsOut = ref<AmountOut[]>([]);
   const isTxPayloadReady = ref<boolean>(false);
+  const wrapperApprovalActions = ref<TransactionActionInfo[]>([]);
 
   /**
    * SERVICES
@@ -107,6 +110,7 @@ export const exitPoolProvider = (
   const { account, getSigner } = useWeb3();
   const { relayerSignature, relayerApprovalAction, relayerApprovalTx } =
     useRelayerApproval(RelayerType.BATCH);
+  const { getTokenApprovalActions } = useTokenApprovalActions();
 
   const debounceQueryExit = debounce(queryExit, debounceQueryExitMillis);
   const debounceGetSingleAssetMax = debounce(
@@ -189,9 +193,51 @@ export const exitPoolProvider = (
       !(relayerApprovalTx.isUnlocked.value || relayerSignature.value)
   );
 
-  const approvalActions = computed((): TransactionActionInfo[] =>
-    shouldSignRelayer.value ? [relayerApprovalAction.value] : []
+  // Watch for pool changes to update wrapper approval actions
+  watch(
+    () => pool.value,
+    async newPool => {
+      if (isErc4626Pool.value) {
+        const erc4626Pool = configService.network.pools?.Erc4626?.[newPool.id];
+        if (erc4626Pool) {
+          // Create approval actions for each wrapper
+          const approvalActionsPromises = erc4626Pool.wrappers.map(
+            async wrapper => {
+              const amountsToApprove = [
+                {
+                  address: wrapper,
+                  amount: '1', // Set to 0 since we're using forceMax: true for unlimited approval
+                },
+              ];
+
+              return getTokenApprovalActions({
+                amountsToApprove,
+                spender: configService.network.addresses.vault, // Approve the Balancer Vault
+                actionType: ApprovalAction.Unwrapping,
+                forceMax: true,
+              });
+            }
+          );
+
+          // Wait for all approval actions to be created
+          const allApprovalActions = await Promise.all(approvalActionsPromises);
+          // Flatten the array of arrays into a single array
+          wrapperApprovalActions.value = allApprovalActions.flat();
+        }
+      } else {
+        wrapperApprovalActions.value = [];
+      }
+    },
+    { immediate: true }
   );
+
+  const approvalActions = computed((): TransactionActionInfo[] => {
+    const actions: TransactionActionInfo[] = [];
+    if (shouldSignRelayer.value) {
+      actions.push(relayerApprovalAction.value);
+    }
+    return [...actions, ...wrapperApprovalActions.value];
+  });
 
   const canSwapExit = computed(
     (): boolean => isDeep(pool.value) && isPreMintedBptType(pool.value.poolType)

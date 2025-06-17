@@ -18,6 +18,7 @@ import {
 import ConfigService, { configService } from '@/services/config/config.service';
 import { lidoRelayerService } from '@/services/contracts/lido-relayer.service';
 import { vaultService } from '@/services/contracts/vault.service';
+import { erc4626RelayerService } from '@/services/contracts/erc4626-relayer.service';
 
 import { walletService as walletServiceInstance } from '@/services/web3/wallet.service';
 
@@ -46,7 +47,8 @@ export class SwapService {
     tokenIn: SwapToken,
     tokenOut: SwapToken,
     swaps: SwapV2[],
-    tokenAddresses: string[]
+    tokenAddresses: string[],
+    isERC4626Swap?: boolean
   ): Promise<TransactionResponse> {
     if (isStETH(tokenIn.address, tokenOut.address)) {
       return this.lidoBatchSwap(tokenIn, tokenOut, swaps, tokenAddresses);
@@ -88,6 +90,16 @@ export class SwapService {
             ? tokenOut.amount.toString()
             : tokenIn.amount.toString();
 
+        if (isERC4626Swap) {
+          return erc4626RelayerService.swap(
+            single,
+            funds,
+            limit,
+            this.transactionDeadline.value,
+            overrides
+          );
+        }
+
         return vaultService.swap(
           single,
           funds,
@@ -102,6 +114,18 @@ export class SwapService {
         [tokenOut],
         tokenAddresses
       );
+
+      if (isERC4626Swap) {
+        return erc4626RelayerService.batchSwap(
+          swapKind,
+          swaps,
+          tokenAddresses,
+          funds,
+          limits,
+          this.transactionDeadline.value,
+          overrides
+        );
+      }
 
       return vaultService.batchSwap(
         swapKind,

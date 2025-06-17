@@ -24,6 +24,7 @@ import { isStETH } from '@/lib/utils/balancer/lido';
 import { getWrapAction, WrapType } from '@/lib/utils/balancer/wrapper';
 import useWeb3 from '@/services/web3/useWeb3';
 import { TransactionActionInfo } from '@/types/transactions';
+import { configService } from '@/services/config/config.service';
 
 const PRICE_UPDATE_THRESHOLD = 0.02;
 
@@ -117,7 +118,6 @@ const summary = computed(() => {
   };
 
   const exactIn = props.swapping.exactIn.value;
-
   const tokenIn = props.swapping.tokenIn.value;
   const tokenOut = props.swapping.tokenOut.value;
 
@@ -260,6 +260,33 @@ const isStETHSwap = computed(
     wrapType.value === WrapType.NonWrap
 );
 
+const isERC4626Swap = computed(() => {
+  const sorResult = props.swapping.sor.sorReturn.value.result;
+  if (!sorResult || !sorResult.tokenAddresses) return false;
+
+  const tokenIn = props.swapping.tokenIn.value.address.toLowerCase();
+  const tokenOut = props.swapping.tokenOut.value.address.toLowerCase();
+  const tokenAddresses = sorResult.tokenAddresses.map(a => a.toLowerCase());
+
+  // Helper to check if a token has a wrapper in config
+  function hasWrapper(address: string) {
+    const wrappers = configService.network.tokens.Wrappers || [];
+    return wrappers.some(w => w.underlying.toLowerCase() === address);
+  }
+
+  const tokenInNeedsWrapper =
+    !tokenAddresses.includes(tokenIn) && hasWrapper(tokenIn);
+  const tokenOutNeedsWrapper =
+    !tokenAddresses.includes(tokenOut) && hasWrapper(tokenOut);
+
+  console.log('isERC4626Swap', {
+    tokenInNeedsWrapper,
+    tokenOutNeedsWrapper,
+  });
+
+  return tokenInNeedsWrapper || tokenOutNeedsWrapper;
+});
+
 const { getTokenApprovalActions } = useTokenApprovalActions();
 const tokenApprovalActions = ref<TransactionActionInfo[]>([]);
 
@@ -279,7 +306,7 @@ const lidoRelayerApproval = useRelayerApprovalTx(RelayerType.LIDO, isStETHSwap);
 
 const erc4626RelayerApproval = useRelayerApprovalTx(
   RelayerType.ERC4626,
-  ref(false)
+  isERC4626Swap
 );
 
 const pools = computed<SubgraphPoolBase[]>(() => {

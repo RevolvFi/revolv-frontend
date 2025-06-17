@@ -27,7 +27,8 @@ export function useSwapper() {
   async function swapIn(
     sorReturn: SorReturn,
     tokenInAmount: BigNumber,
-    tokenOutAmountMin: BigNumber
+    tokenOutAmountMin: BigNumber,
+    isERC4626Swap?: boolean
   ): Promise<TransactionResponse> {
     const tokenInAddress = sorReturn.result.tokenIn;
     const tokenOutAddress = sorReturn.result.tokenOut;
@@ -49,14 +50,16 @@ export function useSwapper() {
       tokenIn,
       tokenOut,
       sorReturn.result.swaps,
-      sorReturn.result.tokenAddresses
+      sorReturn.result.tokenAddresses,
+      isERC4626Swap
     );
   }
 
   async function swapOut(
     sorReturn: SorReturn,
     tokenInAmountMax: BigNumber,
-    tokenOutAmount: BigNumber
+    tokenOutAmount: BigNumber,
+    isERC4626Swap?: boolean
   ): Promise<TransactionResponse> {
     const tokenInAddress = sorReturn.result.tokenIn;
     const tokenOutAddress = sorReturn.result.tokenOut;
@@ -77,7 +80,8 @@ export function useSwapper() {
       tokenIn,
       tokenOut,
       sorReturn.result.swaps,
-      sorReturn.result.tokenAddresses
+      sorReturn.result.tokenAddresses,
+      isERC4626Swap
     );
   }
 
