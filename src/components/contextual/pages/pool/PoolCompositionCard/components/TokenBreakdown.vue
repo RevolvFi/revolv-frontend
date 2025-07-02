@@ -137,7 +137,9 @@ async function addTokenToWallet(tokenAddress: string) {
           placement="bottom"
           iconName="plus-circle"
           iconSize="md"
-        />
+        >
+          <BalIcon name="plus-circle" size="md" />
+        </BalTooltip>
       </button>
     </div>
     <div v-if="isWeighted" class="justify-self-end">

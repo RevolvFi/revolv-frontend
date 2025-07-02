@@ -58,7 +58,7 @@ interface AddressValue {
 type Addresses = Record<string, AddressValue>;
 
 async function generate() {
-  const network = 'artela';
+  const network = 'telos';
 
   console.log(`Generating contract addresses for network ${network}...`);
   const addresses: Addresses = require(`./addresses-${network}.json`);

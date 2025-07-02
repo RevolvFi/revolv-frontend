@@ -327,13 +327,6 @@ export default function useSwapping(
       console.log('[useSwapping] Using sor handler');
       await sor.handleAmountChange();
     }
-
-    console.log('[useSwapping] handleAmountChange end', {
-      tokenInAmountInput: tokenInAmountInput.value,
-      tokenOutAmountInput: tokenOutAmountInput.value,
-      exactIn: exactIn.value,
-      swapRoute: swapRoute.value,
-    });
   }
 
   // WATCHERS

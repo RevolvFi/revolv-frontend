@@ -16,9 +16,8 @@ import {
 } from '@/constants/tokens';
 import { getBalancerSDK } from '@/dependencies/balancer-sdk';
 import { captureBalancerException } from '@/lib/utils/errors';
-import { erc4626RelayerService } from '@/services/contracts/erc4626-relayer.service';
 import { convertERC4626Wrap } from '@/lib/utils/balancer/erc4626Wrappers';
-import { walletService } from '@/services/web3/wallet.service';
+import { configService } from '@/services/config/config.service';
 
 const SWAP_COST = import.meta.env.VITE_SWAP_COST || '100000';
 
@@ -159,21 +158,14 @@ export class SorManager {
       forceRefresh: true,
     };
 
-    // Get ERC4626 vaults for both tokens
-    const erc4626Relayer = erc4626RelayerService;
-    const vaultsIn = (await walletService.txBuilder.contract.callStatic({
-      contractAddress: erc4626Relayer.address,
-      abi: erc4626Relayer.abi,
-      action: 'getVaultsForAsset',
-      params: [v2TokenIn],
-    })) as string[];
-
-    const vaultsOut = (await walletService.txBuilder.contract.callStatic({
-      contractAddress: erc4626Relayer.address,
-      abi: erc4626Relayer.abi,
-      action: 'getVaultsForAsset',
-      params: [v2TokenOut],
-    })) as string[];
+    // Get wrappers from config for both tokens
+    const wrappers = configService.network.tokens.Wrappers || [];
+    const vaultsIn = wrappers
+      .filter(w => w.underlying.toLowerCase() === v2TokenIn.toLowerCase())
+      .map(w => w.wrapper);
+    const vaultsOut = wrappers
+      .filter(w => w.underlying.toLowerCase() === v2TokenOut.toLowerCase())
+      .map(w => w.wrapper);
 
     console.log('[SorManager] Found vaults', {
       vaultsIn,
