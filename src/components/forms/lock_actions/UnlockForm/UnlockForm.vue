@@ -8,8 +8,10 @@ import { useTokens } from '@/providers/tokens.provider';
 import useVeBal from '@/composables/useVeBAL';
 import { Pool } from '@/services/pool/types';
 import useWeb3 from '@/services/web3/useWeb3';
+import { configService } from '@/services/config/config.service';
 
 import MyVeBAL from '../LockForm/components/MyVeBAL.vue';
+import MyVeRvlv from '../LockForm/components/MyVeRvlv.vue';
 import VeBalUnlockForm from './components/VeBalUnlockForm/VeBalUnlockForm.vue';
 
 /**
@@ -18,6 +20,14 @@ import VeBalUnlockForm from './components/VeBalUnlockForm/VeBalUnlockForm.vue';
 const { getToken } = useTokens();
 const { isWalletReady } = useWeb3();
 const { lockablePoolId } = useVeBal();
+
+/**
+ * COMPUTED
+ */
+// Check if we should lock RVLV tokens directly (for Revolv) or LP tokens (for other networks)
+const shouldLockRvlvDirectly = computed(() => {
+  return configService.network.chainId === 40; // Telos chain ID
+});
 
 /**
  * QUERIES
@@ -71,6 +81,10 @@ const isLoading = computed(() =>
 
     <template #gutterRight>
       <BalLoadingBlock v-if="isLoading" class="h-64" />
+      <MyVeRvlv
+        v-else-if="shouldLockRvlvDirectly"
+        :veBalLockInfo="veBalLockInfo"
+      />
       <MyVeBAL v-else :veBalLockInfo="veBalLockInfo" />
     </template>
   </Col3Layout>

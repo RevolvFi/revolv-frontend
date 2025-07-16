@@ -9,7 +9,7 @@ import useConfig from '@/composables/useConfig';
 import useDarkMode from '@/composables/useDarkMode';
 import { sleep } from '@/lib/utils';
 import useWeb3 from '@/services/web3/useWeb3';
-import useNetwork, { veSymbol, isTelos } from '@/composables/useNetwork';
+import useNetwork, { veSymbol } from '@/composables/useNetwork';
 import { Goals, trackGoal } from '@/composables/useFathom';
 import TwitterIcon from '@/components/_global/icons/brands/TwitterIcon.vue';
 import DiscordIcon from '@/components/_global/icons/brands/DiscordIcon.vue';
@@ -75,17 +75,17 @@ const navLinks = [
   },
   {
     label: veSymbol.value,
-    path: `/${networkSlug}/vesymm`,
+    path: `/${networkSlug}/vervlv`,
     goal: Goals.ClickNavVebal,
     hide: !isVeBalSupported.value,
   },
-  {
-    label: 'Telos V1',
-    path: 'https://telos-v1.symm.fi',
-    goal: Goals.ClickNavPortfolio,
-    hide: !isTelos.value,
-    external: true,
-  },
+  // {
+  //   label: 'Telos V1',
+  //   path: 'https://telos-v1.symm.fi',
+  //   goal: Goals.ClickNavPortfolio,
+  //   hide: !isTelos.value,
+  //   external: true,
+  // },
   // {
   //   label: 'Airdrop',
   //   path: `/${networkSlug}/airdrop`,
@@ -110,7 +110,7 @@ const navLinks = [
 const socialLinks = {
   TwitterIcon: {
     component: TwitterIcon,
-    url: 'https://twitter.com/0xSymmetric',
+    url: 'https://x.com/revolvfi',
   },
   DiscordIcon: {
     component: DiscordIcon,
@@ -118,7 +118,7 @@ const socialLinks = {
   },
   MediumIcon: {
     component: MediumIcon,
-    url: 'https://medium.com/@Symmetric.finance',
+    url: 'https://medium.com/@Revolv.finance',
   },
 
   // YoutubeIcon: {
@@ -127,7 +127,7 @@ const socialLinks = {
   // },
 
   GithubIcon: {
-    url: 'https://github.com/centfinance/',
+    url: 'https://github.com/revolvfi/',
     component: GithubIcon,
   },
 };
@@ -172,16 +172,16 @@ watch(blockNumber, async () => {
         v-for="link in navLinks"
         :key="link.label"
         class="side-bar-link"
-        @click="link.hide ? null : navTo(link.path, link.goal, link.external)"
+        @click="link.hide ? null : navTo(link.path, link.goal, false)"
       >
         <div class="flex items-center">
           {{ link.hide ? '' : link.label }}
-          <BalIcon
+          <!-- <BalIcon
             v-if="link.external"
             name="arrow-up-right"
             size="xs"
             class="ml-1"
-          />
+          /> -->
         </div>
       </div>
     </div>

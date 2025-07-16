@@ -210,7 +210,7 @@ onMounted(async () => {
         class="col-span-7 p-4 md:px-8 lg:px-0 w-full h-56"
       />
       <div v-if="!loading" class="col-span-7 gap-y-4 p-4 px-4 md:px-8 lg:px-0">
-        <h2 class="mb-4 font-bold">Blaze trails with Symmetric x Taiko</h2>
+        <h2 class="mb-4 font-bold">Blaze trails with Revolv x Taiko</h2>
         <div class="text-white rounded-lg shadow-md">
           <h2 class="mb-4 text-2xl font-bold">How it Works</h2>
           <p class="mb-2">
@@ -242,7 +242,7 @@ onMounted(async () => {
             Claim your
             <span class="font-bold symm-points-gradient">SYMM Points</span>
             anytime and redeem them during our exciting
-            <span class="font-bold">Taiko Symmetric token launch</span>.
+            <span class="font-bold">Taiko Revolv token launch</span>.
           </p>
         </div>
 

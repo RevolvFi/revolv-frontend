@@ -56,8 +56,8 @@ withDefaults(defineProps<Props>(), {
 .pill {
   @apply flex;
   @apply relative;
-  @apply my-1;
-  @apply max-h-10 items-center;
+  @apply my-0.5;
+  @apply max-h-8 items-center;
 }
 
 .pill::before {
@@ -82,7 +82,7 @@ withDefaults(defineProps<Props>(), {
 }
 
 .pill-text {
-  @apply px-2 py-1;
+  @apply px-1.5 py-0.5 text-sm;
 
   z-index: 1;
 }
@@ -96,11 +96,11 @@ withDefaults(defineProps<Props>(), {
 }
 
 .balance-indicator {
-  @apply w-3 h-3;
+  @apply w-2.5 h-2.5;
   @apply rounded-full border-2 border-white dark:border-gray-850 group-hover:border-gray-50
     dark:group-hover:border-gray-800;
   @apply bg-green-200 dark:bg-green-500;
-  @apply absolute top-0 right-0 -mt-1 -mr-2;
+  @apply absolute top-0 right-0 -mt-0.5 -mr-1.5;
 }
 
 .pill-hoverable:hover::before,

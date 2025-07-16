@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import useNumbers, { FNumFormats } from '@/composables/useNumbers';
+// import useNumbers from '@/composables/useNumbers';
 import { isVeBalPool, totalAprLabel } from '@/composables/usePoolHelpers';
 import { APR_THRESHOLD } from '@/constants/pools';
 import { bnum } from '@/lib/utils';
@@ -12,7 +12,7 @@ import VeBalBreakdown from './components/VeBalBreakdown.vue';
 import YieldBreakdown from './components/YieldBreakdown.vue';
 import { AprBreakdown } from '@symmetric-v3/sdk';
 import { hasStakingRewards } from '@/composables/useAPR';
-import { telosVotingPools } from '@/components/contextual/pages/vebal/LMVoting/testnet-voting-pools';
+import { telosVotingPools } from '@/components/contextual/pages/vebal/LMVoting/telos-voting-pools';
 import { configService } from '@/services/config/config.service';
 /**
  * TYPES
@@ -30,7 +30,7 @@ const props = defineProps<Props>();
 /**
  * COMPOSABLES
  */
-const { fNum } = useNumbers();
+// const { fNum } = useNumbers();
 
 /**
  * COMPUTED
@@ -109,7 +109,7 @@ const totalLabel = computed((): string => {
       </div>
       <div class="p-3 text-left">
         <!-- SWAP FEE APR -->
-        <div
+        <!-- <div
           class="flex items-center mb-1 whitespace-nowrap"
           data-testid="swap-fee-apr"
         >
@@ -117,7 +117,7 @@ const totalLabel = computed((): string => {
           <span class="ml-1 text-xs text-secondary">
             {{ $t('swapFeeAPR') }}
           </span>
-        </div>
+        </div> -->
 
         <!-- VeBal APR -->
         <VeBalBreakdown v-if="hasVebalAPR" :apr="apr?.protocolApr || 0" />

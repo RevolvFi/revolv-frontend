@@ -6,15 +6,32 @@ import useNetwork, {
 } from '@/composables/useNetwork';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
+// import { useRouter } from 'vue-router';
+import { configService } from '@/services/config/config.service';
 
 /**
  * COMPOSABLES
  */
 const { t } = useI18n();
-const router = useRouter();
+// const router = useRouter();
 
 const { veSymbol } = useNetwork();
+
+/**
+ * COMPUTED
+ */
+// Check if we should lock RVLV tokens directly (for Revolv) or LP tokens (for other networks)
+const shouldLockRvlvDirectly = computed(() => {
+  return configService.network.chainId === 40; // Telos chain ID
+});
+
+const currentVeSymbol = computed(() => {
+  return shouldLockRvlvDirectly.value ? 'veRVLV' : veSymbol;
+});
+
+// const lockTokenSymbol = computed(() => {
+//   return shouldLockRvlvDirectly.value ? 'RVLV' : 'LP';
+// });
 /**
  * COMPUTED
  */
@@ -27,14 +44,14 @@ const benefits = computed(() => [
 /**
  * METHODS
  */
-function navigateToGetVeBAL() {
-  router.push({
-    name: 'get-vesymm',
-    query: {
-      returnRoute: 'vesymm',
-    },
-  });
-}
+// function navigateToGetVeBAL() {
+//   router.push({
+//     name: 'get-vervlv',
+//     query: {
+//       returnRoute: 'vervlv',
+//     },
+//   });
+// }
 </script>
 
 <template>
@@ -43,10 +60,21 @@ function navigateToGetVeBAL() {
       <div
         class="py-8 lg:py-4 px-4 lg:px-8 2xl:px-0 xl:pt-0 max-w-md hero-text"
       >
-        <p class="font-medium eyebrow">{{ veSymbol }}</p>
+        <p class="font-medium eyebrow">{{ currentVeSymbol }}</p>
         <h1 class="mb-5 text-white title">
-          {{ $t('veBAL.hero.title') }}
+          {{
+            shouldLockRvlvDirectly
+              ? 'Lock RVLV to Get veRVLV'
+              : $t('veBAL.hero.title')
+          }}
         </h1>
+        <p class="mb-4 text-lg text-white">
+          {{
+            shouldLockRvlvDirectly
+              ? 'Lock your RVLV tokens to earn veRVLV and participate in governance'
+              : 'Lock your LP tokens to earn veBAL and participate in governance'
+          }}
+        </p>
         <ul>
           <li
             v-for="(benefit, i) in benefits"
@@ -57,9 +85,6 @@ function navigateToGetVeBAL() {
           </li>
         </ul>
         <div class="flex mt-6">
-          <BalBtn class="mr-3 hero-btn btn-gold" @click="navigateToGetVeBAL">
-            {{ $t('veBAL.hero.buttons.getVeBAL', { veSymbol }) }}
-          </BalBtn>
           <BalBtn
             tag="a"
             href="https://finance-symmetric.gitbook.io/symmetric-v3/tsymm-and-vtsymm"
@@ -130,7 +155,11 @@ function navigateToGetVeBAL() {
               :src="`images/icons/claims-header/vebal-${networkSlug}.svg`"
             />
             <p class="mt-2 font-semibold tip-label text-shadow">
-              {{ $t('claimHero.tipLabel.boost') }}
+              {{
+                shouldLockRvlvDirectly
+                  ? 'Lock RVLV'
+                  : $t('claimHero.tipLabel.boost')
+              }}
               <BalTooltip
                 iconSize="xs"
                 textAlign="left"
@@ -138,7 +167,11 @@ function navigateToGetVeBAL() {
                 iconClass="text-white"
                 width="60"
               >
-                {{ $t('claimHero.tips.boost', { veSymbol }) }}
+                {{
+                  shouldLockRvlvDirectly
+                    ? 'Lock your RVLV tokens to earn veRVLV'
+                    : $t('claimHero.tips.boost', { veSymbol: currentVeSymbol })
+                }}
               </BalTooltip>
             </p>
           </div>

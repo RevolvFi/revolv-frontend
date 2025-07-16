@@ -19,9 +19,9 @@ defineProps<Props>();
 
 function navigateToGetVeBAL() {
   router.push({
-    name: 'get-vesymm',
+    name: 'get-vervlv',
     query: {
-      returnRoute: 'vesymm',
+      returnRoute: 'vervlv',
     },
   });
 }
@@ -44,7 +44,7 @@ function navigateToGetVeBAL() {
             </BalBtn>
             <BalBtn
               tag="a"
-              href="https://medium.com/@Symmetric.Finance/introducing-tsymm-and-vtsymm-120bfe2d60c0"
+              href="https://medium.com/@Revolv.Finance/introducing-tsymm-and-vtsymm-120bfe2d60c0"
               target="_blank"
               rel="noreferrer"
               color="white"

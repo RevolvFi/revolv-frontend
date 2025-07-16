@@ -1,7 +1,7 @@
 <template>
   <div class="pb-4">
     <div class="subsection">
-      <h1>Symmetric Terms of Use</h1>
+      <h1>Revolv Terms of Use</h1>
       <p><em>Last updated: November 2022</em></p>
       <p>
         <em class="font-semibold">
@@ -21,16 +21,16 @@
     <div class="subsection">
       <h2>1. Overview</h2>
       <p>
-        This Symmetric Terms of Use document (“Terms” or “agreement”)
-        (“Symmetric ”, “we” and “us” refers to the Symmetric Foundation and its
-        subsidiary Symmetric OpCo Limited) covers the website, Symmetric
-        Protocol user-interface and free application (collectively “the Site”)
-        we own and administer, at times in conjunction with others, which
-        provides the ability to access the decentralized Symmetric Protocol.
-        Additionally, you can access the Symmetric Protocol through third-party
-        web or mobile interfaces. These Terms apply to you (“You” or “you”) as a
-        user of our Site including all the products, services, tools and
-        information, without limitation, made available on the Site.
+        This Revolv Terms of Use document (“Terms” or “agreement”) (“Revolv ”,
+        “we” and “us” refers to the Revolv Foundation and its subsidiary Revolv
+        OpCo Limited) covers the website, Revolv Protocol user-interface and
+        free application (collectively “the Site”) we own and administer, at
+        times in conjunction with others, which provides the ability to access
+        the decentralized Revolv Protocol. Additionally, you can access the
+        Revolv Protocol through third-party web or mobile interfaces. These
+        Terms apply to you (“You” or “you”) as a user of our Site including all
+        the products, services, tools and information, without limitation, made
+        available on the Site.
       </p>
       <p>
         You must be able to form a legally binding contract online either as an
@@ -45,15 +45,14 @@
       </p>
       <p>
         You are advised to periodically review these Terms so you understand any
-        changes to the Terms. Symmetric in its sole discretion, reserves the
-        right to make changes to our Terms. Changes are binding on users of the
-        Site and will take effect immediately upon posting. As a user, you agree
-        to be bound by any changes, variations, or modifications to our Terms
-        and your continued use of the Site shall constitute acceptance of any
-        such changes, revisions, variations, or modifications. When we make
-        changes, we will make the updated Terms available on the interface and
-        update the “Last Updated” date at the beginning of the Terms
-        accordingly.
+        changes to the Terms. Revolv in its sole discretion, reserves the right
+        to make changes to our Terms. Changes are binding on users of the Site
+        and will take effect immediately upon posting. As a user, you agree to
+        be bound by any changes, variations, or modifications to our Terms and
+        your continued use of the Site shall constitute acceptance of any such
+        changes, revisions, variations, or modifications. When we make changes,
+        we will make the updated Terms available on the interface and update the
+        “Last Updated” date at the beginning of the Terms accordingly.
       </p>
       <p>
         You accept such changes, by continuing to use the Site and by doing so
@@ -75,33 +74,33 @@
     <div class="subsection">
       <h2>2. Site</h2>
       <p>
-        As part of the Site, Symmetric provides access to a decentralized
-        finance application (“Application” or “Symmetric Protocol app”) on the
-        Ethereum blockchain, that allows swappers or liquidity providers of
-        Ethereum assets (“Cryptocurrency Assets”) to transact using smart
-        contracts (“Smart Contracts”). Use of the Symmetric Protocol may require
-        that you pay a fee, such as gas charges on the Ethereum network to
-        perform a transaction. You acknowledge and agree that Symmetric has no
-        control over any activities, transactions, the method of payment of any
-        transactions, or any actual processing of payments of transactions. You
-        must ensure that you have a sufficient balance to complete any
-        transaction on the Symmetric Protocol before initiating such
-        transaction. You should not take or refrain from taking any action based
-        on any information contained on the Site or any other available
-        information at any time. Before you make any legal, technical, or
-        financial decisions involving the Services, you should seek independent
-        professional advice from a licensed and qualified individual in the area
-        for which such advice would be appropriate.
+        As part of the Site, Revolv provides access to a decentralized finance
+        application (“Application” or “Revolv Protocol app”) on the Ethereum
+        blockchain, that allows swappers or liquidity providers of Ethereum
+        assets (“Cryptocurrency Assets”) to transact using smart contracts
+        (“Smart Contracts”). Use of the Revolv Protocol may require that you pay
+        a fee, such as gas charges on the Ethereum network to perform a
+        transaction. You acknowledge and agree that Revolv has no control over
+        any activities, transactions, the method of payment of any transactions,
+        or any actual processing of payments of transactions. You must ensure
+        that you have a sufficient balance to complete any transaction on the
+        Revolv Protocol before initiating such transaction. You should not take
+        or refrain from taking any action based on any information contained on
+        the Site or any other available information at any time. Before you make
+        any legal, technical, or financial decisions involving the Services, you
+        should seek independent professional advice from a licensed and
+        qualified individual in the area for which such advice would be
+        appropriate.
       </p>
       <p>
-        You acknowledge and agree that Symmetric has no control over any
-        transactions conducted through the Symmetric Protocol, the method of
+        You acknowledge and agree that Revolv has no control over any
+        transactions conducted through the Revolv Protocol, the method of
         payment of any transactions or any actual payments of transactions
         including use of any third-party services such as Metamask, or other
         wallet services. Likewise, you must ensure that you have a sufficient
-        balance of the applicable cryptocurrency tokens stored at your Symmetric
+        balance of the applicable cryptocurrency tokens stored at your Revolv
         Protocol-compatible wallet address (“Cryptocurrency Wallet”) to complete
-        any transaction on the Symmetric Protocol or the Ethereum network before
+        any transaction on the Revolv Protocol or the Ethereum network before
         initiating such transaction.
       </p>
     </div>
@@ -187,7 +186,7 @@
           unlawful;
         </li>
         <li>
-          Export, reexport, or transfer, directly or indirectly, any Symmetric
+          Export, reexport, or transfer, directly or indirectly, any Revolv
           technology in violation of applicable export laws or regulations;
         </li>
         <li>
@@ -201,13 +200,13 @@
         <li>
           Use the Site in any manner that could interfere with, disrupt,
           negatively affect, redirect or inhibit other users from fully enjoying
-          the Site or the Symmetric Protocol, or that could damage, disable,
-          overburden, or impair the functioning of the Site or the Symmetric
+          the Site or the Revolv Protocol, or that could damage, disable,
+          overburden, or impair the functioning of the Site or the Revolv
           Protocol in any manner;
         </li>
         <li>
           Attempt to circumvent or disable any content filtering techniques or
-          security measures that Symmetric employs on the Site, or attempt to
+          security measures that Revolv employs on the Site, or attempt to
           access any service or area of the Site that you are not authorized to
           access;
         </li>
@@ -246,21 +245,21 @@
       </h3>
       <ul>
         <li>
-          Losses while digital assets are being supplied to the Symmetric
-          Protocol and losses due to the fluctuation of prices of tokens in a
-          swapping pair or liquidity pool. Prices of digital currencies, tokens
-          and/or other digital assets fluctuate day by day or even minute by
-          minute. The value of your available balance could surge or drop
-          suddenly. Please note that there is a possibility that the price of
-          tokens could decrease to zero. Prices of tokens are prone to
-          significant fluctuations, for example, due to announced proposed
-          legislative acts, governmental restrictions, news related to cyber
-          crimes or other factors causing potentially excessive market
-          enthusiasm, disproportionate loss in confidence, or manipulation by
-          others in the market.
+          Losses while digital assets are being supplied to the Revolv Protocol
+          and losses due to the fluctuation of prices of tokens in a swapping
+          pair or liquidity pool. Prices of digital currencies, tokens and/or
+          other digital assets fluctuate day by day or even minute by minute.
+          The value of your available balance could surge or drop suddenly.
+          Please note that there is a possibility that the price of tokens could
+          decrease to zero. Prices of tokens are prone to significant
+          fluctuations, for example, due to announced proposed legislative acts,
+          governmental restrictions, news related to cyber crimes or other
+          factors causing potentially excessive market enthusiasm,
+          disproportionate loss in confidence, or manipulation by others in the
+          market.
         </li>
         <li>
-          Risks associated with accessing the Symmetric Protocol through third
+          Risks associated with accessing the Revolv Protocol through third
           party web or mobile interfaces. You are responsible for doing your own
           diligence on those interfaces to understand and accept the risks that
           use entails. You are also responsible for doing your own diligence on
@@ -271,13 +270,13 @@
           Risks associated with any Smart Contracts with which you interact.
         </li>
         <li>
-          Although Symmetric does not have access to your assets, you are
-          reminded and acknowledge that at any time, your access to your
-          Cryptocurrency Assets through third party wallet services, unrelated
-          to Symmetric or the Symmetric.Fi website, may be suspended or
-          terminated or there may be a delay in your access or use of your
-          Cryptocurrency Assets, which may result in the Cryptocurrency Assets
-          diminishing in value or you being unable to complete a Smart Contract.
+          Although Revolv does not have access to your assets, you are reminded
+          and acknowledge that at any time, your access to your Cryptocurrency
+          Assets through third party wallet services, unrelated to Revolv or the
+          Revolv.Fi website, may be suspended or terminated or there may be a
+          delay in your access or use of your Cryptocurrency Assets, which may
+          result in the Cryptocurrency Assets diminishing in value or you being
+          unable to complete a Smart Contract.
         </li>
         <li>
           You are reminded of the inherent risks with digital assets and
@@ -349,21 +348,20 @@
           Site, the Application and the Smart Contracts;
         </li>
         <li>
-          that you expressly waive and release Symmetric from any and all
+          that you expressly waive and release Revolv from any and all
           liability, claims, causes of action, responsibility or damages arising
           from or in any way related to your use of the Site, the Application or
           the Smart Contracts.
         </li>
         <li>
           upgrades and modifications to the protocol are managed in a
-          community-driven way by holders of the Symmetric Protocol governance
-          token. No developer or entity involved in creating the Symmetric
-          Protocol will be liable for any claims or damages whatsoever
-          associated with your use, inability to use, or your interaction with
-          other users of, the Symmetric Protocol, including any direct,
-          indirect, incidental, special, exemplary, punitive or consequential
-          damages, or loss of profits, cryptocurrencies, tokens, or anything
-          else of value.
+          community-driven way by holders of the Revolv Protocol governance
+          token. No developer or entity involved in creating the Revolv Protocol
+          will be liable for any claims or damages whatsoever associated with
+          your use, inability to use, or your interaction with other users of,
+          the Revolv Protocol, including any direct, indirect, incidental,
+          special, exemplary, punitive or consequential damages, or loss of
+          profits, cryptocurrencies, tokens, or anything else of value.
         </li>
       </ol>
     </div>
@@ -403,13 +401,13 @@
     <div class="subsection">
       <h2>6. Intellectual Property Rights</h2>
       <p>
-        Symmetric is the owner of all intellectual property rights in the Site
-        and the material published on them. To the extent practical, these works
-        are protected by copyright laws and all such rights are reserved.
-        www.Symmetric.fi is the uniform resource locator (‘URL’) of Symmetric.
-        You will not make use of this URL (or any other URL owned by us) on
-        another website or digital platform without our prior written consent.
-        Any unauthorized use or reproduction may be prosecuted. You will retain
+        Revolv is the owner of all intellectual property rights in the Site and
+        the material published on them. To the extent practical, these works are
+        protected by copyright laws and all such rights are reserved.
+        www.Revolv.fi is the uniform resource locator (‘URL’) of Revolv. You
+        will not make use of this URL (or any other URL owned by us) on another
+        website or digital platform without our prior written consent. Any
+        unauthorized use or reproduction may be prosecuted. You will retain
         ownership of all copyright in data you upload or submit by, through or
         to the Site. You grant us a worldwide, royalty-free, irrevocable license
         to use, copy, distribute or publish and send this data in any manner.
@@ -458,7 +456,7 @@
           Some jurisdictions do not allow the exclusion of certain warranties or
           the limitation or exclusion of certain liabilities, but your
           acceptance of these Terms constitutes an agreement to limit the
-          liability of Symmetric and our officers, directors, employees,
+          liability of Revolv and our officers, directors, employees,
           contractors, agents, affiliates, or subsidiaries to the maximum extent
           possible under any applicable laws.</em
         >
@@ -507,7 +505,7 @@
     <div class="subsection">
       <h2>9. Indemnification</h2>
       <p>
-        You agree to indemnify and hold Symmetric and our officers, directors,
+        You agree to indemnify and hold Revolv and our officers, directors,
         employees, contractors, agents, affiliates, or subsidiaries harmless
         from any claim or demand, including attorneys’ fees and costs, made by
         any third-party due to or arising out of 1) your use of the site or 2)
@@ -546,9 +544,9 @@
       <p>
         These Terms and the documents referred to in them set out the entire
         agreement between you and us with respect to your use of the site,
-        Symmetric and the services provided via the site and supersede any and
-        all prior or contemporaneous representations, communications or
-        agreements (written or oral) made between you or us.
+        Revolv and the services provided via the site and supersede any and all
+        prior or contemporaneous representations, communications or agreements
+        (written or oral) made between you or us.
       </p>
       <p>
         <em class="font-semibold"
@@ -561,7 +559,7 @@
           designate an appointing authority. The seat of the arbitration shall
           be the Cayman Islands and the language of the arbitration shall be
           English. The applicable law shall be Cayman Islands law or another
-          choice of law determined in Symmetric’s sole discretion.</em
+          choice of law determined in Revolv’s sole discretion.</em
         >
       </p>
       <p>
@@ -574,7 +572,7 @@
           representative proceeding. This waiver applies to class arbitration,
           and, unless we agree otherwise, the arbitrator may not consolidate
           more than one person’s claims. You agree that, by entering into this
-          agreement, you and Symmetric are each waiving the right to a trial by
+          agreement, you and Revolv are each waiving the right to a trial by
           jury or to participate in a class action, collective action, or other
           representative proceeding of any kind.
         </em>
@@ -597,7 +595,7 @@
         opportunity loss (e.g., loss of opportunity to place a payment
         instruction, resulting in loss of profits which could have been
         obtained) due to occurrences such as emergency situations and force
-        majeure events, Symmetric is under no obligation to take any corrective
+        majeure events, Revolv is under no obligation to take any corrective
         action or measure and shall no under circumstances be liable for any
         lost profits or other swapping losses.
       </p>
@@ -605,12 +603,12 @@
     <div>
       <h2>12. Contact Us</h2>
       <p>
-        Symmetric is a foundation company organized in the Cayman Islands with
-        an operating company organized in the British Virgin Islands (BVI).
-        Please contact us if you have any questions about these Terms or other
-        topics, by sending an email to
-        <a class="link" href="mailto:support@symmetric.finance"
-          >support@symmetric.finance</a
+        Revolv is a foundation company organized in the Cayman Islands with an
+        operating company organized in the British Virgin Islands (BVI). Please
+        contact us if you have any questions about these Terms or other topics,
+        by sending an email to
+        <a class="link" href="mailto:support@revolv.finance"
+          >support@revolv.finance</a
         >.
       </p>
     </div>

@@ -3,7 +3,7 @@ import { TokenListURLMap } from '@/types/TokenList';
 const tokenlists: TokenListURLMap = {
   Balancer: {
     Allowlisted:
-      'https://raw.githubusercontent.com/centfinance/tokenlists/main/generated/symmetric.tokenlist.json',
+      'https://raw.githubusercontent.com/revolvfi/tokenlists/main/generated/symmetric.tokenlist.json',
   },
   External: [
     // 'https://raw.githubusercontent.com/telosnetwork/token-list/main/telosevm.tokenlist.json',

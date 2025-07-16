@@ -9,7 +9,7 @@ const PointsPage = () => import('@/pages/claim/points.vue');
 
 const LegacyClaimPage = () => import('@/pages/claim/legacy.vue');
 const CookiesPolicyPage = () => import('@/pages/cookies-policy.vue');
-const GetVeBalPage = () => import('@/pages/get-vesymm.vue');
+const GetVeBalPage = () => import('@/pages/get-vervlv.vue');
 const LPVaultPage = () => import('@/pages/lp-vault.vue');
 const HomePage = () => import('@/pages/index.vue');
 const PoolPage = () =>
@@ -26,9 +26,9 @@ const SwapPage = () => import('@/pages/swap.vue');
 export const SwapPagePrefetchLinks = async () =>
   import('@/pages/swap.vue').toString();
 
-const UnlockVeBalPage = () => import('@/pages/unlock-vesymm.vue');
-const VeBalPage = () => import('@/pages/vesymm.vue');
-const VeBalVotingPage = () => import('@/pages/vesymm-voting.vue');
+const UnlockVeBalPage = () => import('@/pages/unlock-vervlv.vue');
+const VeBalPage = () => import('@/pages/vervlv.vue');
+const VeBalVotingPage = () => import('@/pages/vervlv-voting.vue');
 const FaucetPage = () => import('@/pages/faucet.vue');
 const BalancesPage = () => import('@/pages/balances.vue');
 
@@ -131,19 +131,19 @@ const routes: RouteRecordRaw[] = [
     meta: { layout: 'PoolLayout' },
   },
   {
-    path: '/:networkSlug/vesymm',
-    name: 'vesymm',
+    path: '/:networkSlug/vervlv',
+    name: 'vervlv',
     component: VeBalPage,
   },
   {
-    path: '/:networkSlug/vesymm-voting',
-    name: 'vesymm-voting',
+    path: '/:networkSlug/vervlv-voting',
+    name: 'vervlv-voting',
     component: VeBalVotingPage,
     meta: { layout: 'FocussedLayout' },
   },
   {
-    path: '/:networkSlug/get-vesymm',
-    name: 'get-vesymm',
+    path: '/:networkSlug/get-vervlv',
+    name: 'get-vervlv',
     component: GetVeBalPage,
     meta: { layout: 'FocussedLayout' },
   },

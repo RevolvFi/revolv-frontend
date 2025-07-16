@@ -24,13 +24,14 @@ import { VeBalLockInfo } from '@/services/balancer/contracts/contracts/veBAL';
 import { ApprovalAction } from '@/composables/approvals/types';
 import useTokenApprovalActions from '@/composables/approvals/useTokenApprovalActions';
 import { captureBalancerException } from '@/lib/utils/errors';
+import { configService } from '@/services/config/config.service';
 // import { useCrossChainSync } from '@/providers/cross-chain-sync.provider';
 
 /**
  * TYPES
  */
 type Props = {
-  lockablePoolTokenInfo: TokenInfo;
+  lockablePoolTokenInfo?: TokenInfo;
   lockAmount: string;
   lockEndDate: string;
   lockType: LockType[];
@@ -82,6 +83,27 @@ const { networkSlug } = useNetwork();
 const { getTokenApprovalActions } = useTokenApprovalActions();
 // const { refetch: refetchSyncData } = useCrossChainSync();
 
+/**
+ * COMPUTED
+ */
+// Check if we should lock RVLV tokens directly (for Revolv) or LP tokens (for other networks)
+const shouldLockRvlvDirectly = computed(() => {
+  return configService.network.chainId === 40; // Telos chain ID
+});
+
+const tokenInfo = computed(() => {
+  if (shouldLockRvlvDirectly.value) {
+    // For RVLV direct locking, return RVLV token info
+    return {
+      address: configService.network.tokens.Addresses.BAL,
+      symbol: 'RVLV',
+      name: 'Revolv',
+      decimals: 18,
+    } as TokenInfo;
+  }
+  return props.lockablePoolTokenInfo;
+});
+
 const lockActions = props.lockType.map((lockType, actionIndex) => ({
   label: t(`getVeBAL.previewModal.actions.${lockType}.label`, [
     format(new Date(props.lockEndDate), PRETTY_DATE_FORMAT),
@@ -105,12 +127,15 @@ const shouldResubmitVotes = computed<boolean>(
   () => totalVotes !== unallocatedVotes.value
 );
 
-const amountsToApprove = computed(() => [
-  {
-    address: props.lockablePoolTokenInfo.address,
-    amount: props.lockAmount,
-  },
-]);
+const amountsToApprove = computed(() => {
+  if (!tokenInfo.value) return [];
+  return [
+    {
+      address: tokenInfo.value.address,
+      amount: String(props.lockAmount),
+    },
+  ];
+});
 
 /**
  * METHODS
@@ -130,7 +155,7 @@ async function handleTransaction(
             format(new Date(props.lockEndDate), PRETTY_DATE_FORMAT),
           ])
         : `${fNum(props.lockAmount, FNumFormats.token)} ${
-            props.lockablePoolTokenInfo.symbol
+            tokenInfo.value?.symbol || 'RVLV'
           }`,
     details: {
       lockAmount: props.lockAmount,
@@ -278,7 +303,7 @@ onBeforeMount(async () => {
       </BalAlert>
       <BalBtn
         tag="router-link"
-        :to="{ name: 'vesymm', params: { networkSlug } }"
+        :to="{ name: 'vervlv', params: { networkSlug } }"
         color="gray"
         outline
         block

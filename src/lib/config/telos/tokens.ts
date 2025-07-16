@@ -12,7 +12,7 @@ const tokens: TokenConstants = {
     nativeAsset: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
     wNativeAsset: '0xD102cE6A4dB07D247fcc28F366A623Df0938CA9E',
     WETH: '0xD102cE6A4dB07D247fcc28F366A623Df0938CA9E',
-    BAL: '0xd5f2a24199c3dfc44c1bf8b1c01ab147809434ca',
+    BAL: '0x98A5030a449D8833166c3F1d96Db00BA2a082FbF',
     rETH: '',
     reward: '0xd102ce6a4db07d247fcc28f366a623df0938ca9e',
     rewards:

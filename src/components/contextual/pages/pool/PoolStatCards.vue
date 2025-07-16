@@ -12,7 +12,7 @@ import {
 import { APR_THRESHOLD, VOLUME_THRESHOLD } from '@/constants/pools';
 import { Pool } from '@/services/pool/types';
 import { AprBreakdown } from '@symmetric-v3/sdk';
-import { telosVotingPools } from '../vebal/LMVoting/testnet-voting-pools';
+import { telosVotingPools } from '../vebal/LMVoting/telos-voting-pools';
 import { configService } from '@/services/config/config.service';
 
 // import { useCrossChainSync } from '@/providers/cross-chain-sync.provider';

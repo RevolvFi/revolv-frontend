@@ -80,11 +80,13 @@ export default function usePoolQuery(
     }
 
     // Inject pool tokens into token registry
-    injectTokens([
-      ...tokensListExclBpt(pool),
-      ...tokenTreeLeafs(pool.tokens),
-      pool.address, // We need to inject pool addresses so we can fetch a user's balance for that pool.
-    ]);
+    if (pool && pool.tokens && pool.tokensList) {
+      injectTokens([
+        ...tokensListExclBpt(pool),
+        ...tokenTreeLeafs(pool.tokens),
+        pool.address, // We need to inject pool addresses so we can fetch a user's balance for that pool.
+      ]);
+    }
 
     return pool;
   };

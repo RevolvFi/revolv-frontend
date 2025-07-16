@@ -174,7 +174,7 @@ export default defineComponent({
 }
 
 .bal-checkbox-input:disabled {
-  @apply bg-gray-200 dark:bg-gray-800 cursor-not-allowed;
+  @apply bg-gray-200 dark:bg-gray-600 cursor-not-allowed border-gray-400 dark:border-gray-500;
 }
 
 .bal-checkbox-input:enabled:checked {

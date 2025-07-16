@@ -49,7 +49,7 @@ function handleInternalClose() {
           color="gradient"
           @click="
             router.push({
-              name: 'vesymm',
+              name: 'vervlv',
               params: { networkSlug: getNetworkSlug(Network.TELOS) },
             })
           "

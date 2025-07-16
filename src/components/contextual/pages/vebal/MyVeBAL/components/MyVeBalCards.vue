@@ -14,13 +14,14 @@ import { VeBalLockInfo } from '@/services/balancer/contracts/contracts/veBAL';
 import { Pool } from '@/services/pool/types';
 import useWeb3 from '@/services/web3/useWeb3';
 import { TokenInfo } from '@/types/TokenList';
+import { configService } from '@/services/config/config.service';
 
 /**
  * TYPES
  */
 type Props = {
-  lockablePool: Pool;
-  lockablePoolTokenInfo: TokenInfo;
+  lockablePool?: Pool;
+  lockablePoolTokenInfo?: TokenInfo;
   veBalLockInfo?: VeBalLockInfo | null;
   totalLockedValue: string;
 };
@@ -50,11 +51,22 @@ const { networkSlug, veSymbol, lpToken } = useNetwork();
 /**
  * COMPUTED
  */
-const poolShares = computed(() =>
-  bnum(props.lockablePool.totalLiquidity).div(props.lockablePool.totalShares)
-);
+const poolShares = computed(() => {
+  if (props.lockablePool) {
+    return bnum(props.lockablePool.totalLiquidity).div(
+      props.lockablePool.totalShares
+    );
+  }
+  return bnum(1); // For RVLV direct locking
+});
 
-const bptBalance = computed(() => balanceFor(props.lockablePool.address));
+const bptBalance = computed(() => {
+  if (props.lockablePool) {
+    return balanceFor(props.lockablePool.address);
+  }
+  // For RVLV direct locking, get RVLV token balance
+  return balanceFor(configService.network.tokens.Addresses.BAL);
+});
 
 const fiatTotal = computed(() =>
   poolShares.value.times(bptBalance.value).toString()
@@ -72,12 +84,16 @@ const totalExpiredLpTokens = computed(() =>
   props.veBalLockInfo?.isExpired ? props.veBalLockInfo.lockedAmount : '0'
 );
 
-const fiatTotalExpiredLpTokens = computed(() =>
-  bnum(props.lockablePool.totalLiquidity)
+const fiatTotalExpiredLpTokens = computed(() => {
+  if (!props.lockablePool) {
+    // For RVLV direct locking, return the expired amount directly
+    return totalExpiredLpTokens.value;
+  }
+  return bnum(props.lockablePool.totalLiquidity)
     .div(props.lockablePool.totalShares)
     .times(totalExpiredLpTokens.value)
-    .toString()
-);
+    .toString();
+});
 
 const cards = computed(() => {
   const hasExistingLock = props.veBalLockInfo?.hasExistingLock;
@@ -95,12 +111,14 @@ const cards = computed(() => {
       secondaryText: isWalletReady.value
         ? fNum(bptBalance.value, FNumFormats.token)
         : '—',
-      showPlusIcon: isWalletReady.value ? true : false,
-      plusIconTo: {
-        name: 'add-liquidity',
-        params: { id: lockablePoolId.value, networkSlug },
-        query: { returnRoute: 'vesymm' },
-      },
+      showPlusIcon: isWalletReady.value && lockablePoolId.value ? true : false,
+      plusIconTo: lockablePoolId.value
+        ? {
+            name: 'add-liquidity',
+            params: { id: lockablePoolId.value, networkSlug },
+            query: { returnRoute: 'vervlv' },
+          }
+        : null,
     },
     {
       id: 'myLockedLpToken',
@@ -114,7 +132,7 @@ const cards = computed(() => {
         ? fNum(props.veBalLockInfo?.lockedAmount ?? '0', FNumFormats.token)
         : '—',
       showPlusIcon: isWalletReady.value && !isExpired ? true : false,
-      plusIconTo: { name: 'get-vesymm', query: { returnRoute: 'vesymm' } },
+      plusIconTo: { name: 'get-vervlv', query: { returnRoute: 'vervlv' } },
       showUnlockIcon: isExpired ? true : false,
     },
     {
@@ -128,7 +146,7 @@ const cards = computed(() => {
             ])
           : '-',
       showPlusIcon: hasExistingLock && !isExpired ? true : false,
-      plusIconTo: { name: 'get-vesymm', query: { returnRoute: 'vesymm' } },
+      plusIconTo: { name: 'get-vervlv', query: { returnRoute: 'vervlv' } },
     },
     {
       id: 'myVeBAL',
@@ -217,7 +235,12 @@ const cards = computed(() => {
   </BalCard>
   <teleport to="#modal">
     <UnlockPreviewModal
-      v-if="showUnlockPreviewModal && veBalLockInfo"
+      v-if="
+        showUnlockPreviewModal &&
+        veBalLockInfo &&
+        lockablePool &&
+        lockablePoolTokenInfo
+      "
       :lockablePool="lockablePool"
       :lockablePoolTokenInfo="lockablePoolTokenInfo"
       :veBalLockInfo="veBalLockInfo"

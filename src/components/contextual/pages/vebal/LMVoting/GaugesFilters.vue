@@ -66,18 +66,16 @@ function updateNetwork(network: number) {
 <template>
   <BalPopover noPad class="flex-0">
     <template #activator>
-      <BalBtn class="flex-1 h-full" color="white" size="sm">
+      <BalBtn class="flex-1 w-20 h-8" color="white" size="sm">
         <BalIcon
           name="filter"
-          size="lg"
-          class="mr-3 text-gray-600 dark:text-gray-100"
+          size="sm"
+          class="mr-1 text-gray-600 dark:text-gray-100"
         />
-        <div class="flex text-gray-600 dark:text-gray-100">
-          {{ $t('gaugeFilter.moreFilters') }}
-        </div>
-        <div v-if="activeFiltersNum > 0" class="px-2">
+        <div class="flex text-xs text-gray-600 dark:text-gray-100">Filters</div>
+        <div v-if="activeFiltersNum > 0" class="px-1">
           <div
-            class="flex justify-center items-center p-2 w-5 h-5 text-xs text-center text-white bg-blue-600 rounded-full"
+            class="flex justify-center items-center p-1 w-4 h-4 text-xs text-center text-white bg-blue-600 rounded-full"
           >
             {{ activeFiltersNum }}
           </div>

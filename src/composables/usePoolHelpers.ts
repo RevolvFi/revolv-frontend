@@ -433,6 +433,8 @@ export function tokenTreeLeafs(
   tokenTree: PoolToken[],
   options: TokenTreeOpts = { includeLinearUnwrapped: false }
 ): string[] {
+  if (!tokenTree || !Array.isArray(tokenTree)) return [];
+
   const addresses: string[] = [];
 
   for (const token of tokenTree) {
@@ -513,6 +515,7 @@ export function flatTokenTree(
  * @returns tokensList excluding pre-minted BPT address.
  */
 export function tokensListExclBpt(pool: Pool): string[] {
+  if (!pool || !pool.tokensList) return [];
   return removeAddress(pool.address, pool.tokensList);
 }
 

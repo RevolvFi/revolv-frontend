@@ -4,7 +4,7 @@ import DesktopLinkItem from './DesktopLinkItem.vue';
 import useNetwork, {
   isTestnet,
   veSymbol,
-  isTelos,
+  // isTelos,
 } from '@/composables/useNetwork';
 import { Goals, trackGoal } from '@/composables/useFathom';
 import { isVeBalSupported, isGaugesSupported } from '@/composables/useVeBAL';
@@ -83,8 +83,8 @@ function isActive(page: string): boolean {
     </DesktopLinkItem>
     <DesktopLinkItem
       v-if="isVeBalSupported"
-      :to="{ name: 'vesymm', params: { networkSlug } }"
-      :active="isActive('vesymm')"
+      :to="{ name: 'vervlv', params: { networkSlug } }"
+      :active="isActive('vervlv')"
       prefetch
       @click="trackGoal(Goals.ClickNavVebal)"
     >
@@ -119,15 +119,15 @@ function isActive(page: string): boolean {
         {{ isSmallScreen ? 'LP Vault' : 'Taiko LP Vault' }}
       </span>
     </DesktopLinkItem>
-    <a
+    <!-- <a
       v-if="isTelos"
       href="https://telos-v1.symm.fi"
       target="_blank"
-      class="flex overflow-hidden relative flex-row gap-1 justify-center items-center p-0 h-full hover:text-purple-600 dark:hover:text-yellow-500 transition-all duration-500 ease-in-out cursor-pointer"
+      class="flex overflow-hidden relative flex-row gap-1 justify-center items-center p-0 h-full transition-all duration-500 ease-in-out cursor-pointer hover:text-purple-600 dark:hover:text-yellow-500"
     >
       Telos V1
       <BalIcon name="arrow-up-right" size="xs" />
-    </a>
+    </a> -->
     <!-- <DesktopLinkItem
       v-if="isVeBalSupported"
       :to="{ name: 'airdrop', params: { networkSlug } }"

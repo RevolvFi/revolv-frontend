@@ -170,7 +170,7 @@ const fiatTotalExpiredLpTokens = computed(() =>
                     v-if="Number(bptBalance) > 0"
                     tag="router-link"
                     :to="{
-                      name: 'get-vesymm',
+                      name: 'get-vervlv',
                       query: {
                         returnRoute: $route.name,
                         returnParams: JSON.stringify({

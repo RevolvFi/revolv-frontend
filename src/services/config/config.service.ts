@@ -22,8 +22,8 @@ export default class ConfigService {
   public get env(): Env {
     return {
       APP_ENV: import.meta.env.VITE_ENV || 'development',
-      APP_DOMAIN: import.meta.env.VITE_DOMAIN || 'app.symm.fi',
-      APP_HOST: import.meta.env.VITE_HOST || 'symm.fi',
+      APP_DOMAIN: import.meta.env.VITE_DOMAIN || 'app.revolv.fi',
+      APP_HOST: import.meta.env.VITE_HOST || 'revolv.fi',
       API_URL:
         import.meta.env.VITE_API_URL || 'https://api-v3.balancer.fi/graphql',
       IPFS_NODE: import.meta.env.VITE_IPFS_NODE || 'cloudflare-ipfs.com',

@@ -950,7 +950,7 @@ export default function useSor({
   ) {
     if (!isUserError(error)) {
       console.trace(error);
-      state.submissionError = t('swapException', ['Symmetric']);
+      state.submissionError = t('swapException', ['Revolv']);
 
       captureBalancerException({
         error,

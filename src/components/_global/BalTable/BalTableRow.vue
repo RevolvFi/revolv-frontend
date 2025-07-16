@@ -50,7 +50,7 @@ function handleColumnClick(column: ColumnDefinition, event: Event) {
 <template>
   <tr
     :class="[
-      'bg-white z-10 row-bg group',
+      'z-10 group transition-colors duration-300 hover:bg-white/20 dark:hover:bg-white/10',
       {
         'cursor-pointer': handleRowClick,
         'border-b dark:border-gray-700': pinned,

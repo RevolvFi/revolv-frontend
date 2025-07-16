@@ -222,7 +222,7 @@ const availableNetworks = ['telos', 'meter', 'artela'];
       class="p-4 w-full text-center bg-purple-600 dark:bg-purple-900"
     >
       <span class="text-white">
-        If you had liquidity on Symmetric before March 28th, 2024, you can
+        If you had liquidity on Symmetric Telos before March 28th, 2024, you can
         withdraw it
         <a
           href="https://telos-v1.symm.fi"
@@ -304,7 +304,7 @@ const availableNetworks = ['telos', 'meter', 'artela'];
           <div
             class="flex flex-col md:flex-row justify-between items-end lg:items-center w-full"
           >
-            <!-- <div class="flex items-end justify-between mb-2">
+            <!-- <div class="flex justify-between items-end mb-2">
               <BalBtn
                 v-if="upToSmallBreakpoint"
                 color="blue"
@@ -382,20 +382,22 @@ const availableNetworks = ['telos', 'meter', 'artela'];
             </BalVStack>
           </div>
         </div>
-        <PoolsTable
-          :data="pools"
-          :noPoolsLabel="$t('noPoolsFound')"
-          :isLoading="isLoading"
-          :selectedTokens="selectedTokens"
-          class="mb-8"
-          :sortColumn="initSortCol"
-          :hiddenColumns="['migrate', 'actions', 'lockEndDate']"
-          :isLoadingMore="isFetchingNextPage"
-          :isPaginated="isPaginated"
-          skeletonClass="pools-table-loading-height"
-          @on-column-sort="onColumnSort"
-          @load-more="loadMorePools"
-        />
+        <div class="px-4 xl:px-0">
+          <PoolsTable
+            :data="pools"
+            :noPoolsLabel="$t('noPoolsFound')"
+            :isLoading="isLoading"
+            :selectedTokens="selectedTokens"
+            class="mb-8"
+            :sortColumn="initSortCol"
+            :hiddenColumns="['migrate', 'actions', 'lockEndDate']"
+            :isLoadingMore="isFetchingNextPage"
+            :isPaginated="isPaginated"
+            skeletonClass="pools-table-loading-height"
+            @on-column-sort="onColumnSort"
+            @load-more="loadMorePools"
+          />
+        </div>
         <!-- <div ref="featuredProtocolsSentinel" />
         <div
           v-if="isElementSupported && isFeaturedProtocolsVisible"

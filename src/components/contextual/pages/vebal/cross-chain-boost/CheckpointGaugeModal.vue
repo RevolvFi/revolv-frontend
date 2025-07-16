@@ -84,7 +84,7 @@ const actions = [
         contributing to your staking boost yet on this pool. This is because,
         pool gauges don't detect veBAL changes until you interact with them.
         This transaction is the most gas efficient way to update the gauge but
-        you can also trigger the update by claiming any tSYMM incentives.
+        you can also trigger the update by claiming any RVLV incentives.
       </span>
 
       <BalActionSteps
