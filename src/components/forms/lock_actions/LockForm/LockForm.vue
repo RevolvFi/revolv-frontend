@@ -14,7 +14,6 @@ import { configService } from '@/services/config/config.service';
 import HowToLock from './components/HowToLock.vue';
 import LockableTokens from './components/LockableTokens.vue';
 import MyVeBAL from './components/MyVeBAL.vue';
-import MyVeRvlv from './components/MyVeRvlv.vue';
 import VeBalForm from './components/VeBalForm/VeBalForm.vue';
 
 /**
@@ -151,10 +150,6 @@ const isLoading = computed(() =>
 
     <template #gutterRight>
       <BalLoadingBlock v-if="isLoading" class="h-64" />
-      <MyVeRvlv
-        v-else-if="shouldLockRvlvDirectly"
-        :veBalLockInfo="veBalLockInfo"
-      />
       <MyVeBAL v-else :veBalLockInfo="veBalLockInfo" />
       <template v-if="isMobile">
         <BalLoadingBlock
