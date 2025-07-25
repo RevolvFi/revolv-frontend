@@ -13,13 +13,21 @@ const lsDarkMode = ref(LS_KEYS.App.DarkMode === 'true');
 // STATE
 const darkMode = computed({
   get() {
-    if (networkSlug === 'etherlink' || networkSlug === 'taiko') {
+    if (
+      networkSlug === 'etherlink' ||
+      networkSlug === 'taiko' ||
+      networkSlug === 'telos'
+    ) {
       return true;
     }
     return lsDarkMode.value;
   },
   set(value: boolean) {
-    if (networkSlug !== 'etherlink' && networkSlug !== 'taiko') {
+    if (
+      networkSlug !== 'etherlink' &&
+      networkSlug !== 'taiko' &&
+      networkSlug !== 'telos'
+    ) {
       lsDarkMode.value = value;
     }
   },
@@ -31,7 +39,11 @@ function setDarkMode(val: boolean): void {
   lsSet(LS_KEYS.App.DarkMode, darkMode.value.toString());
   if (darkMode.value) {
     document.documentElement.classList.add('dark');
-  } else if (networkSlug !== 'etherlink' && networkSlug !== 'taiko') {
+  } else if (
+    networkSlug !== 'etherlink' &&
+    networkSlug !== 'taiko' &&
+    networkSlug !== 'telos'
+  ) {
     document.documentElement.classList.remove('dark');
   }
 }
