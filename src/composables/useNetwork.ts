@@ -103,7 +103,7 @@ export const veSymbol = computed(() => {
     return 'vCSYMM';
   }
   if (networkId.value === Network.TELOS) {
-    return 'vTSYMM';
+    return 'veRVLV';
   }
   if (networkId.value === Network.GNOSIS) {
     return 'vGSYMM';
@@ -119,7 +119,7 @@ export const symmSymbol = computed(() => {
     return 'cSYMM';
   }
   if (networkId.value === Network.TELOS) {
-    return 'tSYMM';
+    return 'RVLV';
   }
   if (networkId.value === Network.GNOSIS) {
     return 'gSYMM';

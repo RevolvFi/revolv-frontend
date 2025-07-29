@@ -28,7 +28,7 @@ const { handleFailed, handleSuccess, txState, votingActions } =
       <BalBtn
         tag="router-link"
         :to="{
-          name: 'vesymm',
+          name: 'vervlv',
           params: { networkSlug: 'ethereum' },
         }"
         color="gray"

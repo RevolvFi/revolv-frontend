@@ -3,7 +3,7 @@
     "contracts": [
       {
         "name": "Authorizer",
-        "address": "0x00EDdD9621Fb08436d0331c149D1690909a5906d"
+        "address": "0x66B1E278550E6742b7Ee6E814E0ae59c19C9e11d"
       }
     ],
     "status": "ACTIVE"
@@ -12,28 +12,15 @@
     "contracts": [
       {
         "name": "Vault",
-        "address": "0xbccc4b4c6530F82FE309c5E845E50b5E9C89f2AD"
+        "address": "0xb51E754479b47600D39f983E6f5b645607C04233"
       },
       {
         "name": "ProtocolFeesCollector",
-        "address": "0x61497C44c7Cb9C3eab99Ef20f58863414A5665d2"
+        "address": "0x1d577bac8954Ec4b0E0192dd5B7cA13C93b2f503"
       },
       {
         "name": "BalancerHelpers",
-        "address": "0xc2a0d530e57B1275fbce908031DA636f95EA1E38"
-      }
-    ],
-    "status": "ACTIVE"
-  },
-  "20211202-no-protocol-fee-lbp": {
-    "contracts": [
-      {
-        "name": "NoProtocolFeeLiquidityBootstrappingPoolFactory",
-        "address": "0x266b53bb135f2dbc324b5C5Aa281e84f1C105B26"
-      },
-      {
-        "name": "MockLiquidityBootstrappingPool",
-        "address": "0xF6EC5e013f9bA2FcA745eab980F24e298D78fce4"
+        "address": "0xB91816c24da83768C329590bCA6376533D01B0f1"
       }
     ],
     "status": "ACTIVE"
@@ -42,82 +29,7 @@
     "contracts": [
       {
         "name": "AuthorizerAdaptor",
-        "address": "0xAF27669B65161ef323B2Ec8314ddF30e8d51c4a8"
-      }
-    ],
-    "status": "ACTIVE"
-  },
-  "20220325-balancer-token-admin": {
-    "contracts": [
-      {
-        "name": "TSYMMTokenAdmin",
-        "address": "0x48Bd633f4B9128a38Ebb4a48b6975EB3Eaf1931b"
-      }
-    ],
-    "status": "ACTIVE"
-  },
-  "20220325-gauge-controller": {
-    "contracts": [
-      {
-        "name": "VotingEscrow",
-        "address": "0x0D0b7efc6e20b96841f37b28219a595a81c4615A"
-      },
-      {
-        "name": "GaugeController",
-        "address": "0x7ac8CF03C7c48d1E1eEB2Cb2B3A50B1B1430ae7b"
-      },
-      {
-        "name": "BalancerMinter",
-        "address": "0xbb3c49aD5Acea9B3E1145DfC6F4Ed20f2224a14F"
-      }
-    ],
-    "status": "ACTIVE"
-  },
-  "20220325-test-balancer-token": {
-    "contracts": [
-      {
-        "name": "TestBalancerToken",
-        "address": "0xFEF39453770fF2C6b2F453D1b6D075623a79e3Eb"
-      }
-    ],
-    "status": "ACTIVE"
-  },
-  "20220325-ve-delegation": {
-    "contracts": [
-      {
-        "name": "VotingEscrowDelegation",
-        "address": "0x10F85b7322B6A150844DA4e422FdC1a251734de8"
-      },
-      {
-        "name": "VotingEscrowDelegationProxy",
-        "address": "0x3152246f3CD4dD465292Dd4Ffd792E2Cf602e332"
-      }
-    ],
-    "status": "ACTIVE"
-  },
-  "20220420-smart-wallet-checker": {
-    "contracts": [
-      {
-        "name": "SmartWalletChecker",
-        "address": "0x434a833edbe4A88AD48ddf99e72ed4b148960B6E"
-      }
-    ],
-    "status": "ACTIVE"
-  },
-  "20220707-distribution-scheduler": {
-    "contracts": [
-      {
-        "name": "DistributionScheduler",
-        "address": "0xf58FF32511C18d9c4c32984bdEEda3Db5f1974d9"
-      }
-    ],
-    "status": "ACTIVE"
-  },
-  "20220714-fee-distributor-v2": {
-    "contracts": [
-      {
-        "name": "FeeDistributor",
-        "address": "0x75d71288F0181a5c1C9f8c81755846954C37433A"
+        "address": "0x01E42BEB06749a72a86244Ef6d16fEFC4D23fc7e"
       }
     ],
     "status": "ACTIVE"
@@ -126,7 +38,7 @@
     "contracts": [
       {
         "name": "BalancerQueries",
-        "address": "0x1b13728ea3C90863990aC0e05987CfeC1888908c"
+        "address": "0xbb6BD5fcA80FACb61898023aAa3a0A7E05A50E2D"
       }
     ],
     "status": "ACTIVE"
@@ -135,20 +47,7 @@
     "contracts": [
       {
         "name": "ProtocolFeePercentagesProvider",
-        "address": "0x4e4131dC27ed9501ac5fEb76F94572fDAe9f0fD0"
-      }
-    ],
-    "status": "ACTIVE"
-  },
-  "20220822-mainnet-gauge-factory-v2": {
-    "contracts": [
-      {
-        "name": "LiquidityGaugeV5",
-        "address": "0xea04bB2254b7Eee6547F963c2D56C06d50e3A8eB"
-      },
-      {
-        "name": "LiquidityGaugeFactory",
-        "address": "0x2564fA7CaFe82c527Ee788265FD4Dc863F65D2D1"
+        "address": "0xd4f1972155E8d1e9C688fcC616b0F484A4233454"
       }
     ],
     "status": "ACTIVE"
@@ -157,92 +56,46 @@
     "contracts": [
       {
         "name": "AuthorizerAdaptorEntrypoint",
-        "address": "0x6a66Da23A789b648a60632da4a5A635558372203"
+        "address": "0xE2eda4DE86d118e5977E9099865cEF4F5a6E755F"
       }
     ],
     "status": "ACTIVE"
   },
-  "20230215-single-recipient-gauge-factory-v2": {
+  "20230316-l2-balancer-pseudo-minter": {
     "contracts": [
       {
-        "name": "SingleRecipientGaugeFactory",
-        "address": "0xa025369dfC8280CC7e88451a0fbe33fE7138eD31"
-      },
-      {
-        "name": "SingleRecipientGauge",
-        "address": "0xc0A740cDd1C647d9c77367E47f0D0c253140E6e3"
-      },
-      {
-        "name": "VTSYMMGauge",
-        "address": "0x91132ddd744d00d1954b3ee51ffcfde2518bba4c"
+        "name": "L2BalancerPseudoMinter",
+        "address": "0x7924903f369e509e42E23fe8f519FCa41E4Afc26"
       }
     ],
     "status": "ACTIVE"
   },
-  "20230222-merkle-orchard-v2": {
+  "20230316-l2-ve-delegation-proxy": {
     "contracts": [
       {
-        "name": "MerkleOrchard",
-        "address": "0x4C8Aa9ce762412dB5a2e874Ab4e40d312f19fa52"
+        "name": "NullVotingEscrow",
+        "address": "0xB873BAf7d3B67c5E98eF173BCC14c3465FE7669c"
+      },
+      {
+        "name": "VotingEscrowDelegationProxy",
+        "address": "0x1299380D705fdffd08cd30BE74ac63a5985dAe3A"
+      },
+      {
+        "name": "VotingEscrowDelegation",
+        "address": "0x32415b046523Cd262Ec0191df1a66588Aff2cC58"
       }
     ],
     "status": "ACTIVE"
-  },
-  "20230314-batch-relayer-v5": {
-    "contracts": [
-      {
-        "name": "BatchRelayerLibrary",
-        "address": "0x698fEa3Aa7DBD323D8D896993fD1EC556D308615"
-      },
-      {
-        "name": "BalancerRelayer",
-        "address": "0x12b89478C9ab7C38579Cfbb90CD3afb40d2762e2"
-      }
-    ],
-    "status": "DEPRECATED"
   },
   "20230320-weighted-pool-v4": {
     "contracts": [
       {
         "name": "WeightedPoolFactory",
-        "address": "0xdd58D43a829067129B8C37f1924D31B1896ac0C6"
+        "address": "0xEEC5208655feaa474d210cb4b2284af5142Ba8EF"
       },
       {
         "name": "MockWeightedPool",
-        "address": "0xB2FaB0919a162733063ED3c14adfFA02513eada9"
-      }
-    ],
-    "status": "ACTIVE"
-  },
-  "20230411-managed-pool-v2": {
-    "contracts": [
-      {
-        "name": "ManagedPoolAddRemoveTokenLib",
-        "address": "0x4fE18fde71267c46d6DDeecc412cd498e88b39Cb"
-      },
-      {
-        "name": "CircuitBreakerLib",
-        "address": "0xfff23CDf2e98b6ea6f0ae856e8DeF6Fdb3141dF1"
-      },
-      {
-        "name": "ManagedPoolAmmLib",
-        "address": "0x611b8E5c7ec8ee0c7bD5f2B6E9DfD44fbED8A427"
-      },
-      {
-        "name": "ExternalWeightedMath",
-        "address": "0x2320243925EBb4616F4a95319f83cdbEA63bF1a1"
-      },
-      {
-        "name": "RecoveryModeHelper",
-        "address": "0x45a2992e1bFdCF9b9AcE0a84A238f2E56F481816"
-      },
-      {
-        "name": "ManagedPoolFactory",
-        "address": "0x4eD870363d69F0f2c565332342eFC68ca82b544b"
-      },
-      {
-        "name": "MockManagedPool",
-        "address": "0xC07951543C0b961e64CF96225151a51BFC380246"
+        "address": "0x8B9400Ad20C207678B4a7bFa2d6Cc8Fff5bc7fBc"
       }
     ],
     "status": "ACTIVE"
@@ -251,38 +104,7 @@
     "contracts": [
       {
         "name": "AuthorizerWithAdaptorValidation",
-        "address": "0x9E192E96c668891E59CD39138905A5bcDFA03a2d"
-      }
-    ],
-    "status": "ACTIVE"
-  },
-  "20230519-gauge-adder-v4": {
-    "contracts": [
-      {
-        "name": "GaugeAdder",
-        "address": "0xb95B9FA13Afb83542d3a73B10F040cC3AAFc844A"
-      }
-    ],
-    "status": "ACTIVE"
-  },
-  "20230711-composable-stable-pool-v5": {
-    "contracts": [
-      {
-        "name": "ComposableStablePoolFactory",
-        "address": "0x98add7DC34a382e188be709a72Ca8fCDF7e548db"
-      },
-      {
-        "name": "MockComposableStablePool",
-        "address": "0x8Fb9AE94AC6869Bb10C0eb46Fb2500Ffe2706dBe"
-      }
-    ],
-    "status": "ACTIVE"
-  },
-  "20230915-stakeless-gauge-checkpointer-v2": {
-    "contracts": [
-      {
-        "name": "StakelessGaugeCheckpointer",
-        "address": "0x808e36CFfC8EA806a545902C0a9Bf4D1Db236dc5"
+        "address": "0x11A508b555ED14b8e2393c2fc22fc8be916Ea55A"
       }
     ],
     "status": "ACTIVE"
@@ -291,24 +113,71 @@
     "contracts": [
       {
         "name": "BatchRelayerLibrary",
-        "address": "0xB8f48b5AA39ec2CE41b0C38875B919214C3DBbB8"
+        "address": "0x1DB117C80D34Ab7fdbe4657402Ba708aCbAD25b4"
       },
       {
         "name": "BatchRelayerQueryLibrary",
-        "address": "0x21f4f40996286DD0fc164c0e00EbA377ec84a64b"
+        "address": "0x7E0B6594944EB5107f2a27dc82d26e42F561Fd48"
       },
       {
         "name": "BalancerRelayer",
-        "address": "0x6259FC97C11D08003BcF93448627F9930EbF5166"
+        "address": "0x797129f28d844E47073DC4E92907079BDAcAFe65"
       }
     ],
     "status": "ACTIVE"
   },
-  "20231122-tsymm-token": {
+  "20240223-composable-stable-pool-v6": {
     "contracts": [
       {
-        "name": "SymmToken",
-        "address": "0xd5f2a24199C3DFc44C1Bf8B1C01aB147809434Ca"
+        "name": "ComposableStablePoolFactory",
+        "address": "0xaC584a7CA52f852Be3fACb359F1959a3B698E6C1"
+      },
+      {
+        "name": "MockComposableStablePool",
+        "address": "0x88EcD4B0F3A685E8CE74572cC1916dEc2c6335B8"
+      }
+    ],
+    "status": "ACTIVE"
+  },
+  "20250128-no-token-admin-gauge-factory": {
+    "contracts": [
+      {
+        "name": "NoTokenAdminGauge",
+        "address": "0x3B526FB7f2283767ca6f4194Da93AFc5A71B12f0"
+      },
+      {
+        "name": "NoTokenAdminGaugeFactory",
+        "address": "0xE6584CF31463c11aa79Dc376201925C934e0D8E2"
+      }
+    ],
+    "status": "ACTIVE"
+  },
+  "20250128-symmetric-gauge-controller": {
+    "contracts": [
+      {
+        "name": "GaugeController",
+        "address": "0x2D2E6b240A758dccC1DD13e71f4136a482b84Ec9"
+      }
+    ],
+    "status": "ACTIVE"
+  },
+  "20250619-symmetric-bribe-market": {
+    "contracts": [
+      {
+        "name": "RewardDistributor",
+        "address": "0x40E2786869b59C5cBF309E76184D4d299069e2F5"
+      },
+      {
+        "name": "BribeVault",
+        "address": "0xe529460ed1b8a55E283A10A5e3487D6924677A2d"
+      },
+      {
+        "name": "BribeMarket",
+        "address": "0xfAf6FAD847C7aa995da5a19d8607AF1CA4795402"
+      },
+      {
+        "name": "BribeFactory",
+        "address": "0x31191Dc484BC61CACE4c562C567181296e6eFB15"
       }
     ],
     "status": "ACTIVE"

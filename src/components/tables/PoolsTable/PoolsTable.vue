@@ -24,9 +24,10 @@ import {
   totalAprLabel,
   isLBP,
   shouldHideAprs,
+  isErc4626,
 } from '@/composables/usePoolHelpers';
 import { bnum } from '@/lib/utils';
-import { Pool } from '@/services/pool/types';
+import { Pool, PoolToken } from '@/services/pool/types';
 import { APR_THRESHOLD, VOLUME_THRESHOLD } from '@/constants/pools';
 import { configService } from '@/services/config/config.service';
 
@@ -40,6 +41,7 @@ import PoolsTableActionSelector from './PoolsTableActionSelector.vue';
 import { PoolAction } from '@/components/contextual/pages/pools/types';
 import { isVe8020Pool } from '@/composables/useVotingPools';
 import Ve8020Chip from '@/components/contextual/pages/vebal/LMVoting/Ve8020Chip.vue';
+
 /**
  * TYPES
  */
@@ -281,10 +283,86 @@ function lockedUntil(lockEndDate?: number) {
 }
 
 function iconAddresses(pool: Pool) {
+  if (isErc4626(pool)) {
+    const erc4626Pool = configService.network.pools?.Erc4626?.[pool.id];
+    if (!erc4626Pool) return orderedTokenAddresses(pool);
+
+    // Get all non-BPT tokens from tokensList
+    const nonBptTokens = erc4626Pool.tokensList.filter(
+      token => token !== pool.address
+    );
+
+    // Map each token to either its underlying version or keep as is if no underlying exists
+    return nonBptTokens.map(token => {
+      const wrapperIndex = erc4626Pool.wrappers.indexOf(token);
+      return wrapperIndex >= 0 ? erc4626Pool.underlying[wrapperIndex] : token;
+    });
+  }
   return poolMetadata(pool.id)?.hasIcon
     ? [pool.address]
     : orderedTokenAddresses(pool);
 }
+
+function getTokensForDisplay(pool: Pool): PoolToken[] {
+  if (isErc4626(pool)) {
+    // Create fake token objects for underlying tokens
+    const erc4626Pool = configService.network.pools?.Erc4626?.[pool.id];
+    if (!erc4626Pool) return orderedPoolTokens(pool, pool.tokens);
+
+    // Get all non-BPT tokens from tokensList
+    const nonBptTokens = erc4626Pool.tokensList.filter(
+      token => token !== pool.address
+    );
+
+    return nonBptTokens.map((token, i) => {
+      const wrapperIndex = erc4626Pool.wrappers.indexOf(token);
+
+      // If it's not a wrapper token, return the original pool token
+      if (wrapperIndex === -1) {
+        const originalToken = pool.tokens.find(t => t.address === token);
+        return (
+          originalToken || {
+            address: token,
+            balance: '0',
+            decimals: 18,
+            id: `${pool.id}-${i}`,
+            index: i,
+            name: '',
+            priceRate: '1',
+            symbol: '',
+            totalBalance: '0',
+            weight: null,
+            token: {
+              pool: null,
+            },
+          }
+        );
+      }
+
+      // For wrapper tokens, use the underlying address and keep the wrapper's weight
+      const underlyingAddress = erc4626Pool.underlying[wrapperIndex];
+      const wrapperToken = pool.tokens.find(t => t.address === token);
+
+      return {
+        address: underlyingAddress,
+        balance: wrapperToken?.balance || '0',
+        decimals: wrapperToken?.decimals || 18,
+        id: `${pool.id}-${i}`,
+        index: i,
+        name: '',
+        priceRate: wrapperToken?.priceRate || '1',
+        symbol: '',
+        totalBalance: wrapperToken?.balance || '0',
+        weight: wrapperToken?.weight || null,
+        token: {
+          pool: null,
+        },
+      };
+    });
+  }
+  return orderedPoolTokens(pool, pool.tokens);
+}
+
 function addLiquidity(id: string) {
   router.push({
     name: 'add-liquidity',
@@ -363,9 +441,12 @@ function goToPoolPage(id: string) {
       </template>
       <template #iconColumnCell="pool">
         <div v-if="!isLoading" class="py-4 px-6" :data-testid="pool?.id">
-          <BalAssetSet :addresses="iconAddresses(pool)" :width="100" />
+          <div class="relative rounded-full">
+            <BalAssetSet :addresses="iconAddresses(pool)" :width="100" />
+          </div>
         </div>
       </template>
+
       <template #poolNameCell="pool">
         <div v-if="!isLoading" class="flex items-center py-4 px-6">
           <div v-if="poolMetadata(pool.id)?.name" class="pr-2 text-left">
@@ -373,7 +454,7 @@ function goToPoolPage(id: string) {
           </div>
           <div v-else>
             <TokenPills
-              :tokens="orderedPoolTokens(pool, pool.tokens)"
+              :tokens="getTokensForDisplay(pool)"
               :isStablePool="isStableLike(pool.poolType)"
               :selectedTokens="selectedTokens"
               :pickedTokens="selectedTokens"

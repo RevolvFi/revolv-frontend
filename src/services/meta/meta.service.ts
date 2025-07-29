@@ -60,10 +60,10 @@ class MetaService implements IMetaService {
   private setDefaultMeta(): void {
     const descriptionMeta = document.querySelector('meta[name=description]');
 
-    document.title = 'Symmetric';
+    document.title = 'Revolv';
     descriptionMeta?.setAttribute(
       'content',
-      'A UI that supports core Symmetric protocol functionality. Explore & create pools, manage liquidity, swap tokens, get veBAL and claim incentives.'
+      'A UI that supports core Revolv protocol functionality. Explore & create pools, manage liquidity, swap tokens, get veBAL and claim incentives.'
     );
   }
 }

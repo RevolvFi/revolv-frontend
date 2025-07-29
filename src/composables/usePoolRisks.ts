@@ -19,7 +19,7 @@ import { RiskKey } from '@/types/pools';
 import { capitalize } from 'lodash';
 
 export const riskTitles = {
-  [RiskKey.General]: 'General Symmetric protocol risks',
+  [RiskKey.General]: 'General Revolv protocol risks',
   [RiskKey.Weighted]: 'Weighted pool risks',
   [RiskKey.Stable]: 'Stable pool risks',
   [RiskKey.ComposableStable]: 'Composable stable pool risks',

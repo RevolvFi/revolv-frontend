@@ -5,9 +5,9 @@ import useVotingPools from '@/composables/useVotingPools';
 
 import useNetwork, {
   lpToken,
-  symmSymbol,
+  // symmSymbol,
   veSymbol,
-  nativeSymbol,
+  // nativeSymbol,
 } from '@/composables/useNetwork';
 import useVeBal from '@/composables/useVeBAL';
 import { useVeBalLockInfo } from '@/composables/useVeBalLockInfo';
@@ -54,7 +54,7 @@ const { shouldResubmitVotes } = useVotingEscrowLocks();
 const { networkSlug } = useNetwork();
 const { isWalletReady } = useWeb3();
 
-const { hasVeBalBalance, noVeBalBalance } = useVeBal();
+const { hasVeBalBalance } = useVeBal();
 const { fNum } = useNumbers();
 
 const {
@@ -175,15 +175,12 @@ watch(isRefetchingVotingPools, async () => {
 </script>
 
 <template>
-  <div
-    v-if="networkSlug !== 'artela' && networkSlug !== 'telos'"
-    class="flex flex-col"
-  >
+  <div class="flex flex-col">
     <div
-      class="flex flex-col lg:flex-row gap-4 lg:justify-between lg:items-end"
+      class="flex flex-col lg:flex-row gap-3 lg:justify-between lg:items-end mb-4"
     >
-      <div class="px-4 xl:px-0 pb-2 max-w-3xl">
-        <h3 class="mb-2">
+      <div class="pb-1 max-w-3xl">
+        <h3 class="mb-1 text-lg font-semibold">
           {{ $t('veBAL.liquidityMining.title') }}
           <BalTooltip
             :text="
@@ -213,27 +210,27 @@ watch(isRefetchingVotingPools, async () => {
       v-if="shouldResubmitVotes"
       title="Resubmit your votes to utilize your full voting power"
     >
-      Votes on pools are set at the time of the vote. Since you’ve added new
+      Votes on pools are set at the time of the vote. Since you've added new
       {{ veSymbol }} since your original vote, you have additional voting power
       which is not being used. Use the 'Edit votes' button to resubmit your
       votes.
     </VotingAlert>
 
-    <VotingAlert
+    <!-- <VotingAlert
       v-if="noVeBalBalance && !isLoading"
       :title="`You need some ${veSymbol} to vote on gauges`"
     >
       Get {{ veSymbol }} by locking up LP tokens from the 80% {{ symmSymbol }} /
       20% {{ nativeSymbol }}
       pool.
-    </VotingAlert>
+    </VotingAlert> -->
 
     <VotingAlert
       v-if="veBalExpired"
       :title="`You can't vote because your ${veSymbol} has expired`"
     >
       You need some {{ veSymbol }} to vote on gauges. Unlock and relock your
-      {{ lpToken }} to get some veBAL.
+      {{ lpToken }} to get some veRVLV.
     </VotingAlert>
 
     <VotingAlert
@@ -243,11 +240,13 @@ watch(isRefetchingVotingPools, async () => {
       You won't be able to make any edits until some of them are unlocked.
     </VotingAlert>
 
-    <div class="flex flex-wrap justify-between items-end px-4 lg:px-0">
-      <div class="flex gap-2 xs:gap-3 mb-3 lg:mb-0">
-        <BalCard shadow="none" class="p-0 md:w-48 min-w-max">
+    <div class="flex flex-wrap justify-between items-end mb-4">
+      <div class="flex gap-2 xs:gap-3 mb-2 lg:mb-0">
+        <div
+          class="p-3 md:w-40 min-w-max rounded-xl border shadow-lg backdrop-blur-lg bg-white/5 dark:bg-white/10 border-white/30 dark:border-white/20"
+        >
           <div class="flex items-center">
-            <p class="inline mr-1 text-sm text-secondary">
+            <p class="inline mr-1 text-xs text-secondary">
               My unallocated votes
             </p>
             <BalTooltip
@@ -263,7 +262,7 @@ watch(isRefetchingVotingPools, async () => {
             />
           </div>
           <p
-            class="inline mr-1 text-lg font-semibold"
+            class="inline mr-1 text-base font-semibold"
             :class="{ 'text-red-500': hasExpiredLock }"
           >
             <span v-if="hasLock">
@@ -285,12 +284,14 @@ watch(isRefetchingVotingPools, async () => {
             width="72"
             class="relative top-0.5"
           />
-        </BalCard>
-        <BalCard shadow="none" class="md:w-48 min-w-max">
+        </div>
+        <div
+          class="p-3 md:w-40 min-w-max rounded-xl border shadow-lg backdrop-blur-lg bg-white/5 dark:bg-white/10 border-white/30 dark:border-white/20"
+        >
           <div class="flex items-center">
             <p
               :class="{ 'text-orange-500 font-medium': votingPeriodLastHour }"
-              class="inline mr-1 text-sm text-secondary"
+              class="inline mr-1 text-xs text-secondary"
             >
               Voting period ends
             </p>
@@ -304,7 +305,7 @@ watch(isRefetchingVotingPools, async () => {
               class="mt-1"
             />
           </div>
-          <p class="text-lg font-semibold tabular-nums">
+          <p class="text-base font-semibold tabular-nums">
             <span
               v-if="votingPeriodEnd.length"
               :class="{ 'text-orange-500': votingPeriodLastHour }"
@@ -317,12 +318,12 @@ watch(isRefetchingVotingPools, async () => {
               }}
             </span>
           </p>
-        </BalCard>
+        </div>
       </div>
-      <div class="flex mb-3 lg:mb-0">
+      <div class="flex mb-2 lg:mb-0">
         <BalTextInput
           v-model="tokenFilter"
-          class="mr-5 b-5"
+          class="mr-2 w-48 text-xs"
           name="tokenSearch"
           type="text"
           :placeholder="$t('filterByToken')"
@@ -330,7 +331,7 @@ watch(isRefetchingVotingPools, async () => {
         >
           <template #prepend>
             <div class="flex items-center h-full">
-              <BalIcon name="search" size="md" class="px-2 text-gray-600" />
+              <BalIcon name="search" size="sm" class="px-1 text-gray-600" />
             </div>
           </template>
         </BalTextInput>
@@ -341,14 +342,15 @@ watch(isRefetchingVotingPools, async () => {
           @update:show-expired-gauges="showExpiredGauges = $event"
           @update:active-network-filters="activeNetworkFilters = $event"
         />
-        <div v-if="isWalletReady" class="flex-0 ml-5 w-32 h-8">
+        <div v-if="isWalletReady" class="flex flex-0 ml-2 w-24 h-full">
           <BalBtn
             :tag="votingDisabled ? 'div' : 'router-link'"
-            :to="{ name: 'vesymm-voting', params: { networkSlug } }"
+            :to="{ name: 'vervlv-voting', params: { networkSlug } }"
             :label="hasSubmittedVotes ? 'Edit votes' : 'Vote'"
             color="gradient"
             :disabled="votingDisabled"
             block
+            size="md"
           />
         </div>
       </div>

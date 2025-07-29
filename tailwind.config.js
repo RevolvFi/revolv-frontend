@@ -17,7 +17,7 @@ module.exports = {
   theme: {
     fontFamily: {
       body: [
-        'Inter-Variable',
+        'Nunito-Variable',
         '-apple-system',
         'BlinkMacSystemFont',
         '"Segoe UI"',

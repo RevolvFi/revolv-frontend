@@ -12,7 +12,11 @@ const { darkMode, toggleDarkMode } = useDarkMode();
 const { networkSlug } = useNetwork();
 
 const hasLightMode = computed(() => {
-  return networkSlug !== 'taiko' && networkSlug !== 'etherlink';
+  return (
+    networkSlug !== 'taiko' &&
+    networkSlug !== 'etherlink' &&
+    networkSlug !== 'telos'
+  );
 });
 </script>
 

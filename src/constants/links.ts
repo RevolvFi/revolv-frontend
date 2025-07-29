@@ -11,11 +11,11 @@ export const EXTERNAL_LINKS = {
     Social: {
       Telegram: 'https://t.me/SymmetricFinanceDiscussion',
       Discord: 'https://discord.gg/z8hJqrFYs3',
-      Github: 'https://github.com/centfinance/',
+      Github: 'https://github.com/revolvfi/',
       Mail: 'mailto:contact@balancer.finance',
       Medium: 'https://medium.com/@Symmetric.finance',
       Linkedin: 'https://www.linkedin.com/company/balancer-labs/',
-      Twitter: 'https://twitter.com/0xSymmetric',
+      Twitter: 'https://x.com/revolvfi',
       Youtube: 'https://www.youtube.com/channel/UCBRHug6Hu3nmbxwVMt8x_Ow',
     },
     Vote: 'https://vote.balancer.finance/',

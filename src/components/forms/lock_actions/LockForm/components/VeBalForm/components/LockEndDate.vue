@@ -89,9 +89,9 @@ function formatDateInput(date: Date | number) {
 </script>
 
 <template>
-  <div class="mb-6">
+  <div class="mb-4">
     <div>
-      <p class="pb-2 font-semibold">
+      <p class="pb-1 text-sm font-semibold">
         {{ $t('getVeBAL.lockForm.lockEndDate.title') }}
       </p>
     </div>
@@ -102,12 +102,13 @@ function formatDateInput(date: Date | number) {
       :min="formatDateInput(minLockEndDateTimestamp)"
       :max="formatDateInput(maxLockEndDateTimestamp)"
       step="7"
+      size="sm"
     />
-    <div class="flex px-1 mt-2 text-sm text-secondary">
+    <div class="flex px-1 mt-1 text-xs text-secondary">
       <div
         v-for="(lockDate, index) in lockDates"
         :key="index"
-        class="mr-3 hover:text-pink-500 focus:text-pink-500 cursor-pointer"
+        class="mr-2 hover:text-pink-500 focus:text-pink-500 cursor-pointer"
         @click="lockDate.action"
       >
         ~{{ lockDate.label }}

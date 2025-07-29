@@ -1,6 +1,6 @@
-# Symmetric Frontend App (v2)
+# Revolv Frontend App (v2)
 
-Official frontend app for the Symmetric protocol (v3)
+Official frontend app for the Revolv protocol (v3)
 
 ![Alt](https://repobeats.axiom.co/api/embed/9a2f4fbb502d735b6b8ec648723e686ae82f1fad.svg 'Repobeats analytics image')
 
@@ -103,12 +103,12 @@ source: https://stackoverflow.com/questions/65612411/forcing-docker-to-use-linux
 
 ## Self-Hosting
 
-As we believe in decentralization at all layers, we've made it easy to host your own Symmetric Frontend.
+As we believe in decentralization at all layers, we've made it easy to host your own Revolv Frontend.
 
 ### Docker Production Image
 
 We've created a production ready [docker image](./Dockerfile) runs
-a pre-built version of Symmetric Frontend-v2 using nginx. You'll need your own
+a pre-built version of Revolv Frontend-v2 using nginx. You'll need your own
 [Infura](https://infura.io), [Alchemy](https://www.alchemy.com/), and
 [Blocknative](https://blocknative.com) API keys in order to fetch data and
 execute transactions.

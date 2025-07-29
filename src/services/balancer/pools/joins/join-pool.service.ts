@@ -12,11 +12,13 @@ import { GeneralisedJoinHandler } from './handlers/generalised-join.handler';
 
 import { BalancerSDK } from '@symmetric-v3/sdk';
 import { ExactInJoinHandler } from './handlers/exact-in-join.handler';
+import { Erc4626JoinHandler } from './handlers/erc4626-join.handler';
 
 export enum JoinHandler {
   Swap = 'Swap',
   Generalised = 'Generalised',
   ExactIn = 'ExactIn',
+  Erc4626 = 'Erc4626',
 }
 
 type HandlerParams = [Ref<Pool>, BalancerSDK];
@@ -55,6 +57,8 @@ export class JoinPoolService {
     switch (type) {
       case JoinHandler.Swap:
         return (this.joinHandler = new SwapJoinHandler(...handlerParams));
+      case JoinHandler.Erc4626:
+        return (this.joinHandler = new Erc4626JoinHandler(...handlerParams));
       case JoinHandler.Generalised:
         return (this.joinHandler = new GeneralisedJoinHandler(
           ...handlerParams

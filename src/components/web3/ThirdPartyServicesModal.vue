@@ -23,7 +23,7 @@
             width="36"
             height="36"
             :src="buildServiceIconURL(service)"
-            alt="Symmetric 3rd party service"
+            alt="Revolv 3rd party service"
             class="mt-1"
           />
           <BalStack vertical spacing="none">

@@ -295,10 +295,19 @@ export default function useSwapping(
 
   function resetAmounts() {
     sor.resetInputAmounts('');
+    console.log('[useSwapping] Resetting amounts');
   }
 
   async function handleAmountChange() {
+    console.log('[useSwapping] handleAmountChange start', {
+      tokenInAmountInput: tokenInAmountInput.value,
+      tokenOutAmountInput: tokenOutAmountInput.value,
+      exactIn: exactIn.value,
+      swapRoute: swapRoute.value,
+    });
+
     if (exactIn.value) {
+      console.log('[useSwapping] Resetting tokenOutAmountInput');
       tokenOutAmountInput.value = '';
     } else {
       tokenInAmountInput.value = '';
@@ -309,10 +318,14 @@ export default function useSwapping(
     joinExit.resetState();
 
     if (isCowswapSwap.value) {
+      console.log('[useSwapping] Using cowswap handler');
       cowswap.handleAmountChange();
-    } else {
-      await sor.handleAmountChange();
+    } else if (isJoinExitSwap.value) {
+      console.log('[useSwapping] Using joinExit handler');
       await joinExit.handleAmountChange();
+    } else {
+      console.log('[useSwapping] Using sor handler');
+      await sor.handleAmountChange();
     }
   }
 
@@ -324,6 +337,9 @@ export default function useSwapping(
   });
 
   watch(tokenOutAddressInput, () => {
+    console.log('[useSwapping] tokenOutAddressInput changed', {
+      tokenOutAddressInput: tokenOutAddressInput.value,
+    });
     setOutputAsset(tokenOutAddressInput.value);
 
     handleAmountChange();
@@ -342,16 +358,21 @@ export default function useSwapping(
       if (!cowswap.hasValidationError.value) {
         cowswap.handleAmountChange();
       }
-    } else if (isJoinExitSwap.value) {
-      if (!joinExit.hasValidationError.value) {
-        joinExit.handleAmountChange();
-      }
+      // }
+      // else if (isJoinExitSwap.value) {
+      //   if (!joinExit.hasValidationError.value) {
+      //     joinExit.handleAmountChange();
+      //   }
     } else if (isBalancerSwap.value) {
+      console.log('[useSwapping] Using sor handler');
       sor.updateSwapAmounts();
     }
   });
 
   watch(slippageBufferRate, () => {
+    console.log('[useSwapping] slippageBufferRate changed', {
+      slippageBufferRate: slippageBufferRate.value,
+    });
     handleAmountChange();
   });
 

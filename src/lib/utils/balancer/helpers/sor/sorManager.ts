@@ -16,6 +16,8 @@ import {
 } from '@/constants/tokens';
 import { getBalancerSDK } from '@/dependencies/balancer-sdk';
 import { captureBalancerException } from '@/lib/utils/errors';
+import { convertERC4626Wrap } from '@/lib/utils/balancer/erc4626Wrappers';
+import { configService } from '@/services/config/config.service';
 
 const SWAP_COST = import.meta.env.VITE_SWAP_COST || '100000';
 
@@ -146,14 +148,6 @@ export class SorManager {
 
     const timestampSeconds = Math.floor(Date.now() / 1000);
 
-    const isWTLOSUSDT =
-      (v2TokenIn === '0xD102cE6A4dB07D247fcc28F366A623Df0938CA9E' ||
-        v2TokenIn === AddressZero ||
-        v2TokenOut === '0xD102cE6A4dB07D247fcc28F366A623Df0938CA9E' ||
-        v2TokenOut === AddressZero) &&
-      (v2TokenOut === '0x975Ed13fa16857E83e7C493C7741D556eaaD4A3f' ||
-        v2TokenOut === '0x975Ed13fa16857E83e7C493C7741D556eaaD4A3f');
-
     // The poolTypeFilter can be used to filter to different pool types. Useful for debug/testing.
     const swapOptions: SwapOptions = {
       maxPools: this.maxPools,
@@ -164,42 +158,97 @@ export class SorManager {
       forceRefresh: true,
     };
 
-    if (isWTLOSUSDT) {
-      swapOptions.poolTypeFilter = PoolFilter.Weighted;
+    // Get wrappers from config for both tokens
+    const wrappers = configService.network.tokens.Wrappers || [];
+    const vaultsIn = wrappers
+      .filter(w => w.underlying.toLowerCase() === v2TokenIn.toLowerCase())
+      .map(w => w.wrapper);
+    const vaultsOut = wrappers
+      .filter(w => w.underlying.toLowerCase() === v2TokenOut.toLowerCase())
+      .map(w => w.wrapper);
+
+    console.log('[SorManager] Found vaults', {
+      vaultsIn,
+      vaultsOut,
+    });
+
+    // Create array of all possible token combinations to try
+    const tokenInOptions = [v2TokenIn, ...vaultsIn];
+    const tokenOutOptions = [v2TokenOut, ...vaultsOut];
+
+    let bestSwapInfo: SwapInfo | null = null;
+    let bestReturnAmount = BigNumber.from(0);
+
+    // Try each combination of tokens
+    for (const tokenInOption of tokenInOptions) {
+      for (const tokenOutOption of tokenOutOptions) {
+        try {
+          // Convert input amount if using a vault
+          let inputAmount = amountScaled;
+          if (tokenInOption !== v2TokenIn) {
+            const convertedAmount = await convertERC4626Wrap(tokenInOption, {
+              amount: amountScaled,
+              isWrap: true,
+            });
+            inputAmount = BigNumber.from(convertedAmount);
+          }
+          console.table({
+            tokenInOption,
+            inputAmount: inputAmount.toString(),
+            tokenOutOption,
+          });
+
+          const swapInfoV2: SwapInfo = await this.sorV2.getSwaps(
+            tokenInOption.toLowerCase(),
+            tokenOutOption.toLowerCase(),
+            swapType,
+            inputAmount,
+            swapOptions
+          );
+
+          // Convert return amount if using a vault
+          let returnAmount = swapInfoV2.returnAmount;
+          if (tokenOutOption !== v2TokenOut) {
+            const convertedAmount = await convertERC4626Wrap(tokenOutOption, {
+              amount: swapInfoV2.returnAmount,
+              isWrap: false,
+            });
+            returnAmount = BigNumber.from(convertedAmount);
+          }
+
+          // Compare return amounts to find the best route
+          if (returnAmount.gt(bestReturnAmount)) {
+            bestSwapInfo = swapInfoV2;
+            bestReturnAmount = returnAmount;
+          }
+        } catch (error) {
+          // Skip invalid combinations
+          continue;
+        }
+      }
     }
 
-    const swapInfoV2: SwapInfo = await this.sorV2.getSwaps(
-      v2TokenIn.toLowerCase(),
-      v2TokenOut.toLowerCase(),
-      swapType,
-      amountScaled,
-      swapOptions
-    );
-    console.log('v2TokenIn', v2TokenIn);
-    console.log('v2TokenOut', v2TokenOut);
-    console.log('swapType', swapType);
-    console.log('amountScaled', amountScaled.toString());
-    console.log('swapOptions', swapOptions);
-    console.log('gasPrice', this.gasPrice.toString());
-    console.log('swapGas', BigNumber.from(SWAP_COST).toString());
+    if (!bestSwapInfo) {
+      throw new Error('No valid swap route found');
+    }
+    console.table({
+      tokenIn: v2TokenIn,
+      tokenOut: v2TokenOut,
+      returnDecimals: tokenOutDecimals,
+      hasSwaps: bestSwapInfo.swaps.length > 0,
+      returnAmount: bestReturnAmount.toString(),
+      marketSpNormalised: bestSwapInfo.marketSp,
+    });
 
-    // Both are scaled amounts
-    console.log(
-      `[SorManager] ${swapInfoV2.returnAmount.toString()}: V2 return amount`
-    );
-    console.log(
-      `[SorManager] ${swapInfoV2.returnAmountConsideringFees.toString()}: V2 return amount with fees`
-    );
-
+    // Return the best swap route found, but keep the original token addresses in the return object
     return {
-      tokenIn,
-      tokenOut,
-      returnDecimals:
-        swapType === SwapTypes.SwapExactIn ? tokenOutDecimals : tokenInDecimals,
-      hasSwaps: swapInfoV2.swaps.length > 0,
-      returnAmount: swapInfoV2.returnAmount,
-      result: swapInfoV2,
-      marketSpNormalised: swapInfoV2.marketSp,
+      tokenIn: v2TokenIn,
+      tokenOut: v2TokenOut,
+      returnDecimals: tokenOutDecimals,
+      hasSwaps: bestSwapInfo.swaps.length > 0,
+      returnAmount: bestReturnAmount,
+      marketSpNormalised: bestSwapInfo.marketSp,
+      result: bestSwapInfo,
     };
   }
 

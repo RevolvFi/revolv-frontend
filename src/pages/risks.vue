@@ -5,11 +5,11 @@ import { RiskKey } from '@/types/pools';
 <template>
   <div class="pb-4 risks">
     <div class="pb-3">
-      <h1>Symmetric Protocol Risks</h1>
+      <h1>Revolv Protocol Risks</h1>
       <p>
         There are many inherent risks developers accept when working in DeFi and
-        using the Symmetric Protocol. This page aims to summarize the top risks
-        to help you with your risk decisions. It is important to note that this
+        using the Revolv Protocol. This page aims to summarize the top risks to
+        help you with your risk decisions. It is important to note that this
         list is not exhaustive, and there may be additional risks not explicitly
         mentioned here. As the risk environment is fluid, we expect to
         periodically update this summary.
@@ -136,9 +136,9 @@ import { RiskKey } from '@/types/pools';
       <h4>Smart contract risk</h4>
       <p>
         Smart contract risk is a general risk when using DeFi protocols,
-        including Symmetric. Smart contracts are self-executing pieces of code
-        that run on certain blockchains, like Ethereum. Although they are
-        designed to be secure, they can be vulnerable to bugs and exploits.
+        including Revolv. Smart contracts are self-executing pieces of code that
+        run on certain blockchains, like Ethereum. Although they are designed to
+        be secure, they can be vulnerable to bugs and exploits.
       </p>
       <p>
         If there is a flaw in the smart contract code, it can be exploited by
@@ -148,36 +148,36 @@ import { RiskKey } from '@/types/pools';
         is important to carefully evaluate the security of the protocols before
         using them.
       </p>
-      <h5>The Symmetric Vault</h5>
+      <h5>The Revolv Vault</h5>
       <p>
-        The main architectural change between Symmetric V1 and Symmetric V2 is
-        the transition to&nbsp;a single vault that holds and manages all the
-        assets added by all Symmetric pools. This separates the AMM logic from
-        the token management and accounting. Token management/accounting is done
-        by the vault while the AMM logic is individual to each pool. This
-        provides many advantages, including flexibility and gas efficiency.
+        The main architectural change between Revolv V1 and Revolv V2 is the
+        transition to&nbsp;a single vault that holds and manages all the assets
+        added by all Revolv pools. This separates the AMM logic from the token
+        management and accounting. Token management/accounting is done by the
+        vault while the AMM logic is individual to each pool. This provides many
+        advantages, including flexibility and gas efficiency.
       </p>
       <p>
-        One critique of this approach is that the Symmetric Vault could be a
-        single point of failure—i.e. hack the vault, get all the tokens of the
-        protocol. This Symmetric Vault architecture was heavily audited prior to
+        One critique of this approach is that the Revolv Vault could be a single
+        point of failure—i.e. hack the vault, get all the tokens of the
+        protocol. This Revolv Vault architecture was heavily audited prior to
         launch and has now been battle-tested since May 2021, securing over $3b.
         It has also been forked by other teams across different networks,
         including Beethoven X on Fantom, without issue.
       </p>
-      <h5>How does Symmetric work to mitigate this risk?</h5>
+      <h5>How does Revolv work to mitigate this risk?</h5>
       <ul>
         <li>
           Development teams have engaged with top tier smart contract auditing
           firms to identify and fix bugs before deployment.
         </li>
         <li>
-          The core of Symmetric smart contracts are immutable and do not use
+          The core of Revolv smart contracts are immutable and do not use
           proxies or other upgrade mechanisms. Note: Within DeFI, upgradable
           contracts are a major way exploits have been introduced.
         </li>
         <!-- <li>
-          In addition, Symmetric has a bug bounty program via
+          In addition, Revolv has a bug bounty program via
           <a class="link" href="https://immunefi.com/bounty/balancer/"
             >Immunefi</a
           >
@@ -217,17 +217,17 @@ import { RiskKey } from '@/types/pools';
         a profit.
       </p>
       <p>
-        In addition, the composable nature of DeFi means that a pool on
-        Symmetric may contain tokens that may be manipulated by an attacker on a
-        third party protocol, which further increases risk.
+        In addition, the composable nature of DeFi means that a pool on Revolv
+        may contain tokens that may be manipulated by an attacker on a third
+        party protocol, which further increases risk.
       </p>
       <p>
         These types of economic exploits are difficult to detect and prevent.
       </p>
-      <h5>How does Symmetric work to mitigate this risk?</h5>
+      <h5>How does Revolv work to mitigate this risk?</h5>
       <ul>
         <li>
-          Symmetric strives to deliver careful economic modeling, rigorous
+          Revolv strives to deliver careful economic modeling, rigorous
           mechanism design, testing and audits by top tier auditing firms.
         </li>
       </ul>
@@ -259,7 +259,7 @@ import { RiskKey } from '@/types/pools';
 
       <ul>
         <li>
-          Unsupported tokens on Symmetric Protocol, including:
+          Unsupported tokens on Revolv Protocol, including:
           <ul class="mt-2">
             <li>
               <router-link to="risks#rebasing-tokens"
@@ -310,15 +310,15 @@ import { RiskKey } from '@/types/pools';
         </p>
       </div>
 
-      <h5>How does Symmetric mitigate these risks?</h5>
+      <h5>How does Revolv mitigate these risks?</h5>
       <ul>
         <li>
-          Since the Symmetric protocol is permissionless, anyone can create a
+          Since the Revolv protocol is permissionless, anyone can create a
           liquidity pool composed of any ERC-20 token. This makes this type of
           risk difficult to mitigate.
         </li>
         <li>
-          The Symmetric App UI may be updated to exclude blacklisted tokens and
+          The Revolv App UI may be updated to exclude blacklisted tokens and
           pools but LPs should not rely on this.
         </li>
         <li>
@@ -329,7 +329,7 @@ import { RiskKey } from '@/types/pools';
           <code>stETH</code>.
         </li>
         <li>
-          For Symmetric Managed Pools, a novel feature called ‘circuit breakers’
+          For Revolv Managed Pools, a novel feature called ‘circuit breakers’
           has been designed to halt swapping if there is a large, uncorrelated
           drop in a token’s value.
         </li>
@@ -349,7 +349,7 @@ import { RiskKey } from '@/types/pools';
         </li>
         <li>
           LP’s should review all pool tokens before providing liquidity to
-          ensure no constituent pool tokens are unsupported by the Symmetric
+          ensure no constituent pool tokens are unsupported by the Revolv
           Protocol (e.g. rebasing tokens).
         </li>
         <li>
@@ -389,23 +389,21 @@ import { RiskKey } from '@/types/pools';
     <div :id="RiskKey.Governance" class="risk">
       <h4>DAO Governance risk</h4>
       <p>
-        Symmetric currently uses off-chain voting mechanisms to signal the will
-        of ve token holders (vote-escrow SYMM). This off-chain voting is done
-        via
+        Revolv currently uses off-chain voting mechanisms to signal the will of
+        ve token holders (vote-escrow RVLV). This off-chain voting is done via
         <a class="link" href="https://snapshot.org/">Snapshot</a>—originally
-        developed in-house by Symmetric Labs.
+        developed in-house by Revolv Labs.
       </p>
       <p>
-        A summary of the immutability of the Symmetric Protocol’s smart
-        contracts:
+        A summary of the immutability of the Revolv Protocol’s smart contracts:
       </p>
       <ul>
         <li>
-          Symmetric V1 contracts are immutable, so there were no core protocol
+          Revolv V1 contracts are immutable, so there were no core protocol
           parameters that could be changed.
         </li>
         <li>
-          Symmetric V2 contracts do allow for some tweaking of core protocol
+          Revolv V2 contracts do allow for some tweaking of core protocol
           parameters, including the ability to:
           <ul class="mt-2">
             <li>
@@ -427,17 +425,16 @@ import { RiskKey } from '@/types/pools';
             <li>
               Set dynamic-fee controllers: addresses (initially assigned to
               Gauntlet) that may change the swap fee for pools created by the
-              dynamic-fee pool factory that will be deployed by Symmetric Labs
+              dynamic-fee pool factory that will be deployed by Revolv Labs
             </li>
             <li>Add and remove ve gauges</li>
           </ul>
         </li>
       </ul>
       <p>
-        Note: The system of Symmetric Governance may change in the future. For
-        example, Symmetric community members have expressed interest in moving
-        from the Multisig towards on-chain governance execution by ve token
-        holders.
+        Note: The system of Revolv Governance may change in the future. For
+        example, Revolv community members have expressed interest in moving from
+        the Multisig towards on-chain governance execution by ve token holders.
       </p>
       <p>
         The main risk with this setup consisting of off-chain voting executed by
@@ -468,17 +465,17 @@ import { RiskKey } from '@/types/pools';
           against the interests of the majority of the community.
         </li>
       </ul>
-      <h5>How Symmetric aims to mitigate this risk:</h5>
+      <h5>How Revolv aims to mitigate this risk:</h5>
       <ul>
         <li>
-          The core of Symmetric smart contracts are immutable and do not use
+          The core of Revolv smart contracts are immutable and do not use
           proxies or other upgrade mechanisms. Only parameters, which are
           considered to be less ‘dangerous’ may be tweaked.
         </li>
         <li>
           The Multisig does&nbsp;not&nbsp;have custody of, nor control over,
-          funds from liquidity providers locked inside Symmetric Protocol
-          contracts. Symmetric V2 was designed so that even if a multisig goes
+          funds from liquidity providers locked inside Revolv Protocol
+          contracts. Revolv V2 was designed so that even if a multisig goes
           rogue, all the liquidity is safe and can be withdrawn by their
           rightful owners.
         </li>
@@ -486,7 +483,7 @@ import { RiskKey } from '@/types/pools';
       <h5>How LPs can mitigate this risk:</h5>
       <ul>
         <li>
-          LPs should stay up to date with Symmetric Governance by following
+          LPs should stay up to date with Revolv Governance by following
           discussions on the forum and participating in the off-chain voting.
         </li>
         <li>
@@ -508,8 +505,7 @@ import { RiskKey } from '@/types/pools';
         powerful new financial primitive, native to DeFi.
       </p>
       <p>
-        Flash Loans may be used on Symmetric and interact with the Symmetric
-        Vault.
+        Flash Loans may be used on Revolv and interact with the Revolv Vault.
       </p>
       <p>
         While Flash Loans offer many benefits, they also comes with certain
@@ -518,14 +514,14 @@ import { RiskKey } from '@/types/pools';
         relatively new with the full range of attack surfaces still being
         discovered.
       </p>
-      <h5>How Symmetric aims to mitigate this risk:</h5>
+      <h5>How Revolv aims to mitigate this risk:</h5>
       <ul>
         <li>
-          The Symmetric Vault is non-reentrant, which blocks most Flash Loan
+          The Revolv Vault is non-reentrant, which blocks most Flash Loan
           attacks.
         </li>
         <li>
-          Symmetric strives to deliver careful economic modeling, rigorous
+          Revolv strives to deliver careful economic modeling, rigorous
           mechanism design, testing and audits by top tier auditing firms.
         </li>
       </ul>
@@ -534,8 +530,8 @@ import { RiskKey } from '@/types/pools';
     <div :id="RiskKey.Mutable" class="risk">
       <h4>Mutable pool attributes</h4>
       <p>
-        Symmetric is a flexible AMM that allows people to create different types
-        of liquidity pools, including those with immutable and/or mutable pool
+        Revolv is a flexible AMM that allows people to create different types of
+        liquidity pools, including those with immutable and/or mutable pool
         attributes.
       </p>
       <p>
@@ -561,23 +557,23 @@ import { RiskKey } from '@/types/pools';
           Who can change each attribute
           <ul>
             <li>
-              On Symmetric pools, if an attribute is editable, the address that
-              can make the edit is also specified. The two most common parties
-              that are set to be able to change pool attributes are either the
-              Pool Owner or Symmetric Governance.
+              On Revolv pools, if an attribute is editable, the address that can
+              make the edit is also specified. The two most common parties that
+              are set to be able to change pool attributes are either the Pool
+              Owner or Revolv Governance.
             </li>
           </ul>
         </li>
       </ul>
-      <h5>How does Symmetric work to mitigate this risk?</h5>
+      <h5>How does Revolv work to mitigate this risk?</h5>
       <ul>
         <li>
-          For known pool types, the Symmetric App UI transparently displays pool
+          For known pool types, the Revolv App UI transparently displays pool
           attributes and specifies if it is editable and if so, by whom.
         </li>
         <li>
-          Symmetric Managed Pools are designed to have mutable attributes that
-          can be changed by the Pool Owner. For certain ‘dangerous operations’,
+          Revolv Managed Pools are designed to have mutable attributes that can
+          be changed by the Pool Owner. For certain ‘dangerous operations’,
           there are ‘timelock delays’ which give LPs a period to review the
           proposed changes and withdraw funds if they do not agree with the
           change. In addition, Pool Controllers can set a guardian who has the
@@ -615,8 +611,8 @@ import { RiskKey } from '@/types/pools';
       </p>
       <p>
         Slippage tolerance is a setting in both the Add/Remove liquidity flows
-        on the Symmetric App UI. Setting a low slippage tolerance protects you
-        from front-running bots and miner extractable value (MEV).
+        on the Revolv App UI. Setting a low slippage tolerance protects you from
+        front-running bots and miner extractable value (MEV).
       </p>
       <h5>Due to high Gas fees</h5>
       <p>
@@ -634,20 +630,20 @@ import { RiskKey } from '@/types/pools';
         mining incentives. If the gas fees are higher than the returns they get
         from providing liquidity, LPs may end up with a net loss.
       </p>
-      <h5>How Symmetric aims to mitigate this risk:</h5>
+      <h5>How Revolv aims to mitigate this risk:</h5>
       <ul>
         <li>
-          The Symmetric Smart Order router is used to route liquidity
-          efficiently via pools to minimize price impact.
+          The Revolv Smart Order router is used to route liquidity efficiently
+          via pools to minimize price impact.
         </li>
         <li>
-          The Symmetric App UI gives LP’s control over their slippage settings.
+          The Revolv App UI gives LP’s control over their slippage settings.
         </li>
         <li>
-          LP’s are warned via the Symmetric App UI when the price impact is
-          excessive. Once price impact exceeds a certain threshold, the
-          Symmetric App UI prevents user’s from executing a transaction where
-          they would otherwise get rekt.
+          LP’s are warned via the Revolv App UI when the price impact is
+          excessive. Once price impact exceeds a certain threshold, the Revolv
+          App UI prevents user’s from executing a transaction where they would
+          otherwise get rekt.
         </li>
       </ul>
       <h5>How LP’s can mitigate this risk:</h5>
@@ -668,9 +664,9 @@ import { RiskKey } from '@/types/pools';
       <h4>Impermanent loss</h4>
       <p>
         Impermanent loss is a risk that liquidity providers (LPs) face when
-        providing liquidity to an automated market maker (AMM) like Symmetric.
-        It is the difference between the value of holding assets in a pool
-        versus holding them outside of the pool.
+        providing liquidity to an automated market maker (AMM) like Revolv. It
+        is the difference between the value of holding assets in a pool versus
+        holding them outside of the pool.
       </p>
       <p>
         If the price of the assets in the pool changes, LPs may experience a
@@ -686,21 +682,21 @@ import { RiskKey } from '@/types/pools';
         This risk is particularly relevant for pools with volatile assets where
         token prices are likely diverge over time.
       </p>
-      <h5>How does Symmetric work to mitigate this risk?</h5>
+      <h5>How does Revolv work to mitigate this risk?</h5>
       <ul>
         <li>
-          All AMMs either have impermanent loss or reduced yield to LPs.
-          Symmetric aims to make its pools as capital efficient as possible so
-          that the yield LPs make is more likely to exceed any impermanent loss.
+          All AMMs either have impermanent loss or reduced yield to LPs. Revolv
+          aims to make its pools as capital efficient as possible so that the
+          yield LPs make is more likely to exceed any impermanent loss.
         </li>
         <li>
-          The Symmetric protocol supports unbalanced pools which LPs can use to
+          The Revolv protocol supports unbalanced pools which LPs can use to
           reduce impermanent loss. For example, there is lower impermanent loss
           in an 80/20 pool (or any other unbalanced pools) versus a 50/50 pool
           with the same underlying tokens.
         </li>
         <li>
-          Note: Some ecosystem developers are building on top of Symmetric to
+          Note: Some ecosystem developers are building on top of Revolv to
           create novel pools, including Managed Pools, with rebalancing
           algorithms designed to minimize impermanent loss.
         </li>
@@ -709,7 +705,7 @@ import { RiskKey } from '@/types/pools';
       <ul>
         <li>
           LPs should consider the risk of impermanent risk carefully before
-          providing liquidity to a Symmetric pool.
+          providing liquidity to a Revolv pool.
         </li>
         <li>
           The longer an LP holds their position, the more likely it is that
@@ -733,8 +729,8 @@ import { RiskKey } from '@/types/pools';
       <p>
         DeFi users, including liquidity providers and swappers, typically
         interact with front-end user interfaces to interact with a protocol’s
-        smart contracts. An example is the app.Symmetric.fi front-end UI
-        instance which interacts with Symmetric Protocol smart contracts.
+        smart contracts. An example is the app.Revolv.fi front-end UI instance
+        which interacts with Revolv Protocol smart contracts.
       </p>
 
       <p class="mb-0">
@@ -761,31 +757,31 @@ import { RiskKey } from '@/types/pools';
         </li>
       </ul>
 
-      <h5>How does Symmetric work to mitigate this risk?</h5>
+      <h5>How does Revolv work to mitigate this risk?</h5>
       <ul>
         <li>
-          Since the Symmetric smart contracts can be interacted with by any
-          front-end UI, there is less reliance on any one single UI. The
-          Symmetric App UI code is open source with an MIT License which allow
-          other third party developers to fork the code, make improvements and
-          compete for users.
+          Since the Revolv smart contracts can be interacted with by any
+          front-end UI, there is less reliance on any one single UI. The Revolv
+          App UI code is open source with an MIT License which allow other third
+          party developers to fork the code, make improvements and compete for
+          users.
         </li>
         <li>
           Users or third party developers can keep track of changes and review
-          the open source repository on the Symmetric Github for potential
+          the open source repository on the Revolv Github for potential
           malicious code.
         </li>
         <li>
-          The developers of the Symmetric App UI have provided instructions on
-          how to clone and run local environments of the app. This allows people
-          to have the ability to keep deprecated features or modify the code to
-          add new features that they prefer.
+          The developers of the Revolv App UI have provided instructions on how
+          to clone and run local environments of the app. This allows people to
+          have the ability to keep deprecated features or modify the code to add
+          new features that they prefer.
         </li>
       </ul>
       <h5>How can LPs mitigate this risk?</h5>
       <ul>
         <li>
-          LP’s can learn how to interact with Symmetric smart contracts on third
+          LP’s can learn how to interact with Revolv smart contracts on third
           party websites, like
           <a class="link" href="https://etherscan.io/">Etherscan</a>.
         </li>
@@ -809,13 +805,11 @@ import { RiskKey } from '@/types/pools';
         entire DeFi ecosystem.
       </p>
       <p>
-        It's also possible that the Symmetric App UI may be wholly or partially
+        It's also possible that the Revolv App UI may be wholly or partially
         suspended or terminated for any or no reason, which may limit your
         access to your tokens via this website. In this scenario, you may be
         able to recover funds by forking the open-source code on
-        <a
-          class="link"
-          href="https://github.com/centfinance/Symmetric.Frontend-v3/"
+        <a class="link" href="https://github.com/revolvfi/revolv-frontnend/"
           >Github</a
         >
         and running your own local instance, or by using a third party website,
@@ -826,7 +820,7 @@ import { RiskKey } from '@/types/pools';
     <div :id="RiskKey.PoolType" class="risk">
       <h3>Pool type risks</h3>
       <p>
-        Symmetric is designed to be infinitely extendible to allow for any
+        Revolv is designed to be infinitely extendible to allow for any
         conceivable pool type with custom curves, logic and parameters, and
         more. The general risks of the most popular pool types are listed below.
       </p>
@@ -840,10 +834,10 @@ import { RiskKey } from '@/types/pools';
           >Weighted math</a
         >, which makes them great for general cases, including tokens that don't
         necessarily have any price correlation (ex. DAI/WETH). Unlike weighted
-        pools in other AMMs that only provide 50/50 weightings, Symmetric
-        Weighted Pools enable users to build pools with more than two tokens and
-        custom weightings, such as pools with 80/20 or 60/20/20 weightings. Some
-        risks of weighted pools include:
+        pools in other AMMs that only provide 50/50 weightings, Revolv Weighted
+        Pools enable users to build pools with more than two tokens and custom
+        weightings, such as pools with 80/20 or 60/20/20 weightings. Some risks
+        of weighted pools include:
       </p>
       <ul>
         <li>
@@ -856,9 +850,9 @@ import { RiskKey } from '@/types/pools';
           Toxic token risk
           <ul>
             <li>
-              Symmetric weighted pools are not limited to just having two
-              tokens. The more tokens in a pool, the more risk that one of these
-              could become toxic.
+              Revolv weighted pools are not limited to just having two tokens.
+              The more tokens in a pool, the more risk that one of these could
+              become toxic.
             </li>
           </ul>
         </li>
@@ -963,7 +957,7 @@ import { RiskKey } from '@/types/pools';
           <p>
             Oracles are data providers which supply external information to
             smart contracts. Oracles, like Chainlink, may be used to source
-            exchange rates between pool tokens for a rate provider in Symmetric
+            exchange rates between pool tokens for a rate provider in Revolv
             MetaStable pools. The risks of using Oracles to supply exchange
             rates include:
           </p>
@@ -1127,8 +1121,8 @@ import { RiskKey } from '@/types/pools';
       <p>
         <a class="link" href="https://www.optimism.io/">Optimism</a> is a Layer
         2 scaling solution for Ethereum that uses Optimistic Rollups to improve
-        transaction throughput and reduce fees. Although, the Symmetric App UI
-        doesn’t support Optimism, the Symmetric Protocol smart contracts are
+        transaction throughput and reduce fees. Although, the Revolv App UI
+        doesn’t support Optimism, the Revolv Protocol smart contracts are
         deployed on Optimism and currently used by
         <a class="link" href="https://op.beets.fi/">Beethoven X</a>.
       </p>
@@ -1182,8 +1176,8 @@ import { RiskKey } from '@/types/pools';
         suggestions or propose changes for this page directly via the
         <a
           class="link"
-          href="https://github.com/centfinance/Symmetric.Frontend-v3/blob/develop/src/pages/risks.vue"
-          >Symmetric Github</a
+          href="https://github.com/revolvfi/revolv-frontnend/blob/develop/src/pages/risks.vue"
+          >Revolv Github</a
         >.
       </p>
     </div>

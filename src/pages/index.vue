@@ -8,9 +8,10 @@ import usePoolFilters from '@/composables/pools/usePoolFilters';
 // import useBreakpoints from '@/composables/useBreakpoints';
 import useNetwork, {
   rewardSymbol,
-  symmSymbol,
-  symmAddress,
+  // symmSymbol,
+  // symmAddress,
   rewardAddress,
+  isTelos,
 } from '@/composables/useNetwork';
 import usePools from '@/composables/pools/usePools';
 import { lsGet, lsSet } from '@/lib/utils';
@@ -215,7 +216,24 @@ const availableNetworks = ['telos', 'meter', 'artela'];
 
 <template>
   <div>
-    <!-- <HomePageHero /> -->
+    <!-- Add this banner at the top -->
+    <div
+      v-if="isTelos"
+      class="p-4 w-full text-center bg-purple-600 dark:bg-purple-900"
+    >
+      <span class="text-white">
+        If you had liquidity on Symmetric Telos before March 28th, 2024, you can
+        withdraw it
+        <a
+          href="https://telos-v1.symm.fi"
+          target="_blank"
+          class="font-medium hover:text-blue-200 underline transition-colors"
+        >
+          here
+        </a>
+      </span>
+    </div>
+
     <div class="xl:container xl:px-4 pt-10 md:pt-8 xl:mx-auto">
       <UserInvestedInAffectedPoolAlert />
       <BalStack vertical>
@@ -257,7 +275,7 @@ const availableNetworks = ['telos', 'meter', 'artela'];
               v-if="availableNetworks.includes(networkSlug)"
               class="flex flex-row items-center space-x-2"
             >
-              <div>
+              <!-- <div>
                 {{ symmSymbol }}:
                 <span class="font-bold">{{
                   fNum(symmPrice, { style: 'currency' })
@@ -268,7 +286,7 @@ const availableNetworks = ['telos', 'meter', 'artela'];
                 iconName="plus-circle"
                 iconSize="sm"
                 @click="addTokenToWallet(symmAddress)"
-              />
+              /> -->
               <div>
                 {{ rewardSymbol }}:
                 <span class="font-bold">{{
@@ -286,7 +304,7 @@ const availableNetworks = ['telos', 'meter', 'artela'];
           <div
             class="flex flex-col md:flex-row justify-between items-end lg:items-center w-full"
           >
-            <!-- <div class="flex items-end justify-between mb-2">
+            <!-- <div class="flex justify-between items-end mb-2">
               <BalBtn
                 v-if="upToSmallBreakpoint"
                 color="blue"
@@ -364,20 +382,22 @@ const availableNetworks = ['telos', 'meter', 'artela'];
             </BalVStack>
           </div>
         </div>
-        <PoolsTable
-          :data="pools"
-          :noPoolsLabel="$t('noPoolsFound')"
-          :isLoading="isLoading"
-          :selectedTokens="selectedTokens"
-          class="mb-8"
-          :sortColumn="initSortCol"
-          :hiddenColumns="['migrate', 'actions', 'lockEndDate']"
-          :isLoadingMore="isFetchingNextPage"
-          :isPaginated="isPaginated"
-          skeletonClass="pools-table-loading-height"
-          @on-column-sort="onColumnSort"
-          @load-more="loadMorePools"
-        />
+        <div class="px-4 xl:px-0">
+          <PoolsTable
+            :data="pools"
+            :noPoolsLabel="$t('noPoolsFound')"
+            :isLoading="isLoading"
+            :selectedTokens="selectedTokens"
+            class="mb-8"
+            :sortColumn="initSortCol"
+            :hiddenColumns="['migrate', 'actions', 'lockEndDate']"
+            :isLoadingMore="isFetchingNextPage"
+            :isPaginated="isPaginated"
+            skeletonClass="pools-table-loading-height"
+            @on-column-sort="onColumnSort"
+            @load-more="loadMorePools"
+          />
+        </div>
         <!-- <div ref="featuredProtocolsSentinel" />
         <div
           v-if="isElementSupported && isFeaturedProtocolsVisible"

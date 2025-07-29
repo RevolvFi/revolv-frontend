@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from '@tanstack/vue-query';
 
 import QUERY_KEYS from '@/constants/queryKeys';
-import { getApi } from '@/dependencies/balancer-api';
+// import { getApi } from '@/dependencies/balancer-api';
 import {
   GaugeControllerDecorator,
   VotingPoolWithVotes,
@@ -11,10 +11,8 @@ import { isTestnet, isMainnet, isMeter } from '@/composables/useNetwork';
 import { VeBalGetVotingListQuery } from '@/services/api/graphql/generated/api-types';
 import { Network } from '@/lib/config/types';
 import { PoolType } from '@/services/pool/types';
-import {
-  telosVotingPools,
-  testnetVotingPools,
-} from '@/components/contextual/pages/vebal/LMVoting/testnet-voting-pools';
+import { telosVotingPools } from '@/components/contextual/pages/vebal/LMVoting/telos-voting-pools';
+import { testnetVotingPools } from '@/components/contextual/pages/vebal/LMVoting/testnet-voting-pools';
 import { meterVotingPools } from '@/components/contextual/pages/vebal/LMVoting/meter-voting-pools';
 import { mapApiChain, mapApiPoolType } from '@/services/api/graphql/mappers';
 
@@ -62,9 +60,10 @@ export default function useVotingPoolsQuery(
       } else if (isMeter.value) {
         apiVotingPools = meterVotingPools('meter');
       } else {
-        const api = getApi();
-        const { veBalGetVotingList } = await api.VeBalGetVotingList();
-        apiVotingPools = veBalGetVotingList;
+        // const api = getApi();
+        // const { veBalGetVotingList } = await api?.VeBalGetVotingList();
+        // apiVotingPools = veBalGetVotingList;
+        apiVotingPools = telosVotingPools('telos');
       }
 
       const batchSize = 4;

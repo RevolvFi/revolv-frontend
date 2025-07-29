@@ -1,10 +1,9 @@
-
 <script setup lang="ts">
 import BalLoadingIcon from '../BalLoadingIcon/BalLoadingIcon.vue';
 
 import {
-  hoverFrom,
-  hoverTo,
+  // hoverFrom,
+  // hoverTo,
   gradientFrom,
   gradientTo,
   loadingFrom,
@@ -99,13 +98,14 @@ const circleSizeClasses = computed(() => {
 });
 
 const bgGradientClasses = computed(() => {
-  if (props.outline) return 'bg-transparent hover:bg-gray-50';
+  if (props.outline)
+    return 'bg-transparent hover:bg-gray-50/50 dark:hover:bg-gray-800/50';
 
   let fromColor = 'blue';
-  let toColor = 'pink';
+  let toColor = 'purple';
 
   if (props.color === 'gradient-reverse') {
-    fromColor = 'pink';
+    fromColor = 'purple';
     toColor = 'blue';
   } else if (props.color === 'gradient-pink-yellow') {
     fromColor = 'pink';
@@ -113,14 +113,14 @@ const bgGradientClasses = computed(() => {
   }
 
   if (props.disabled) {
-    return `bg-gray-300 dark:bg-gray-700 text-white dark:text-gray-500`;
+    return `bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400`;
   }
   if (props.loading) {
-    return `bg-gradient-to-tr ${loadingFrom(fromColor)} ${loadingTo(toColor)}`;
+    return `bg-gradient-to-r ${loadingFrom(fromColor)} ${loadingTo(toColor)}`;
   }
-  return ` bg-gradient-to-tr ${gradientFrom(fromColor)} ${gradientTo(
+  return `bg-gradient-to-r ${gradientFrom(fromColor)} ${gradientTo(
     toColor
-  )} ${hoverFrom(fromColor)} ${hoverTo(toColor)} transition-colors`;
+  )} hover:shadow-lg hover:scale-[1.02] transition-all duration-200 ease-out`;
 });
 
 const bgFlatClasses = computed(() => {
@@ -134,13 +134,14 @@ const bgFlatClasses = computed(() => {
 
 const bgColorClasses = computed(() => {
   if (props.color.includes('gradient')) return bgGradientClasses.value;
-  else if (props.outline) return 'bg-transparent';
+  else if (props.outline)
+    return 'bg-transparent hover:bg-gray-50/50 dark:hover:bg-gray-800/50';
   else if (props.flat) return bgFlatClasses.value;
   else if (props.color === 'white') {
-    return 'bg-gray-50 hover:bg-white dark:bg-gray-800';
+    return 'bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600';
   } else {
     if (props.disabled) {
-      return `bg-gray-300 dark:bg-gray-700 text-white dark:text-gray-500`;
+      return `bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400`;
     }
     if (props.loading) {
       return `${loadingBackground(props.color)} ${loadingDarkBackground(
@@ -151,6 +152,7 @@ const bgColorClasses = computed(() => {
     return `
           ${background(props.color)} ${hoverBackground(props.color)}
           ${darkBackground(props.color)} ${darkHoverBackground(props.color)}
+          hover:shadow-lg hover:scale-[1.02] transition-all duration-200 ease-out
         `;
   }
 });
@@ -158,11 +160,11 @@ const bgColorClasses = computed(() => {
 const borderClasses = computed(() => {
   if (props.outline) {
     if (props.disabled) return `border border-gray-200 dark:border-gray-700`;
-    return `border ${border(props.color)} ${darkBorder(
+    return `border-2 ${border(props.color)} ${darkBorder(
       props.color
     )} ${darkHoverBorder(props.color)} ${darkFocusBorder(
       props.color
-    )} hover:text-gray-600 dark:hover:text-gray-200 dark:focus:text-gray-200`;
+    )} hover:text-gray-600 dark:hover:text-gray-200 dark:focus:text-gray-200 hover:border-opacity-80 transition-all duration-200`;
   }
   return 'border-none';
 });
@@ -170,7 +172,8 @@ const borderClasses = computed(() => {
 const textColorClasses = computed(() => {
   if (props.outline && props.disabled)
     return 'text-gray-400 dark:text-gray-700';
-  if (props.outline && props.color === 'gradient') return 'text-purple-700';
+  if (props.outline && props.color === 'gradient')
+    return 'text-purple-700 dark:text-purple-400';
   if (props.color === 'white') {
     if (props.outline)
       return 'text-white hover:text-yellow-500 dark:hover:text-yellow-500';
@@ -178,7 +181,7 @@ const textColorClasses = computed(() => {
   }
   if (props.outline || props.flat)
     return `${text(props.color)} ${darkText(props.color)}`;
-  return 'text-white';
+  return 'text-white font-medium';
 });
 
 const displayClasses = computed(() => {
@@ -194,7 +197,7 @@ const contentClasses = computed(() => {
 
 const shapeClasses = computed(() => {
   if (props.circle || props.rounded) return 'rounded-full';
-  return 'rounded-lg';
+  return 'rounded-xl';
 });
 
 const cursorClasses = computed(() => {
@@ -204,8 +207,11 @@ const cursorClasses = computed(() => {
 
 const shadowClasses = computed(() => {
   if (props.flat || props.disabled || props.loading) return '';
-  if (props.size === 'sm') return 'shadow hover:shadow-none';
-  return 'shadow hover:shadow-none';
+  if (props.outline)
+    return 'shadow-sm hover:shadow-md transition-shadow duration-200';
+  if (props.size === 'sm')
+    return 'shadow-md hover:shadow-lg transition-shadow duration-200';
+  return 'shadow-lg hover:shadow-xl transition-shadow duration-200';
 });
 
 const btnClasses = computed(() => {
@@ -256,17 +262,28 @@ const iconColor = computed(() => {
   @apply overflow-hidden tracking-tight;
 
   font-variation-settings: 'wght' 500;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   text-decoration: none !important;
-  line-height: 0;
+  line-height: 1.2;
+  font-feature-settings: 'liga' 1, 'kern' 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .bal-btn:focus,
 .bal-btn:active {
   outline: none !important;
+  transform: scale(0.98);
+}
+
+.bal-btn:focus-visible {
+  outline: 2px solid currentcolor;
+  outline-offset: 2px;
 }
 
 .content {
   @apply flex items-center w-full h-full;
+
+  gap: 0.5rem;
 }
 </style>

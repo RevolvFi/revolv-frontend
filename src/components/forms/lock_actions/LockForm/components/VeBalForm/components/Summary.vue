@@ -43,6 +43,6 @@ const { veBalTokenInfo } = useVeBal();
 }
 
 .row {
-  @apply p-3 flex justify-between;
+  @apply p-2 flex justify-between;
 }
 </style>

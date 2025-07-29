@@ -112,11 +112,12 @@ onMounted(async () => {
 
     <div class="grid">
       <div
-        v-for="token in rootPool.tokens"
+        v-for="token in rootPool?.tokens || []"
         :key="token.address"
         class="grid nested-group"
       >
         <TokenBreakdown
+          v-if="token && tokenData"
           :token="token"
           :showUserShares="showUserShares"
           :rootPool="pool"

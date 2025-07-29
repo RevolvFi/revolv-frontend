@@ -28,11 +28,11 @@
     "pools-fetch-error": "Failed to fetch pools.",
     "price-fetch-error": "Our pricing provider, CoinGecko, is currently down.",
     "retry-label": "Refresh to try again",
-    "boostedPools": "Increased yields, greater capital efficiency, deeper liquidity. Try Symmetric Boosted pools now →",
+    "boostedPools": "Increased yields, greater capital efficiency, deeper liquidity. Try Revolv Boosted pools now →",
     "vebalL2": "Staking is live on Polygon and Arbitrum. Incentives for eligible pools will resume on April 28.",
     "withdrawToInternalBalance": {
       "title": "Withdraw to Vault balance",
-      "description": "This transaction will withdraw your tokens from this pool to your Symmetric Vault balance. \n\nYou will then be able to withdraw the relevant tokens from the Vault using the"
+      "description": "This transaction will withdraw your tokens from this pool to your Revolv Vault balance. \n\nYou will then be able to withdraw the relevant tokens from the Vault using the"
     }
   },
   "allow": "Allow",
@@ -55,7 +55,7 @@
     "InsufficientValidTo": "The order you are signing is already expired. This can happen if you set a short expiration in the settings and waited too long before signing the transaction. Please try again.",
     "InsufficientFunds": "The account doesn't have enough funds.",
     "UnsupportedToken": "One of the tokens you are swapping is unsupported.",
-    "WrongOwner": "The signature is invalid.\n\nIt's likely that the signing method provided by your wallet doesn't comply with the standards required by Symmetric.\n\nCheck whether your Wallet app supports off-chain signing (EIP-712 or ETHSIGN).",
+    "WrongOwner": "The signature is invalid.\n\nIt's likely that the signing method provided by your wallet doesn't comply with the standards required by Revolv.\n\nCheck whether your Wallet app supports off-chain signing (EIP-712 or ETHSIGN).",
     "NotFound": "Token pair selected has insufficient liquidity.",
     "OrderNotFound": "The order you are trying to cancel does not exist.",
     "AlreadyCancelled": "Order is already cancelled.",
@@ -101,7 +101,7 @@
   "available": "Available",
   "availableToClaim": "Available to claim:",
   "balance": "Balance",
-  "balancerGovernance": "Symmetric governance",
+  "balancerGovernance": "Revolv governance",
   "balances": "Balances",
   "basedOnLast24h": "based on the last 24h",
   "basedOnTokensInWallet": "Based on pool tokens in your wallet",
@@ -109,7 +109,7 @@
   "browseLists": "Browse lists",
   "browserWallet": "Browser Wallet",
   "bugBounty": "Bug bounty",
-  "builtOnBalancer": "Built on Symmetric protocol",
+  "builtOnBalancer": "Built on Revolv protocol",
   "boosted": "Boosted",
   "boostedTooltip": "This pool has a Boosted Pool component. In addition to accumulating swap fees, Boosted pools also generate yield for LPs by lending excess liquidity to other yield generating DeFi protocols.",
   "clpTooltip": "Designed for capital efficiency,  ‘Concentrated Liquidity Pools’ (CLPs) are a class of AMMs that price the exchange of assets within a defined range. As such, any CLP only provides liquidity for trading activity restricted to this specific region.",
@@ -121,12 +121,12 @@
   "buy": "Buy",
   "build": "Build",
   "blog": "Blog",
-  "boostedPool": "Symmetric Boosted pool",
-  "byConnectingWallet": "By connecting a wallet, I agree to Symmetric Foundation’s",
+  "boostedPool": "Revolv Boosted pool",
+  "byConnectingWallet": "By connecting a wallet, I agree to Revolv Foundation’s",
   "brandedRedirect": {
     "xave": {
       "title": "Xave Finance",
-      "description": "Xave Finance  (pronounced \"Save Finance\") allows financial services companies (\"fintechs\") to leverage DeFi for real time remittance transfers and high yield consumer savings. Xave does this in a capital efficient way by building liquid FX markets via our custom FXPools integrated with the Symmetric V2 Vault.",
+      "description": "Xave Finance  (pronounced \"Save Finance\") allows financial services companies (\"fintechs\") to leverage DeFi for real time remittance transfers and high yield consumer savings. Xave does this in a capital efficient way by building liquid FX markets via our custom FXPools integrated with the Revolv V2 Vault.",
       "btnText": "Manage liquidity on app.xave.co"
     },
     "gyro": {
@@ -144,8 +144,8 @@
   "claimHero": {
     "title": "Claim liquidity incentives",
     "legacyTitle": "Initial Liquidity Airdrop",
-    "description": "Symmetric Protocol liquidity incentives are directed to pools by {veSymbol} voters. Stake in these pools to earn incentives. Boost with {veSymbol} for up to 2.5x extra.",
-    "legacyDescription": "From November 27th to December 1st, Symmetric is conducting an exciting Airdrop event, offering a chance to share in a pool of $3,000 in tSYMM tokens and $3,000 in TLOS. This opportunity is open to users who lock their tSYMM/WTLOS 80/20 LP tokens in exchange for {veSymbol}. The total amount available for distribution will be determined by the overall liquidity locked, ensuring a fair and proportional reward for {veSymbol} holders. This distribution will be calculated based on the amount and duration of LP tokens locked, with the final snapshot scheduled for December 1, 2024, at 4:00 PM UTC. It's a fantastic opportunity to increase your holdings with minimal effort. Join in and make the most of this offer!",
+    "description": "Revolv Protocol liquidity incentives are directed to pools by {veSymbol} voters. Stake in these pools to earn incentives. Boost with {veSymbol} for up to 2.5x extra.",
+    "legacyDescription": "From November 27th to December 1st, Revolv is conducting an exciting Airdrop event, offering a chance to share in a pool of $3,000 in RVLV tokens and $3,000 in TLOS. This opportunity is open to users who lock their RVLV/WTLOS 80/20 LP tokens in exchange for {veSymbol}. The total amount available for distribution will be determined by the overall liquidity locked, ensuring a fair and proportional reward for {veSymbol} holders. This distribution will be calculated based on the amount and duration of LP tokens locked, with the final snapshot scheduled for December 1, 2024, at 4:00 PM UTC. It's a fantastic opportunity to increase your holdings with minimal effort. Join in and make the most of this offer!",
     "tipLabel": {
       "addLiquidity": "Add liquidity",
       "stake": "Stake your LP",
@@ -199,7 +199,7 @@
   "copperLaunchPromo": {
     "buttonLabel": "View this auction on Copper",
     "description": "Copper is the platform for FLAs—a simple crowdfunding mechanism that enables projects and ideas from across the world to raise money from individuals without barriers to entry.",
-    "poweredByBalancer": "Copper is built on Symmetric V2 and uses Liquidity Bootstrapping Pools to power its FLAs",
+    "poweredByBalancer": "Copper is built on Revolv V2 and uses Liquidity Bootstrapping Pools to power its FLAs",
     "title": "A Copper fair launch auction pool (FLA)"
   },
   "continueAnyway": "Continue anyway",
@@ -220,8 +220,8 @@
     "enterTokenPrice": "Enter the estimated current price of {0} in $USD",
     "existingPoolInfo": "There’s already another pool with exactly the same tokens and fee structure. It’s recommended to add your liquidity to the other pool or to go back and change your Pool Creation parameters in a material way to avoid fractured liquidity and lower profits for both pools.",
     "fixedFeeRadioLabel": "Permanently fix fees to the initial rate",
-    "governanceFees": "Allow Symmetric governance to manage fees",
-    "governanceFeesTooltip": "Enable this to give Symmetric governance the ability to dynamically manage the fees of this pool in order to maximize profits. But note, Symmetric governance is under no obligation to actually manage the fees and will likely only do so if there is significant swap volume.",
+    "governanceFees": "Allow Revolv governance to manage fees",
+    "governanceFeesTooltip": "Enable this to give Revolv governance the ability to dynamically manage the fees of this pool in order to maximize profits. But note, Revolv governance is under no obligation to actually manage the fees and will likely only do so if there is significant swap volume.",
     "invalidInitialWeightsInfo": "One or more tokens has an initial weight less than 1% which may cause funding to fail. If the token has a missing price, enter in a price. Otherwise, adjust the initial balances in the previous step.",
     "invalidInitialWeightsTitle": "Invalid initial weight",
     "maxInitialLiquidity": "Max initial liquidity",
@@ -271,7 +271,7 @@
     },
     "updateGauge": {
       "title": "Trigger pool gauge updates to get your boosts sooner",
-      "description": "Pool gauges don’t automatically recognize changes in {veSymbol} until triggered. Updates are triggered when any user interacts with a gauge, such as by claiming tSYMM, staking or unstaking. Trigger individual gauges yourself for your boosts to apply immediately."
+      "description": "Pool gauges don’t automatically recognize changes in {veSymbol} until triggered. Updates are triggered when any user interacts with a gauge, such as by claiming RVLV, staking or unstaking. Trigger individual gauges yourself for your boosts to apply immediately."
     },
     "selectNetworkModal": {
       "title": "Sync {veSymbol}: Select networks",
@@ -320,7 +320,7 @@
     },
     "migrateReason": {
       "title": "Migrate to avoid vulnerability",
-      "description": "A security vulnerability was recently disclosed. Although, no funds are a risk, insofar as the exploit could only be executed by pool owners or Symmetric Governance itself which is composed of known participants in the Symmetric ecosystem, it is recommended to migrate your funds asap."
+      "description": "A security vulnerability was recently disclosed. Although, no funds are a risk, insofar as the exploit could only be executed by pool owners or Revolv Governance itself which is composed of known participants in the Revolv ecosystem, it is recommended to migrate your funds asap."
     },
     "stabal3Pool": {
       "whyMigrate": {
@@ -432,7 +432,7 @@
   "dynamicSwapFeeLabel": "Dynamic swap fees: Currently <span class='font-semibold'>{0}</span>",
   "docs": "Docs",
   "earnings": "Earnings",
-  "earnBAL": "Earn $tSYMM when swapping eligible tokens",
+  "earnBAL": "Earn $RVLV when swapping eligible tokens",
   "effectivePrice": "Effective price:",
   "enterAmount": "Enter amount",
   "enterAPrice": "Enter a price",
@@ -459,15 +459,15 @@
       "linkText": "Fjord Foundry website"
     },
     "Beets": {
-      "description": "Powered by Symmetric technology, Beethoven X provides a composable liquidity base layer on Fantom and Optimism. From Boosted Pools to Maturity Adjusted fNFTs, the DEX offers a suite of powerful financial primitives.",
+      "description": "Powered by Revolv technology, Beethoven X provides a composable liquidity base layer on Fantom and Optimism. From Boosted Pools to Maturity Adjusted fNFTs, the DEX offers a suite of powerful financial primitives.",
       "linkText": "Beethoven X website"
     },
     "Xave": {
-      "description": "Xave Finance enables real time remittance transfers and high yield consumer savings for Fintechs, with capital efficient liquid FX markets (via custom FXPools) integrated with the Symmetric Vault.",
+      "description": "Xave Finance enables real time remittance transfers and high yield consumer savings for Fintechs, with capital efficient liquid FX markets (via custom FXPools) integrated with the Revolv Vault.",
       "linkText": "Xave website"
     },
     "Gyroscope": {
-      "description": "Gyroscope is a new stablecoin that, like a physical gyroscope, aims to remain stable as the surrounding environment changes. Gyroscope AMMs—Concentrated Liquidity Pools (CLPs)—leverage Symmetric's customizable AMM logic.",
+      "description": "Gyroscope is a new stablecoin that, like a physical gyroscope, aims to remain stable as the surrounding environment changes. Gyroscope AMMs—Concentrated Liquidity Pools (CLPs)—leverage Revolv's customizable AMM logic.",
       "linkText": "Gyroscope website"
     }
   },
@@ -517,29 +517,29 @@
       "header": "The fees on this transaction exceed 20% of the swap amount."
     }
   },
-  "goToBalancerV1Site": "Go to the Symmetric V1 site ->",
+  "goToBalancerV1Site": "Go to the Revolv V1 site ->",
   "goToMigratedPool": "Go to migrated pool",
   "governance": "Governance",
   "grants": "Grants",
   "deprecatedPool": {
     "tooltip": "This pool has been deprecated. If you're a Liquidity Provider, please migrate to the new upgraded pool.",
     "hasNewPool": {
-      "title": "Move your liquidity for future tSYMM incentives",
+      "title": "Move your liquidity for future RVLV incentives",
       "description": "Liquidity mining incentives are being phased out for this pool, since the upgraded pool is now live. LPs are encouraged to unstake existing positions, withdraw their liquidity and add it to the newly incentivized pool."
     },
     "generic": {
-      "title": "Move your liquidity for future tSYMM incentives",
+      "title": "Move your liquidity for future RVLV incentives",
       "description": "Liquidity mining incentives are being phased out for this pool, since upgraded pools are now live. LPs are encouraged to unstake existing positions, withdraw their liquidity and add it to the newly incentivized pools."
     },
     "gaugeKilledReason": "This pool's gauge will soon be killed. A new version of this pool has been created that uses Aave v3."
   },
   "newVersion": {
     "Aave3": "A new version of this pool has been created that uses Aave v3",
-    "BalIncentives": "A new version of this pool has been created. Please migrate to continue earning tSYMM incentives"
+    "BalIncentives": "A new version of this pool has been created. Please migrate to continue earning RVLV incentives"
   },
   "highPriceImpact": "High price impact",
   "highPriceImpactDetailed": "This swap is significantly moving the market price.",
-  "highRiskPool": "This is a higher-risk pool that contains one or more unlisted tokens. A liquidity pool is only as good as its weakest token! If a token were blacklisted, infinitely minted, frozen, or exploited in any other way, the value of this pool could go to 0. Symmetric Foundation is never liable for losses incurred through using our UI or the Symmetric protocol. Be careful, and do your own research!",
+  "highRiskPool": "This is a higher-risk pool that contains one or more unlisted tokens. A liquidity pool is only as good as its weakest token! If a token were blacklisted, infinitely minted, frozen, or exploited in any other way, the value of this pool could go to 0. Revolv Foundation is never liable for losses incurred through using our UI or the Revolv protocol. Be careful, and do your own research!",
   "home": "Home",
   "hourAbbrev": "h",
   "incentives": "incentives",
@@ -579,7 +579,7 @@
         "default": "Add liquidity preview"
       },
       "tooltips": {
-        "approval": "You must approve {0} to add liquidity for this token on Symmetric. Approvals are required once per token, per wallet."
+        "approval": "You must approve {0} to add liquidity for this token on Revolv. Approvals are required once per token, per wallet."
       }
     },
     "warning": {
@@ -598,7 +598,7 @@
         "paragraph2": "However, since your connected wallet doesn’t have any pool tokens, go to the ‘Single token’ tab above to add liquidity to this pool with non-pool tokens."
       },
       "blockedPool": {
-        "title": "This pool contains one or more tokens that have not been vetted by the Symmetric community: {0}.",
+        "title": "This pool contains one or more tokens that have not been vetted by the Revolv community: {0}.",
         "description": "For the protection of LPs, adding liquidity to the pool has been disabled. Click",
         "description2": "to learn how to submit the token(s) for review."
       }
@@ -612,7 +612,7 @@
   },
   "investmentPool": "Liquidity pool",
   "investmentPools": "Liquidity pools",
-  "investmentPoolsAbout": "Stake your assets to get $tSYMM tokens for participating in Symmetric V2 liquidity mining.",
+  "investmentPoolsAbout": "Stake your assets to get $RVLV tokens for participating in Revolv V2 liquidity mining.",
   "investmentPoolsAboutLink": "Learn more ->",
   "investmentSettled": "Your liquidity add has settled",
   "investmentSuccess": "Your tokens have been added to this pool, and you have received a new LP token representing this action.",
@@ -632,13 +632,13 @@
   "liquidityMiningIncentives": "Liquidity mining incentives",
   "liquidityMiningIncentivesCopy": "Liquidity incentives on {0} are paused for 1 week during its upgrade to the {veSymbol} system. Incentives will resume on April 28.",
   "liquidityMiningPopover": {
-    "airdropEligibility": "People who provide liquidity to eligible pools or swap on eligible token pairs receive weekly $tSYMM distributions as incentives. $tSYMM token holders own the Symmetric Protocol and can help shape its future by voting on governance proposals.",
+    "airdropEligibility": "People who provide liquidity to eligible pools or swap on eligible token pairs receive weekly $RVLV distributions as incentives. $RVLV token holders own the Revolv Protocol and can help shape its future by voting on governance proposals.",
     "airdropExplainer": "Weekly distributions from liquidity mining on {0} are airdropped on Wednesdays, sent directly to your wallet using disperse.app",
     "claimFreezeWarning": {
       "description": "Since you have several weeks' worth of tokens unclaimed, your screen may appear to freeze after pressing the claim button while it is processed. Just leave your browser open and your wallet will eventually pop open for you to complete the claim.",
       "title": "Too many claims"
     },
-    "networksExplainer": "Switch networks in the header to see your current cumulative $tSYMM incentives on {0} and {1}.",
+    "networksExplainer": "Switch networks in the header to see your current cumulative $RVLV incentives on {0} and {1}.",
     "noRewards": {
       "description": "Certain eligible pools have ‘liquidity mining’ token incentives which are distributed to liquidity providers weekly in proportion to their contribution.",
       "title": "You have no token incentives to claim"
@@ -648,7 +648,7 @@
     },
     "title": "Token incentives"
   },
-  "liquidityProviderCopy": "People who provide liquidity to eligible pools or swap on eligible token pairs receive weekly $tSYMM distributions as incentives. $tSYMM token holders own the Symmetric Protocol and can help shape its future by voting on governance proposals.",
+  "liquidityProviderCopy": "People who provide liquidity to eligible pools or swap on eligible token pairs receive weekly $RVLV distributions as incentives. $RVLV token holders own the Revolv Protocol and can help shape its future by voting on governance proposals.",
   "liquidityProvision": "Liquidity provision",
   "loading": "Loading...",
   "loadingBestPrice": "Looking for the best price...",
@@ -657,7 +657,7 @@
   "locked": "Locked",
   "locking": {
     "expiredLockLpTokens": "Expired lock LP tokens",
-    "expiredLockTooltip": "Your previous locking period has expired, so you no longer have any {veSymbol} or voting power. You will no longer earn protocol fees, boosted yields on staked Ethereum Mainnet pools or {veSymbol} incentives. However, you'll still get the minimum 1.0x rate. Redeem your expired locked S-80TSYMM-20WTLOS LP tokens and then create a new lock to get {veSymbol}.",
+    "expiredLockTooltip": "Your previous locking period has expired, so you no longer have any {veSymbol} or voting power. You will no longer earn protocol fees, boosted yields on staked pools or {veSymbol} incentives. However, you'll still get the minimum 1.0x rate. Redeem your expired locked RVLV tokens and then create a new lock to get {veSymbol}.",
     "lockBptForVeBal": "Lock LP for {veSymbol}",
     "lockedLpTokensTooltip": "The USD value of your {veSymbol}. These are your locked LP tokens in the {symmSymbol} 80% / {nativeAsset} 20% pool.",
     "unlockedLpTokensTooltip": "The USD value of your liquidity provided to the {symmSymbol} 80% / {nativeAsset} 20% pool that has not been locked."
@@ -687,7 +687,7 @@
   "migrate": "Migrate",
   "migrateCard": {
     "title": "Migrate liquidity",
-    "description": "Liquidity mining incentives have expired for this pool. For future tSYMM incentives: unstake, withdraw and add liquidity to an incentivized pool.",
+    "description": "Liquidity mining incentives have expired for this pool. For future RVLV incentives: unstake, withdraw and add liquidity to an incentivized pool.",
     "viewBtn": "View incentivized pools",
     "recommendedPool": "Recommended incentivized pools",
     "upgradedPool": "Upgraded incentivized pool"
@@ -695,7 +695,7 @@
   "modals": {
     "veBalRedirectModal": {
       "title": "Proceed to mainnet",
-      "description": "Getting and using {veSymbol} to vest and vote must be performed on the Ethereum mainnet. \n\n You can still earn liquidity mining incentives on Arbitrum, Polygon and Gnosis by adding liquidity to eligible pools. However to vote to direct emissions to your favored pools and to earn the protocol fees, you will need to use {veSymbol} on Ethereum Mainnet by locking S-80TSYMM-20WTLOS."
+      "description": "Getting and using {veSymbol} to vest and vote must be performed on the Telos mainnet. \n\n To vote to direct emissions to your favored pools and to earn the protocol fees, you will need to use {veSymbol} on Ethereum Mainnet by locking RVLV."
     }
   },
   "month": "month",
@@ -711,11 +711,11 @@
   "mustBeValidAddress": "This is not a valid Ethereum address",
   "myApr": "My APR",
   "myBalance": "My balance",
-  "myBalancerBalance": "My Symmetric balance",
+  "myBalancerBalance": "My Revolv balance",
   "myBoost": "My boost",
   "myPortfolio": "My portfolio",
   "myShare": "My share",
-  "myLiquidityInBalancerPools": "My liquidity in Symmetric pools",
+  "myLiquidityInBalancerPools": "My liquidity in Revolv pools",
   "myWallet": "My Ethereum wallet",
   "myWallet2": "My wallet",
   "name": "Name",
@@ -744,7 +744,7 @@
   "noUnstakedInvestments": "You have no unstaked liquidity on {0}",
   "noStakedInvestments": "You have no staked liquidity on {0}",
   "noNativeCurrency": "You’ll need some {0} for gas fees in order to transact on {1}.",
-  "noNativeCurrencyEthereum": "You’ll need some {0} for gas fees in order to do most basic transactions on {1}. However, you may continue to swap any tokens you’ve previously approved for use on Symmetric with this wallet, by using the ‘swap gasless’ option.",
+  "noNativeCurrencyEthereum": "You’ll need some {0} for gas fees in order to do most basic transactions on {1}. However, you may continue to swap any tokens you’ve previously approved for use on Revolv with this wallet, by using the ‘swap gasless’ option.",
   "noPoolsFound": "No pools found",
   "noPriceImpact": "Best price",
   "noPriceImpactTip": "Adding tokens proportionally gets you the best price.",
@@ -775,7 +775,7 @@
   "pages": {
     "claim": {
       "title": "Claim your liquidity mining incentives",
-      "description": "Incentives to attract liquidity are set by the Symmetric protocol and partners. Stakers in eligible pools can claim incentives every block. People with {veSymbol} get a boosted rate—up to 2.5x extra.",
+      "description": "Incentives to attract liquidity are set by the Revolv protocol and partners. Stakers in eligible pools can claim incentives every block. People with {veSymbol} get a boosted rate—up to 2.5x extra.",
       "titles": {
         "incentivesOnOtherNetworks": "Incentives on other networks",
         "legacyIncentives": "Claim your Airdrop"
@@ -786,7 +786,7 @@
     },
     "balances": {
       "title": "My Vault balances",
-      "eulerHack": "Euler eTokens (e.g. eUSDC, eUSDT and eDAI) affected by the Euler hack have been paused and are not transferrable from the Symmetric Vault. To redeem your share of the recovered funds of the Euler hack, if you haven't done so already, go to:"
+      "eulerHack": "Euler eTokens (e.g. eUSDC, eUSDT and eDAI) affected by the Euler hack have been paused and are not transferrable from the Revolv Vault. To redeem your share of the recovered funds of the Euler hack, if you haven't done so already, go to:"
     }
   },
   "pastEarnings": {
@@ -797,7 +797,7 @@
   "pendingEstimate": "Pending: (estimate)",
   "perWeek": "per week",
   "policies": {
-    "balancerThirdPartyInfo": "Symmetric is an open source, permissionless, decentralized protocol. The smart contracts that power the ecosystem may be used by anyone. This website is the Symmetric Foundation's front-end to the ecosystem and it is also open-source. You are free to fork it on Github and modify it as you wish",
+    "balancerThirdPartyInfo": "Revolv is an open source, permissionless, decentralized protocol. The smart contracts that power the ecosystem may be used by anyone. This website is the Revolv Foundation's front-end to the ecosystem and it is also open-source. You are free to fork it on Github and modify it as you wish",
     "cookiesPolicy": "Cookies Policy",
     "privacyPolicy": "Privacy Policy",
     "risks": "Risks",
@@ -855,7 +855,7 @@
       "title": "My pool balance",
       "altTitle": "My pool liquidity balance",
       "poolsRisks": "pool's risks",
-      "risksDisclaimer": "Liquidity Providers encounter risks when using DeFi and Symmetric pools. Before proceeding, view this",
+      "risksDisclaimer": "Liquidity Providers encounter risks when using DeFi and Revolv pools. Before proceeding, view this",
       "underlyingTokens": "Underlying pool tokens"
     },
     "myWalletTokensCard": {
@@ -887,12 +887,12 @@
   "poolOwner": "Pool Owner",
   "delegateOwner": {
     "title": "Delegate owner",
-    "tooltip": "Permissioned functions validated by the Symmetric Vault Authorizer"
+    "tooltip": "Permissioned functions validated by the Revolv Vault Authorizer"
   },
   "noOwner": "No owner",
   "poolWarnings": {
     "bugWarning20220513": {
-      "title": "This pool contains double-entrypoint tokens, which have been found to be incompatible with Symmetric. It is currently not possible to withdraw all assets from the pool proportionally. While it is possible to withdraw in a single asset, liquidity providers are advised to wait. A mechanism is being implemented to allow for proportional withdrawals. <a href=\"https://forum.balancer.fi/t/medium-severity-bug-found/3161\" target=\"blank\" rel=\"noreferrer\" class=\"underline\">Learn more </a>"
+      "title": "This pool contains double-entrypoint tokens, which have been found to be incompatible with Revolv. It is currently not possible to withdraw all assets from the pool proportionally. While it is possible to withdraw in a single asset, liquidity providers are advised to wait. A mechanism is being implemented to allow for proportional withdrawals. <a href=\"https://forum.balancer.fi/t/medium-severity-bug-found/3161\" target=\"blank\" rel=\"noreferrer\" class=\"underline\">Learn more </a>"
     },
     "poolOwnerVulnWarningGovernance": {
       "title": "This pool is affected by a vulnerability disclosed <a href=\"https://forum.balancer.fi/t/vulnerability-disclosure/3179\" target=\"blank\" rel=\"noreferrer\" class=\"underline\">here</a>. Reach out on Discord if you need help creating a new pool with the same composition.",
@@ -974,7 +974,7 @@
   "seeMore": "See more",
   "seeOnExplorer": "See on explorer",
   "seePools": "See pools",
-  "seeV1BalancerInvestments": "Want to see your funds on Symmetric V1?",
+  "seeV1BalancerInvestments": "Want to see your funds on Revolv V1?",
   "select": "Select",
   "selectToken": "Select token",
   "sell": "Sell",
@@ -988,7 +988,7 @@
     "sentry": "Used for error tracking and performance monitoring."
   },
   "settings": "Settings",
-  "setUpEthereumWallet": "Symmetric is a DeFi app on Ethereum. Set up an Ethereum Wallet to swap and provide liquidity here.",
+  "setUpEthereumWallet": "Revolv is a DeFi app on Ethereum. Set up an Ethereum Wallet to swap and provide liquidity here.",
   "singleToken": "Single token",
   "singleTokenMax": "Single token max",
   "slippageTolerance": "Slippage tolerance",
@@ -1107,15 +1107,15 @@
       }
     },
     "liquidityMining": {
-      "title": "Pools eligible for liquidity mining",
-      "description": "Liquidity incentives are directed by the community of {veSymbol} holders. If you hold {veSymbol}, vote below on any pools on {network}. Your vote will persist until you change it and editing a pool can only be done once in 10 days.",
+      "title": "Vote to direct incentives",
+      "description": "Liquidity incentives are directed by the community of {veSymbol} holders. If you hold {veSymbol}, vote below on any pools on {network}. Your vote will persist until you change it and editing a pool can only be done once in 7 days.",
       "myUnallocatedVotes": "My unallocated votes:",
       "myUnallocatedVotesTooltip": "{veSymbol} holders can vote for a single pool or multiple pools in whatever weights they choose, up to their max of 100%. Note: If you’ve previously voted for a pool but no longer have any {veSymbol}, your votes will not count.",
       "unallocatedVotes": "My unallocated votes: {0}.",
       "votingPeriod": "Voting period ends: {0}d {1}h {2}m {3}s",
-      "votingPeriodTooltip": "There is a weekly vote for {veSymbol} holders which ends at 0:00 UTC on Thursdays. This vote determines the tSYMM incentives allocation for all Stakers in these pools for the next week. Although you don’t have to vote to get a boosted yield, your vote can help you earn more by voting on pools where you are a staker.",
+      "votingPeriodTooltip": "There is a weekly vote for {veSymbol} holders which ends at 0:00 UTC on Thursdays. This vote determines the RVLV incentives allocation for all Stakers in these pools for the next week. Although you don’t have to vote to get a boosted yield, your vote can help you earn more by voting on pools where you are a staker.",
       "votingPeriodCountdown": "{0}d : {1}h : {2}m : {3}s",
-      "votingPowerExpiredTooltip": "Your previous lock period has expired, so you no longer have any {veSymbol} or voting power. Any votes that have been allocated in the past will no longer count. Lock up {lpToken} LP tokens to get {veSymbol} for higher yields and voting power.",
+      "votingPowerExpiredTooltip": "Your previous lock period has expired, so you no longer have any {veSymbol} or voting power. Any votes that have been allocated in the past will no longer count. Lock up RVLV to get {veSymbol} for higher yields and voting power.",
       "table": {
         "chain": "Chain",
         "assets": "Assets",
@@ -1479,7 +1479,7 @@
       "description": "Unlock on Ethereum Mainnet"
     }
   },
-  "tableShowsBalancerV2Pools": "This table shows only Symmetric V2 pools.",
+  "tableShowsBalancerV2Pools": "This table shows only Revolv V2 pools.",
   "theme": "Theme",
   "yieldAprRewards": {
     "apr": {
@@ -1510,7 +1510,7 @@
   "tokensLowerCase": "tokens",
   "tokensParen": "Token(s)",
   "tokenPrices": "Token prices",
-  "unlistedTokenWarningTitle": "You have added a token that is not included in the Symmetric Tokenlist.",
+  "unlistedTokenWarningTitle": "You have added a token that is not included in the Revolv Tokenlist.",
   "unlistedTokenWarning": "You will not be able to complete pool creation until it's included. To add a token to our Tokenlist please follow our process described",
   "tooltips": {
     "addLiquidity": {
@@ -1540,11 +1540,11 @@
       "wrapUnwrap": "This option has been disabled because Wrap/Unwrap transactions always require a gas transaction."
     },
     "label": "Swap gasless",
-    "tooltip": "‘Swap gasless’ on the Symmetric CoW Protocol for free signature swaps, MEV protection, and the best prices with intelligent swap routing across DeFi exchanges. Turn it off to swap only through Symmetric liquidity pools using gas."
+    "tooltip": "‘Swap gasless’ on the Revolv CoW Protocol for free signature swaps, MEV protection, and the best prices with intelligent swap routing across DeFi exchanges. Turn it off to swap only through Revolv liquidity pools using gas."
   },
   "swapLiquidity": "Swap liquidity",
   "swapSettled": "Your swap has settled",
-  "swapsThroughWeth": "Swaps from ETH route through Symmetric liquidity pools and incur gas fees.",
+  "swapsThroughWeth": "Swaps from ETH route through Revolv liquidity pools and incur gas fees.",
   "swapSubmissionError": {
     "actionLabel": "Dismiss",
     "title": "An error has occurred"
@@ -1584,11 +1584,11 @@
         "title": "Approve Batch relayer"
       },
       "tokenApproval": {
-        "content": "Your permission is required to swap this token on Symmetric. Approvals are required once per token, per wallet.",
+        "content": "Your permission is required to swap this token on Revolv. Approvals are required once per token, per wallet.",
         "title": "Approve {0}"
       },
       "sign": {
-        "content": "Upon your signature, the Symmetric CoW Protocol will find an optimal route amongst other swappers or from liquidity on other DeFi exchanges, with MEV protection.",
+        "content": "Upon your signature, the Revolv CoW Protocol will find an optimal route amongst other swappers or from liquidity on other DeFi exchanges, with MEV protection.",
         "title": "Sign a free message to swap"
       },
       "swap": {
@@ -1697,18 +1697,18 @@
     "migratePool": "{0} {1} to {2}",
     "wrapUnwrap": "{0} {1} to {2}",
     "tooltips": {
-      "approveForInvesting": "You must approve {0} to add liquidity for this token on Symmetric. Approvals are required once per token, per wallet.",
+      "approveForInvesting": "You must approve {0} to add liquidity for this token on Revolv. Approvals are required once per token, per wallet.",
       "approveForLocking": "You must approve {0} to lock this token. Approvals are required once per token, per wallet.",
-      "approveForStaking": "You must approve {0} to stake this token on Symmetric. Approvals are required once per token, per wallet.",
-      "approveForSwapping": "You must approve {0} to swap this token on Symmetric. Approvals are required once per token, per wallet.",
+      "approveForStaking": "You must approve {0} to stake this token on Revolv. Approvals are required once per token, per wallet.",
+      "approveForSwapping": "You must approve {0} to swap this token on Revolv. Approvals are required once per token, per wallet.",
       "approveForUnwrapping": "You must approve {0} to unwrap this token. Approvals are required once per token, per wallet.",
       "unapprove": "You must unapprove {0} before a new approval value can be set"
     }
   },
   "transactionType": "Transaction type",
   "unallocated": "Unallocated",
-  "unavailableOnNetwork": "Sorry! Symmetric is not available on this network",
-  "unavailableOnNetworkWithName": "Sorry! Symmetric is not available on {0}",
+  "unavailableOnNetwork": "Sorry! Revolv is not available on this network",
+  "unavailableOnNetworkWithName": "Sorry! Revolv is not available on {0}",
   "unsupportedNetwork": "Unsupported network",
   "unknown": "Unknown",
   "unknownPoolType": "Unknown pool type",
@@ -1841,5 +1841,6 @@
     "title": "Pool risks"
   },
   "ukDisclaimer": "Don’t invest unless you’re prepared to lose all the money you invest. This is a high-risk investment and you should not expect to be protected if something goes wrong.",
-  "viewUkDisclaimer": "Take 2 mins to learn more"
+  "viewUkDisclaimer": "Take 2 mins to learn more",
+  "yieldAcceleratedTooltip": "The assets in this pool are deposited into Meridian Lend to earn additional RVLV rewards"
 }

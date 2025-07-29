@@ -102,6 +102,10 @@ export function isDeep(pool: Pool): boolean {
   return configService.network.pools.Deep.includes(pool.id);
 }
 
+export function isErc4626(pool: Pool): boolean {
+  return !!configService.network.pools?.Erc4626?.[pool.id];
+}
+
 export function isBoosted(pool: Pool) {
   return !!Object.keys(poolMetadata(pool.id)?.features || {}).includes(
     PoolFeature.Boosted
@@ -429,6 +433,8 @@ export function tokenTreeLeafs(
   tokenTree: PoolToken[],
   options: TokenTreeOpts = { includeLinearUnwrapped: false }
 ): string[] {
+  if (!tokenTree || !Array.isArray(tokenTree)) return [];
+
   const addresses: string[] = [];
 
   for (const token of tokenTree) {
@@ -509,6 +515,7 @@ export function flatTokenTree(
  * @returns tokensList excluding pre-minted BPT address.
  */
 export function tokensListExclBpt(pool: Pool): string[] {
+  if (!pool || !pool.tokensList) return [];
   return removeAddress(pool.address, pool.tokensList);
 }
 
@@ -716,9 +723,30 @@ export function tokenWeight(pool: Pool, tokenAddress: string): number {
 
   const { nativeAsset, wNativeAsset } = configService.network.tokens.Addresses;
 
+  // Handle ERC4626 pools
+  if (isErc4626(pool)) {
+    const erc4626Pool = configService.network.pools?.Erc4626?.[pool.id];
+    if (!erc4626Pool) return 0;
+
+    // If it's a wrapper token, get its weight directly
+    const wrapperIndex = erc4626Pool.wrappers.indexOf(tokenAddress);
+    if (wrapperIndex >= 0) {
+      return selectByAddress(pool.onchain.tokens, tokenAddress)?.weight || 1;
+    }
+
+    // If it's an underlying token, find its wrapper and get the wrapper's weight
+    const underlyingIndex = erc4626Pool.underlying.indexOf(tokenAddress);
+    if (underlyingIndex >= 0) {
+      const wrapperAddress = erc4626Pool.wrappers[underlyingIndex];
+      return selectByAddress(pool.onchain.tokens, wrapperAddress)?.weight || 1;
+    }
+  }
+
+  // Handle native asset case
   if (isSameAddress(tokenAddress, nativeAsset)) {
     return selectByAddress(pool.onchain.tokens, wNativeAsset)?.weight || 1;
   }
+
   return selectByAddress(pool.onchain.tokens, tokenAddress)?.weight || 1;
 }
 
@@ -731,8 +759,20 @@ export function tokenWeight(pool: Pool, tokenAddress: string): number {
 export function joinTokens(pool: Pool): string[] {
   let addresses: string[] = [];
 
-  addresses = isDeep(pool) ? tokenTreeNodes(pool.tokens) : pool.tokensList;
-
+  if (isErc4626(pool)) {
+    // Get pool from config
+    const erc4626Pool = configService.network.pools?.Erc4626?.[pool.id];
+    if (!erc4626Pool) {
+      throw new Error(`Pool ${pool.id} is not configured as an ERC4626 pool`);
+    }
+    // replace wrappers with underlying in pool.tokensList
+    addresses = pool.tokensList.map(token => {
+      const wrapperIndex = erc4626Pool.wrappers.indexOf(token);
+      return wrapperIndex >= 0 ? erc4626Pool.underlying[wrapperIndex] : token;
+    });
+  } else {
+    addresses = isDeep(pool) ? tokenTreeNodes(pool.tokens) : pool.tokensList;
+  }
   return removeAddress(pool.address, addresses);
 }
 
@@ -818,6 +858,10 @@ export function usePoolHelpers(pool: Ref<AnyPool> | Ref<undefined>) {
     (): boolean => !!pool.value && includesWstEth(pool.value.tokensList) // && isMainnet.value
   );
 
+  const isErc4626Pool = computed(
+    (): boolean => !!pool.value && isErc4626(pool.value)
+  );
+
   const poolJoinTokens = computed((): string[] =>
     pool.value ? joinTokens(pool.value) : []
   );
@@ -866,6 +910,7 @@ export function usePoolHelpers(pool: Ref<AnyPool> | Ref<undefined>) {
     isDeprecatedPool,
     isNewPoolAvailable,
     poolJoinTokens,
+    isErc4626Pool,
     // methods
     isStable,
     isMetaStable,
@@ -883,5 +928,12 @@ export function usePoolHelpers(pool: Ref<AnyPool> | Ref<undefined>) {
     orderedTokenAddresses,
     orderedPoolTokens,
     joinTokens,
+    isErc4626,
   };
+}
+
+export function isYieldAccelerated(pool: Pool) {
+  return !!Object.keys(poolMetadata(pool.id)?.features || {}).includes(
+    PoolFeature.YieldAccelerated
+  );
 }

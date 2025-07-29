@@ -29,7 +29,7 @@ import {
 } from '@/composables/useVotingPools';
 import IconLimit from '@/components/icons/IconLimit.vue';
 import { buildNetworkIconURL } from '@/lib/utils/urls';
-import { poolMetadata } from '@/lib/config/metadata';
+// import { poolMetadata } from '@/lib/config/metadata';
 import Ve8020Chip from './Ve8020Chip.vue';
 import PoolFeatureChip from '@/components/chips/PoolFeatureChip.vue';
 import { PoolFeature } from '@/types/pools';
@@ -77,6 +77,7 @@ const { getIsGaugeExpired, toggleSelection, isSelected } = useVoting();
 /**
  * DATA
  */
+console.log(props.data);
 const columns = computed((): ColumnDefinition<VotingPool>[] => [
   {
     name: t('veBAL.liquidityMining.table.chain'),
@@ -199,19 +200,16 @@ function getPickedTokens(tokens: VotingPool['tokens']) {
 </script>
 
 <template>
-  <BalCard
-    shadow="lg"
-    class="mt-4"
-    :square="upToLargeBreakpoint"
-    :noBorder="upToLargeBreakpoint"
-    noPad
+  <div
+    class="overflow-hidden mt-2 rounded-xl border shadow-lg backdrop-blur-lg bg-white/5 dark:bg-white/10 border-white/30 dark:border-white/20 compact-table glass-table"
+    :class="{ square: upToLargeBreakpoint }"
   >
     <BalTable
       :columns="columns"
       :data="data"
       :rowKey="(dataItem: VotingPool) => dataItem.gauge.address"
       :isLoading="isLoading"
-      skeletonClass="h-64"
+      skeletonClass="h-48"
       sticky="both"
       :square="upToLargeBreakpoint"
       :isPaginated="isPaginated"
@@ -234,14 +232,14 @@ function getPickedTokens(tokens: VotingPool['tokens']) {
         </div>
       </template>
       <template #networkColumnCell="{ network }">
-        <div v-if="!isLoading" class="py-4 px-6">
+        <div v-if="!isLoading" class="py-3 px-4">
           <div
-            class="flex justify-center items-center w-8 h-8 bg-gray-50 dark:bg-gray-800 rounded shadow-sm"
+            class="flex justify-center items-center w-6 h-6 bg-gray-50 dark:bg-gray-800 rounded shadow-sm"
           >
             <img
               :src="buildNetworkIconURL(getNetworkSlug(network))"
               :alt="network"
-              class="w-6 h-6"
+              class="w-4 h-4"
             />
           </div>
         </div>
@@ -252,17 +250,16 @@ function getPickedTokens(tokens: VotingPool['tokens']) {
         </div>
       </template>
       <template #iconColumnCell="pool: VotingPool">
-        <div v-if="!isLoading" class="py-4 px-6">
-          <BalAssetSet :logoURIs="orderedTokenURIs(pool)" :width="100" />
+        <div v-if="!isLoading" class="py-3 px-4">
+          <BalAssetSet :logoURIs="orderedTokenURIs(pool)" :width="80" />
         </div>
       </template>
       <template #poolCompositionCell="pool: VotingPool">
-        <div v-if="!isLoading" class="flex items-center py-4 px-6">
-          <div v-if="poolMetadata(pool.id)" class="text-left">
+        <div v-if="!isLoading" class="flex items-center py-3 px-4">
+          <!-- <div v-if="poolMetadata(pool.id)" class="text-left">
             {{ poolMetadata(pool.id)?.name }}
-          </div>
+          </div> -->
           <TokenPills
-            v-else
             :tokens="orderedGaugeTokens(pool)"
             :isStablePool="
               isStableLike(pool.poolType) || isUnknownType(pool.poolType)
@@ -290,7 +287,7 @@ function getPickedTokens(tokens: VotingPool['tokens']) {
       <template #nextPeriodVotesCell="pool: VotingPool">
         <!-- Put to BalLazy the most expensive to render component -->
         <BalLazy>
-          <div v-if="!isLoading" class="flex justify-end py-4 px-6">
+          <div v-if="!isLoading" class="flex justify-end py-3 px-4">
             <GaugeVoteInfo :pool="pool" />
             <div class="flex justify-end w-6">
               <!-- <IconLimit
@@ -322,14 +319,14 @@ function getPickedTokens(tokens: VotingPool['tokens']) {
         </BalLazy>
       </template>
       <template #myVotesCell="pool: VotingPool">
-        <div v-if="!isLoading" class="py-4 px-6 text-right">
+        <div v-if="!isLoading" class="py-3 px-4 text-right">
           <GaugesTableMyVotes :pool="pool"></GaugesTableMyVotes>
         </div>
       </template>
       <template #voteSelectColumnCell="pool: VotingPool">
         <BalCheckbox
           v-if="isWalletReady"
-          class="flex -top-2 justify-center ml-8 cursor-pointer"
+          class="flex -top-2 justify-center ml-6 cursor-pointer"
           name="expiredGaugesFilter"
           noMargin
           :modelValue="isSelected(pool)"
@@ -342,15 +339,105 @@ function getPickedTokens(tokens: VotingPool['tokens']) {
         />
       </template>
     </BalTable>
-  </BalCard>
+  </div>
 </template>
 
 <style>
 tr.expired-gauge-row {
-  @apply bg-red-50  hover:bg-red-100 dark:border-red-600 dark:border;
+  background-color: rgb(254 242 242);
+}
+
+tr.expired-gauge-row:hover {
+  background-color: rgb(254 226 226);
+}
+
+.dark tr.expired-gauge-row {
+  border-color: rgb(220 38 38);
+  border-width: 1px;
+}
+
+/* Compact table styling */
+.compact-table :deep(.bal-table) {
+  font-size: 0.875rem;
+  background-color: transparent !important;
+}
+
+.compact-table :deep(.bal-table th) {
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgb(75 85 99);
+  background-color: rgb(255 255 255 / 10%) !important;
+}
+
+.dark .compact-table :deep(.bal-table th) {
+  color: rgb(156 163 175);
+  background-color: rgb(255 255 255 / 5%) !important;
+}
+
+.compact-table :deep(.bal-table td) {
+  padding: 0.5rem 1rem;
+  background-color: transparent !important;
+}
+
+.compact-table :deep(.bal-table tbody tr) {
+  transition: background-color 0.2s;
+  background-color: transparent !important;
+}
+
+.compact-table :deep(.bal-table tbody tr:hover) {
+  background-color: rgb(255 255 255 / 20%) !important;
+}
+
+.dark .compact-table :deep(.bal-table tbody tr:hover) {
+  background-color: rgb(255 255 255 / 10%) !important;
+}
+
+.compact-table :deep(.bal-table tbody tr:nth-child(even)) {
+  background-color: rgb(255 255 255 / 10%) !important;
+}
+
+.dark .compact-table :deep(.bal-table tbody tr:nth-child(even)) {
+  background-color: rgb(255 255 255 / 5%) !important;
+}
+
+.compact-table :deep(.bal-table tbody tr:nth-child(odd)) {
+  background-color: rgb(255 255 255 / 5%) !important;
+}
+
+.dark .compact-table :deep(.bal-table tbody tr:nth-child(odd)) {
+  background-color: rgb(255 255 255 / 5%) !important;
+}
+
+/* Glass morphism effect for the table container */
+.glass-table :deep(.bal-table-container) {
+  background-color: transparent !important;
+}
+
+.glass-table :deep(.bal-table-header) {
+  background-color: rgb(255 255 255 / 15%) !important;
+  border-bottom: 1px solid rgb(255 255 255 / 30%) !important;
+}
+
+.dark .glass-table :deep(.bal-table-header) {
+  background-color: rgb(255 255 255 / 10%) !important;
+  border-bottom: 1px solid rgb(255 255 255 / 20%) !important;
+}
+
+.glass-table :deep(.bal-table-body) {
+  background-color: transparent !important;
+}
+
+/* Override BalTable's default backgrounds */
+.compact-table :deep(table) {
+  background-color: transparent !important;
+}
+
+.compact-table :deep(thead) {
+  background-color: transparent !important;
+}
+
+.compact-table :deep(tbody) {
+  background-color: transparent !important;
 }
 </style>
-
-
-356134000
-356063440

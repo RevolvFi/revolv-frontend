@@ -9,6 +9,7 @@ import useVeBal from '@/composables/useVeBAL';
 import { bnum } from '@/lib/utils';
 import { VeBalLockInfo } from '@/services/balancer/contracts/contracts/veBAL';
 import { Pool } from '@/services/pool/types';
+import { configService } from '@/services/config/config.service';
 
 import VeBalTooltipExplainer from './VeBalTooltipExplainer.vue';
 
@@ -16,7 +17,7 @@ import VeBalTooltipExplainer from './VeBalTooltipExplainer.vue';
  * TYPES
  */
 type Props = {
-  lockablePool: Pool;
+  lockablePool?: Pool;
   totalLpTokens: string;
   lockEndDate: string;
   lockAmount: string;
@@ -39,9 +40,20 @@ const { veBalTokenInfo } = useVeBal();
 /**
  * COMPUTED
  */
-const poolShares = computed(() =>
-  bnum(props.lockablePool.totalLiquidity).div(props.lockablePool.totalShares)
-);
+// Check if we should lock RVLV tokens directly (for Revolv) or LP tokens (for other networks)
+const shouldLockRvlvDirectly = computed(() => {
+  return configService.network.chainId === 40; // Telos chain ID
+});
+
+const poolShares = computed(() => {
+  if (shouldLockRvlvDirectly.value || !props.lockablePool) {
+    // For RVLV direct locking, return 1 as we're locking the token directly
+    return bnum(1);
+  }
+  return bnum(props.lockablePool.totalLiquidity).div(
+    props.lockablePool.totalShares
+  );
+});
 
 const fiatTotalLockedAmount = computed(() =>
   poolShares.value.times(props.veBalLockInfo.lockedAmount).toString()

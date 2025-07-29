@@ -75,10 +75,17 @@ const navLinks = [
   },
   {
     label: veSymbol.value,
-    path: `/${networkSlug}/vesymm`,
+    path: `/${networkSlug}/vervlv`,
     goal: Goals.ClickNavVebal,
     hide: !isVeBalSupported.value,
   },
+  // {
+  //   label: 'Telos V1',
+  //   path: 'https://telos-v1.symm.fi',
+  //   goal: Goals.ClickNavPortfolio,
+  //   hide: !isTelos.value,
+  //   external: true,
+  // },
   // {
   //   label: 'Airdrop',
   //   path: `/${networkSlug}/airdrop`,
@@ -103,7 +110,7 @@ const navLinks = [
 const socialLinks = {
   TwitterIcon: {
     component: TwitterIcon,
-    url: 'https://twitter.com/0xSymmetric',
+    url: 'https://x.com/revolvfi',
   },
   DiscordIcon: {
     component: DiscordIcon,
@@ -111,7 +118,7 @@ const socialLinks = {
   },
   MediumIcon: {
     component: MediumIcon,
-    url: 'https://medium.com/@Symmetric.finance',
+    url: 'https://medium.com/@Revolv.finance',
   },
 
   // YoutubeIcon: {
@@ -120,7 +127,7 @@ const socialLinks = {
   // },
 
   GithubIcon: {
-    url: 'https://github.com/centfinance/',
+    url: 'https://github.com/revolvfi/',
     component: GithubIcon,
   },
 };
@@ -132,9 +139,13 @@ function getSocialComponent(componentName) {
   return socialLinks[componentName].component;
 }
 
-async function navTo(path: string, goal: string) {
+async function navTo(path: string, goal: string, isExternal = false) {
   trackGoal(goal);
-  router.push(path);
+  if (isExternal) {
+    window.open(path, '_blank');
+  } else {
+    router.push(path);
+  }
   emit('close');
 }
 
@@ -161,9 +172,17 @@ watch(blockNumber, async () => {
         v-for="link in navLinks"
         :key="link.label"
         class="side-bar-link"
-        @click="link.hide ? null : navTo(link.path, link.goal)"
+        @click="link.hide ? null : navTo(link.path, link.goal, false)"
       >
-        {{ link.hide ? '' : link.label }}
+        <div class="flex items-center">
+          {{ link.hide ? '' : link.label }}
+          <!-- <BalIcon
+            v-if="link.external"
+            name="arrow-up-right"
+            size="xs"
+            class="ml-1"
+          /> -->
+        </div>
       </div>
     </div>
 

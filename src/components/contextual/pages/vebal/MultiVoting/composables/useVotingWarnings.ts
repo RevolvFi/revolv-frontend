@@ -30,9 +30,9 @@ export function useVotingWarnings(pool: VotingPool) {
     if (votesNextPeriodOverCap.value) {
       if (isVeBalGauge) {
         return {
-          title: 'You may be wasting your vote: vtSYMM cap hit',
+          title: 'You may be wasting your vote: veRVLV cap hit',
           description:
-            'Distributions to vtSYMM holders of weekly emissions are capped at 50%. Any votes exceeding this amount at Thursday 0:00 UTC will not be counted.',
+            'Distributions to veRVLV holders of weekly emissions are capped at 50%. Any votes exceeding this amount at Thursday 0:00 UTC will not be counted.',
         };
       } else {
         return {

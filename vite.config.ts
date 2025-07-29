@@ -80,9 +80,6 @@ export default defineConfig(({ mode }) => {
   }
 
   return {
-    define: {
-      'process.env': {},
-    },
     plugins: plugins,
     resolve: {
       alias: {
@@ -117,13 +114,19 @@ export default defineConfig(({ mode }) => {
       strictPort: true,
       host: true,
     },
+    css: {
+      devSourcemap: false,
+    },
+    define: {
+      'process.env': {},
+    },
     preview: {
       port: 8080,
       host: true,
       strictPort: true,
     },
     build: {
-      sourcemap: isBuildAnalysis ? false : true,
+      sourcemap: isBuildAnalysis ? false : false, // Temporarily disable sourcemaps
       minify: true,
       rollupOptions: {
         plugins: [

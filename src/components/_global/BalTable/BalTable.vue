@@ -234,13 +234,13 @@ watch([() => props.data, () => props.isLoading], ([newData]) => {
           />
         </colgroup>
         <!-- header is rendered as a row - seperated by columns -->
-        <thead class="z-10 bg-white dark:bg-gray-900">
+        <thead class="z-10 bg-transparent">
           <th
             v-for="(column, columnIndex) in filteredColumns"
             :key="`header-${column.id}`"
             :ref="columnIndex == 0 ? 'stickyHeaderRef' : undefined"
             :class="[
-              'p-6 bg-white dark:bg-gray-850 headingShadow border-b dark:border-gray-900',
+              'p-3 border-b border-white/30 dark:border-white/20',
               column.className,
               getHorizontalStickyClass(columnIndex),
               isColumnStuck ? 'isSticky' : '',
@@ -265,7 +265,7 @@ watch([() => props.data, () => props.isLoading], ([newData]) => {
                 :name="column.Header"
               />
               <div v-else>
-                <h5 class="text-base">
+                <h5 class="text-sm font-medium">
                   {{ column.name }}
                 </h5>
               </div>
@@ -301,11 +301,11 @@ watch([() => props.data, () => props.isLoading], ([newData]) => {
       />
       <div
         v-else-if="!isLoading && !tableData.length"
-        class="flex justify-start items-center p-6 max-w-full h-24 bg-white dark:bg-gray-850 row-bg text-secondary"
+        class="flex justify-start items-center p-6 max-w-full h-24 bg-white/10 dark:bg-white/5 row-bg text-secondary"
       >
         {{ noResultsLabel || $t('noResults') }}
       </div>
-      <table v-else class="w-full whitespace-normal table-fixed">
+      <table v-else class="w-full whitespace-normal bg-transparent table-fixed">
         <colgroup>
           <col
             v-for="column in filteredColumns"
@@ -322,7 +322,7 @@ watch([() => props.data, () => props.isLoading], ([newData]) => {
               column.align === 'right' ? 'text-left' : 'text-right',
               getHorizontalStickyClass(columnIndex),
               isColumnStuck ? 'isSticky' : '',
-              'bg-white dark:bg-gray-850 p-0 m-0 h-0',
+              'bg-transparent p-0 m-0 h-0',
             ]"
           />
         </tr>
@@ -410,8 +410,8 @@ watch([() => props.data, () => props.isLoading], ([newData]) => {
 .horizontalSticky {
   @apply z-10 opacity-95 xs:opacity-90;
 
-  /* Set the sticky cell to inherit table row's background-color in order for the opacity property to have an effect */
-  background-color: inherit;
+  /* No background - let the container's glass morphism show through */
+  background-color: transparent !important;
   position: sticky;
   left: 0;
   width: 100%;
@@ -434,13 +434,37 @@ watch([() => props.data, () => props.isLoading], ([newData]) => {
 }
 
 .row-bg {
-  @apply bg-white dark:bg-gray-850 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors ease-in duration-300;
+  @apply bg-white/10 dark:bg-white/5 hover:bg-white/20 dark:hover:bg-white/10 transition-colors ease-in duration-300;
 }
 
 .bal-table-pagination-btn {
   @apply flex items-center justify-center h-16 transition-all;
   @apply font-medium hover:text-purple-600 dark:hover:text-yellow-500;
-  @apply border-t dark:border-gray-900 rounded-b-lg;
-  @apply hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer;
+  @apply border-t border-white/30 dark:border-white/20 rounded-b-lg;
+  @apply hover:bg-white/10 dark:hover:bg-white/5 cursor-pointer;
+}
+
+/* Glass morphism table row styling */
+.bal-table tbody tr {
+  @apply transition-colors ease-in duration-300;
+
+  background-color: transparent !important;
+}
+
+.bal-table tbody tr:nth-child(even) {
+  background-color: transparent !important;
+}
+
+.bal-table tbody tr:nth-child(odd) {
+  background-color: transparent !important;
+}
+
+/* Hover effect for table rows */
+.bal-table tbody tr:hover {
+  background-color: rgb(255 255 255 / 20%) !important;
+}
+
+.dark .bal-table tbody tr:hover {
+  background-color: rgb(255 255 255 / 10%) !important;
 }
 </style>

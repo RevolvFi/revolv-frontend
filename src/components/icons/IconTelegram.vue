@@ -9,7 +9,7 @@
     aria-labelledby="telegramTitle"
     role="img"
   >
-    <title id="telegramTitle">Link to Symmetric's Telegram</title>
+    <title id="telegramTitle">Link to Revolv's Telegram</title>
     <g fill="none" fill-rule="evenodd">
       <path
         class="bg"

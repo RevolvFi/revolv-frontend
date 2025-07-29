@@ -33,6 +33,14 @@ const { lockPool: lpVaultPool, lock: lpVault } = useLpVault();
 console.log(lpVaultPool, lpVault);
 
 const { lockPool: oldLpVaultPool, lock: oldLpVault } = useOldLpVault();
+
+const isTaiko = computed(() => {
+  return configService.network.chainId === 167000;
+});
+
+const isTelos = computed(() => {
+  return configService.network.chainId === 40;
+});
 </script>
 
 <template>
@@ -49,19 +57,21 @@ const { lockPool: oldLpVaultPool, lock: oldLpVault } = useOldLpVault();
         <BalStack vertical spacing="2xl">
           <UnstakedPoolsTable />
           <StakedPointsPoolsTable v-if="isPointsSupported" />
-          <StakedPoolsTable v-if="isVeBalSupported" />
+          <StakedPoolsTable v-if="isVeBalSupported || isTelos" />
           <VeBalPoolTable
             v-if="lockPool && Number(lock?.lockedAmount) > 0"
             :lock="lock"
             :lockPool="lockPool"
           />
           <LpVaultPoolTable
-            v-if="lpVaultPool && Number(lpVault?.lockedAmount) > 0"
+            v-if="isTaiko && lpVaultPool && Number(lpVault?.lockedAmount) > 0"
             :lock="lpVault"
             :lockPool="lpVaultPool"
           />
           <OldLpVaultPoolTable
-            v-if="oldLpVaultPool && Number(oldLpVault?.lockedAmount) > 0"
+            v-if="
+              !isTaiko && oldLpVaultPool && Number(oldLpVault?.lockedAmount) > 0
+            "
             :lock="oldLpVault"
             :lockPool="oldLpVaultPool"
           />

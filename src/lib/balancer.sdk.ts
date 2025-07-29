@@ -57,6 +57,9 @@ export async function fetchPoolsForSor() {
   console.time('fetchPoolsForSor');
   try {
     await balancer.swaps.fetchPools();
+    // if (configService.network.chainId === 40) {
+    //   await telosOld.swaps.fetchPools();
+    // }
   } catch (e) {
     const subgraphBlock = (await subgraphFallbackService.get({
       query: '{ _meta { block { number } } }',

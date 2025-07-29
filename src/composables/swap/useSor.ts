@@ -43,6 +43,7 @@ import useTransactions, { TransactionAction } from '../useTransactions';
 import { SwapQuote } from './types';
 import { overflowProtected } from '@/components/_global/BalTextInput/helpers';
 import { captureBalancerException, isUserError } from '@/lib/utils/errors';
+import { convertERC4626Wrap } from '@/lib/utils/balancer/erc4626Wrappers';
 
 type SorState = {
   validationErrors: {
@@ -255,7 +256,20 @@ export default function useSor({
     if (isMainnet.value) trackGoal(Goals.BalancerSwapMainnet);
   }
 
+  // If not found in result.tokenAddresses, try to get the wrapper address (for ERC4626 vaults)
+  function getWrapperForUnderlying(underlying: string): string | undefined {
+    const wrappers = configService.network.tokens.Wrappers || [];
+    const entry = wrappers.find(
+      w => w.underlying.toLowerCase() === underlying.toLowerCase()
+    );
+    return entry?.wrapper;
+  }
+
   async function updateSwapAmounts(): Promise<void> {
+    console.log('[useSor] updateSwapAmounts called', {
+      sorManager: !!sorManager,
+      confirming: confirming.value,
+    });
     if (!sorManager) {
       return;
     }
@@ -299,17 +313,52 @@ export default function useSor({
         if (isStEthAddress(tokenOutAddressInput.value))
           tokenOutAddress = configService.network.tokens.Addresses.wstETH || '';
 
-        const tokenInPosition = result.tokenAddresses.indexOf(
-          tokenInAddress.toLowerCase()
+        // 1. Find the index for tokenIn
+        let tokenInPosition = result.tokenAddresses.findIndex(
+          addr => addr.toLowerCase() === tokenInAddress.toLowerCase()
         );
-        const tokenOutPosition = result.tokenAddresses.indexOf(
-          tokenOutAddress.toLowerCase()
+        let tokenInIsWrapper = false;
+        if (tokenInPosition === -1) {
+          const wrapper = getWrapperForUnderlying(tokenInAddress);
+          if (wrapper) {
+            tokenInPosition = result.tokenAddresses.findIndex(
+              addr => addr.toLowerCase() === wrapper.toLowerCase()
+            );
+            tokenInIsWrapper = true;
+          }
+        }
+
+        // 2. Find the index for tokenOut
+        let tokenOutPosition = result.tokenAddresses.findIndex(
+          addr => addr.toLowerCase() === tokenOutAddress.toLowerCase()
         );
+        let tokenOutIsWrapper = false;
+        if (tokenOutPosition === -1) {
+          const wrapper = getWrapperForUnderlying(tokenOutAddress);
+          if (wrapper) {
+            tokenOutPosition = result.tokenAddresses.findIndex(
+              addr => addr.toLowerCase() === wrapper.toLowerCase()
+            );
+            tokenOutIsWrapper = true;
+          }
+        }
 
         if (swapType === SwapType.SwapExactOut) {
           let tokenInAmount = deltas[tokenInPosition]
             ? BigNumber.from(deltas[tokenInPosition]).abs()
             : BigNumber.from(0);
+
+          // If input is a wrapper, convert to underlying
+          if (tokenInIsWrapper) {
+            tokenInAmount = (await convertERC4626Wrap(
+              result.tokenAddresses[tokenInPosition],
+              {
+                amount: tokenInAmount,
+                isWrap: false,
+              }
+            )) as BigNumber;
+          }
+
           tokenInAmount = await mutateAmount({
             amount: tokenInAmount,
             address: tokenInAddressInput.value,
@@ -325,6 +374,16 @@ export default function useSor({
           let tokenOutAmount = deltas[tokenOutPosition]
             ? BigNumber.from(deltas[tokenOutPosition]).abs()
             : BigNumber.from(0);
+
+          if (tokenOutIsWrapper) {
+            tokenOutAmount = (await convertERC4626Wrap(
+              result.tokenAddresses[tokenOutPosition],
+              {
+                amount: tokenOutAmount,
+                isWrap: false,
+              }
+            )) as BigNumber;
+          }
           tokenOutAmount = await mutateAmount({
             amount: tokenOutAmount,
             address: tokenOutAddressInput.value,
@@ -340,9 +399,15 @@ export default function useSor({
   }
 
   function resetInputAmounts(amount: string): void {
+    console.log('[useSor] resetInputAmounts', {
+      amount,
+      exactIn: exactIn.value,
+    });
     if (exactIn.value && bnum(amount).isZero()) {
+      console.log('[useSor] Resetting tokenOutAmountInput');
       tokenOutAmountInput.value = '';
     } else if (!exactIn.value && bnum(amount).isZero()) {
+      console.log('[useSor] Resetting tokenInAmountInput');
       tokenInAmountInput.value = '';
     } else {
       tokenInAmountInput.value = amount;
@@ -358,6 +423,12 @@ export default function useSor({
     if (isCowswapSwap.value) {
       return;
     }
+    console.log('[useSor] handleAmountChange called', {
+      tokenInAmountInput: tokenInAmountInput.value,
+      tokenOutAmountInput: tokenOutAmountInput.value,
+      exactIn: exactIn.value,
+      wrapType: wrapType.value,
+    });
 
     let amount = exactIn.value
       ? tokenInAmountInput.value
@@ -365,6 +436,7 @@ export default function useSor({
     // Avoid using SOR if querying a zero value or (un)wrapping swap
     const zeroValueSwap = amount === '' || bnum(amount).isZero();
     if (zeroValueSwap) {
+      console.log('[useSor] Resetting due to zero value swap');
       resetInputAmounts(amount);
       return;
     }
@@ -373,6 +445,11 @@ export default function useSor({
     const tokenOutAddress = tokenOutAddressInput.value;
 
     if (!tokenInAddress || !tokenOutAddress) {
+      console.log('[useSor] Resetting due to missing token addresses', {
+        tokenInAddress,
+        tokenOutAddress,
+        exactIn: exactIn.value,
+      });
       if (exactIn.value) tokenOutAmountInput.value = '';
       else tokenInAmountInput.value = '';
       return;
@@ -387,6 +464,7 @@ export default function useSor({
     amount = overflowProtected(amount, inputAmountDecimals);
 
     if (wrapType.value !== WrapType.NonWrap) {
+      console.log('[useSor] Handling wrap/unwrap swap');
       const wrapper =
         wrapType.value === WrapType.Wrap ? tokenOutAddress : tokenInAddress;
 
@@ -416,6 +494,11 @@ export default function useSor({
     }
 
     if (!sorManager || !sorManager.hasPoolData()) {
+      console.log('[useSor] Resetting due to no pool data', {
+        hasSorManager: !!sorManager,
+        hasPoolData: sorManager?.hasPoolData(),
+        exactIn: exactIn.value,
+      });
       if (exactIn.value) tokenOutAmountInput.value = '';
       else tokenInAmountInput.value = '';
       return;
@@ -430,7 +513,11 @@ export default function useSor({
 
       let tokenInAmountScaled = parseUnits(amount, tokenInDecimals);
 
-      console.log('[SOR Manager] swapExactIn');
+      console.log('[useSor] Getting best swap for exact in', {
+        tokenInAddress,
+        tokenOutAddress,
+        tokenInAmountScaled: tokenInAmountScaled.toString(),
+      });
 
       const swapReturn: SorReturn = await sorManager.getBestSwap(
         tokenInAddress,
@@ -440,19 +527,23 @@ export default function useSor({
         SwapTypes.SwapExactIn,
         tokenInAmountScaled
       );
-      console.log('tokenInAddress', tokenInAddress);
-      console.log('tokenOutAddress', tokenOutAddress);
-      console.log('tokenInDecimals', tokenInDecimals);
-      console.log('tokenOutDecimals', tokenOutDecimals);
-      console.log('SwapTypes.SwapExactIn', SwapTypes.SwapExactIn);
-      console.log('tokenInAmountScaled', tokenInAmountScaled);
 
       sorReturn.value = swapReturn;
       let tokenOutAmount = swapReturn.returnAmount;
 
+      console.log('[useSor] Setting tokenOutAmountInput', {
+        tokenOutAmount: tokenOutAmount.toString(),
+        formatted: tokenOutAmount.gt(0)
+          ? formatAmount(formatUnits(tokenOutAmount, tokenOutDecimals))
+          : '',
+        hasSwaps: sorReturn.value.hasSwaps,
+      });
+
       tokenOutAmountInput.value = tokenOutAmount.gt(0)
         ? formatAmount(formatUnits(tokenOutAmount, tokenOutDecimals))
         : '';
+
+      console.log('sorReturn', sorReturn.value);
 
       if (!sorReturn.value.hasSwaps) {
         priceImpact.value = 0;
@@ -471,13 +562,15 @@ export default function useSor({
           isInputToken: false,
         });
         const priceImpactCalc = calcPriceImpact(
-          tokenInAmountScaled,
+          swapReturn.result.swapAmount,
           tokenInDecimals,
-          tokenOutAmount,
+          swapReturn.result.returnAmount,
           tokenOutDecimals,
           SwapType.SwapExactIn,
           swapReturn.marketSpNormalised
         );
+
+        console.log('priceImpactCalc', priceImpactCalc.toString());
 
         priceImpact.value = Math.max(
           Number(formatUnits(priceImpactCalc)),
@@ -490,7 +583,11 @@ export default function useSor({
 
       let tokenOutAmountScaled = parseUnits(amount, tokenOutDecimals);
 
-      console.log('[SOR Manager] swapExactOut');
+      console.log('[useSor] Getting best swap for exact out', {
+        tokenInAddress,
+        tokenOutAddress,
+        tokenOutAmountScaled: tokenOutAmountScaled.toString(),
+      });
 
       const swapReturn: SorReturn = await sorManager.getBestSwap(
         tokenInAddress,
@@ -504,6 +601,13 @@ export default function useSor({
       sorReturn.value = swapReturn; // TO DO - is it needed?
 
       let tokenInAmount = swapReturn.returnAmount;
+      console.log('[useSor] Setting tokenInAmountInput', {
+        tokenInAmount: tokenInAmount.toString(),
+        formatted: tokenInAmount.gt(0)
+          ? formatAmount(formatUnits(tokenInAmount, tokenInDecimals))
+          : '',
+        hasSwaps: sorReturn.value.hasSwaps,
+      });
       tokenInAmountInput.value = tokenInAmount.gt(0)
         ? formatAmount(formatUnits(tokenInAmount, tokenInDecimals))
         : '';
@@ -539,7 +643,7 @@ export default function useSor({
         );
       }
     }
-
+    console.log('sorManager.selectedPools', sorManager.selectedPools);
     pools.value = sorManager.selectedPools;
 
     state.validationErrors.highPriceImpact =
@@ -606,6 +710,38 @@ export default function useSor({
     });
   }
 
+  function isERC4626Swap(tokenIn, tokenOut) {
+    const tokenInAddress = sorReturn.value.result.tokenIn;
+    const tokenOutAddress = sorReturn.value.result.tokenOut;
+    console.log('tokenInAddress', tokenInAddress);
+    console.log('tokenOutAddress', tokenOutAddress);
+
+    // Helper to check if a token is a wrapper for another
+    function isWrapperFor(wrapper, underlying) {
+      console.log('wrapper', wrapper);
+      console.log('underlying', underlying);
+      const wrappers = configService.network.tokens.Wrappers || [];
+      return wrappers.some(
+        w =>
+          w.wrapper.toLowerCase() === wrapper &&
+          w.underlying.toLowerCase() === underlying
+      );
+    }
+
+    // Check if assetIn is a wrapper for tokenIn.address
+    const inputIsERC4626 = isWrapperFor(
+      tokenInAddress.toLowerCase(),
+      tokenIn.toLowerCase()
+    );
+    // Check if assetOut is a wrapper for tokenOut.address
+    const outputIsERC4626 = isWrapperFor(
+      tokenOutAddress.toLowerCase(),
+      tokenOut.toLowerCase()
+    );
+
+    return inputIsERC4626 || outputIsERC4626;
+  }
+
   async function swap(successCallback?: () => void) {
     trackGoal(Goals.ClickSwap);
     swapping.value = true;
@@ -663,6 +799,8 @@ export default function useSor({
       return;
     }
 
+    const isERC4626 = isERC4626Swap(tokenInAddress, tokenOutAddress);
+
     if (exactIn.value) {
       const tokenOutAmount = parseFixed(
         tokenOutAmountInput.value,
@@ -672,7 +810,7 @@ export default function useSor({
       const sr: SorReturn = sorReturn.value as SorReturn;
 
       try {
-        const tx = await swapIn(sr, tokenInAmountScaled, minAmount);
+        const tx = await swapIn(sr, tokenInAmountScaled, minAmount, isERC4626);
         console.log('Swap in tx', tx);
 
         txHandler(tx, 'swap');
@@ -693,7 +831,12 @@ export default function useSor({
       );
 
       try {
-        const tx = await swapOut(sr, tokenInAmountMax, tokenOutAmountScaled);
+        const tx = await swapOut(
+          sr,
+          tokenInAmountMax,
+          tokenOutAmountScaled,
+          isERC4626
+        );
         console.log('Swap out tx', tx);
 
         txHandler(tx, 'swap');
@@ -807,7 +950,7 @@ export default function useSor({
   ) {
     if (!isUserError(error)) {
       console.trace(error);
-      state.submissionError = t('swapException', ['Symmetric']);
+      state.submissionError = t('swapException', ['Revolv']);
 
       captureBalancerException({
         error,

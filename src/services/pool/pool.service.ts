@@ -19,7 +19,7 @@ import { getBalancerSDK } from '@/dependencies/balancer-sdk';
 import { captureBalancerException } from '@/lib/utils/errors';
 import { formatUnits } from '@ethersproject/units';
 import { subgraphRequest } from '@/lib/utils/subgraph';
-// import { telosVotingPools } from '@/components/contextual/pages/vebal/LMVoting/testnet-voting-pools';
+// import { telosVotingPools } from '@/components/contextual/pages/vebal/LMVoting/telos-voting-pools';
 import { configService } from '../config/config.service';
 
 export default class PoolService {
