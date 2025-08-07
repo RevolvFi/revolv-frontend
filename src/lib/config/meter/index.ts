@@ -18,7 +18,7 @@ const config: Config = {
   network: 'meter',
   trustWalletNetwork: 'meter',
   unknown: false,
-  visibleInUI: true,
+  visibleInUI: false,
   testNetwork: false,
   rpc: 'https://meter.blockpi.network/v1/rpc/216bb10a3653b0a8131afee4f6cf1982945022b4',
   ws: ``,

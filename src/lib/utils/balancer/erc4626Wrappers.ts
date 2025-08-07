@@ -1,7 +1,6 @@
 import { Contract } from 'ethers';
 import { BigNumber } from '@ethersproject/bignumber';
 import { defaultAbiCoder } from '@ethersproject/abi';
-import { WeiPerEther as ONE } from '@ethersproject/constants';
 import { configService } from '@/services/config/config.service';
 import { rpcProviderService } from '@/services/rpc-provider/rpc-provider.service';
 import { isSameAddress } from '@/lib/utils';
@@ -23,38 +22,46 @@ type ConversionParams = {
   isWrap: boolean; // e.g. is stETH to wstETH
 };
 
-function getRateProviderAddress(wrapper: string) {
-  const rateProviderInfo =
-    configService.network.rateProviders[wrapper.toLowerCase()];
-  if (!rateProviderInfo || Object.keys(rateProviderInfo).length === 0)
-    throw new Error('ERC4626 wrapper rate provider not set in config');
-  const rateProvider = Object.keys(rateProviderInfo)[0];
-  return rateProvider;
-}
-
 const relayerInterface = BalancerRelayer__factory.createInterface();
 
 /**
- * Convert stETH amount to wstETH or vice versa. Only relevant on mainnet when wrapping or unwrapping.
+ * Convert underlying token amount to wrapper shares or vice versa using the wrapper's preview functions.
  * @param {string} wrapper - The address of the wrapper contract.
- * @param {BigNumber} amount - The amount to convert, could be stETH or wstETH value.
- * @param {boolean} isWrap - True if wrapping stETH to wstETH, false if unwrapping wstETH to stETH.
- * @returns Converted value for wrap or unwrap, if input is stETH, returns wstETH value and vice versa.
+ * @param {BigNumber} amount - The amount to convert.
+ * @param {boolean} isWrap - True if converting underlying to wrapper shares, false if converting wrapper shares to underlying.
+ * @returns Converted value using the wrapper's preview functions.
  */
 export async function convertERC4626Wrap(
   wrapper: string,
   { amount, isWrap }: ConversionParams
 ) {
   try {
-    const rateProvider = new Contract(
-      getRateProviderAddress(wrapper),
-      ['function getRate() external view returns (uint256)'],
+    const wrapperContract = new Contract(
+      wrapper,
+      [
+        'function convertToShares(uint256 assets) public view returns (uint256)',
+        'function convertToAssets(uint256 shares) public view returns (uint256)',
+      ],
       rpcProviderService.jsonProvider
     );
-    const rate = await rateProvider.getRate();
-    return isWrap ? amount.mul(ONE).div(rate) : amount.mul(rate).div(ONE);
+
+    if (isWrap) {
+      // Convert underlying assets to wrapper shares
+      console.log('convertToShares', amount.toString());
+      const result = await wrapperContract.convertToShares(amount);
+      console.log('convertToShares result', result.toString());
+      return result;
+    } else {
+      // Convert wrapper shares to underlying assets
+      console.log('convertToAssets', amount.toString());
+      const result = await wrapperContract.convertToAssets(amount);
+      console.log('convertToAssets result', result.toString());
+      return result;
+    }
   } catch (error) {
-    throw new Error('Failed to convert to ERC4626 wrapper', { cause: error });
+    throw new Error('Failed to convert ERC4626 wrapper amount', {
+      cause: error,
+    });
   }
 }
 
