@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {
-  lpToken,
-  networkSlug,
-  rewardSymbol,
-  symmSymbol,
+  // lpToken,
+  // networkSlug,
+  // rewardSymbol,
+  // symmSymbol,
   veSymbol,
 } from '@/composables/useNetwork';
 import { useRouter } from 'vue-router';
@@ -42,7 +42,7 @@ function navigateToGetVeBAL() {
             <BalBtn class="mr-3 hero-btn btn-gold" @click="navigateToGetVeBAL">
               {{ $t('veBAL.hero.buttons.getVeBAL', { veSymbol }) }}
             </BalBtn>
-            <BalBtn
+            <!-- <BalBtn
               tag="a"
               href="https://medium.com/@Revolv.Finance/introducing-tsymm-and-vtsymm-120bfe2d60c0"
               target="_blank"
@@ -55,9 +55,9 @@ function navigateToGetVeBAL() {
               <BalIcon
                 name="arrow-up-right"
                 size="sm"
-                class="ml-px group-hover:text-pink-500 transition-colors"
+                class="ml-px transition-colors group-hover:text-pink-500"
               />
-            </BalBtn>
+            </BalBtn> -->
           </div>
         </div>
       </div>
@@ -65,7 +65,7 @@ function navigateToGetVeBAL() {
         <div
           class="grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-4 xl:gap-12 items-center w-full fade-in-slow"
         >
-          <div class="group tip">
+          <!-- <div class="group tip">
             <img
               width="144"
               height="144"
@@ -74,7 +74,7 @@ function navigateToGetVeBAL() {
             />
             <p class="font-semibold tip-label text-shadow">
               {{ $t('claimHero.airdropTipLabel.addLiquidity', { lpToken }) }}
-              <!-- <BalTooltip
+              <BalTooltip
                 iconSize="xs"
                 textAlign="left"
                 class="relative top-px"
@@ -82,10 +82,10 @@ function navigateToGetVeBAL() {
                 width="60"
               >
                 {{ $t('claimHero.tips.addLiquidity') }}
-              </BalTooltip> -->
+              </BalTooltip>
             </p>
-          </div>
-          <div class="group tip">
+          </div> -->
+          <!-- <div class="group tip">
             <img
               width="144"
               height="144"
@@ -94,17 +94,8 @@ function navigateToGetVeBAL() {
             />
             <p class="font-semibold tip-label text-shadow">
               {{ $t('claimHero.airdropTipLabel.stake', { veSymbol }) }}
-              <!-- <BalTooltip
-                iconSize="xs"
-                textAlign="left"
-                class="relative top-px"
-                iconClass="text-white"
-                width="60"
-              >
-                {{ $t('claimHero.tips.stake') }}
-              </BalTooltip> -->
             </p>
-          </div>
+          </div> -->
           <!-- <div class="group tip">
             <img
               width="144"
@@ -125,7 +116,7 @@ function navigateToGetVeBAL() {
               </BalTooltip>
             </p>
           </div> -->
-          <div class="group tip">
+          <!-- <div class="group tip">
             <img
               width="144"
               height="144"
@@ -139,7 +130,7 @@ function navigateToGetVeBAL() {
                   rewardSymbol,
                 })
               }}
-              <!-- <BalTooltip
+              <BalTooltip
                 iconSize="xs"
                 textAlign="left"
                 class="relative top-px"
@@ -147,9 +138,9 @@ function navigateToGetVeBAL() {
                 width="60"
               >
                 {{ $t('claimHero.tips.claim') }}
-              </BalTooltip> -->
+              </BalTooltip>
             </p>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
