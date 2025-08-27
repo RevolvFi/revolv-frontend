@@ -44,6 +44,10 @@ import { SwapQuote } from './types';
 import { overflowProtected } from '@/components/_global/BalTextInput/helpers';
 import { captureBalancerException, isUserError } from '@/lib/utils/errors';
 import { convertERC4626Wrap } from '@/lib/utils/balancer/erc4626Wrappers';
+import useRelayerApproval, {
+  RelayerType,
+} from '../approvals/useRelayerApproval';
+import useRelayerApprovalQuery from '../queries/useRelayerApprovalQuery';
 
 type SorState = {
   validationErrors: {
@@ -198,6 +202,10 @@ export default function useSor({
   // COMPOSABLES
   const { account, getProvider: getWeb3Provider, appNetworkConfig } = useWeb3();
   const provider = computed(() => getWeb3Provider());
+  const { relayerSignature } = useRelayerApproval(RelayerType.BATCH);
+  const relayerApprovalQuery = useRelayerApprovalQuery(
+    ref(configService.network.addresses.batchRelayer)
+  );
   const { trackGoal, Goals } = useFathom();
   const { txListener } = useEthers();
   const { addTransaction } = useTransactions();
@@ -703,6 +711,7 @@ export default function useSor({
         trackGoal(Goals.Swapped, bnum(swapUSDValue).times(100).toNumber() || 0);
         swapping.value = false;
         latestTxHash.value = tx.hash;
+        relayerApprovalQuery.refetch();
       },
       onTxFailed: () => {
         swapping.value = false;
@@ -810,7 +819,13 @@ export default function useSor({
       const sr: SorReturn = sorReturn.value as SorReturn;
 
       try {
-        const tx = await swapIn(sr, tokenInAmountScaled, minAmount, isERC4626);
+        const tx = await swapIn(
+          sr,
+          tokenInAmountScaled,
+          minAmount,
+          relayerSignature.value,
+          isERC4626
+        );
         console.log('Swap in tx', tx);
 
         txHandler(tx, 'swap');
@@ -831,12 +846,7 @@ export default function useSor({
       );
 
       try {
-        const tx = await swapOut(
-          sr,
-          tokenInAmountMax,
-          tokenOutAmountScaled,
-          isERC4626
-        );
+        const tx = await swapOut(sr, tokenInAmountMax, tokenOutAmountScaled);
         console.log('Swap out tx', tx);
 
         txHandler(tx, 'swap');

@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 import Col3Layout from '@/components/layouts/Col3Layout.vue';
 import usePoolQuery from '@/composables/queries/usePoolQuery';
 import useVeBalLockInfoQuery from '@/composables/queries/useVeBalLockInfoQuery';
 import useBreakpoints from '@/composables/useBreakpoints';
+import { bnum } from '@/lib/utils';
 import { useTokens } from '@/providers/tokens.provider';
 import useVeBal from '@/composables/useVeBAL';
 import { Pool } from '@/services/pool/types';
@@ -15,6 +16,7 @@ import HowToLock from './components/HowToLock.vue';
 import LockableTokens from './components/LockableTokens.vue';
 import MyVeBAL from './components/MyVeBAL.vue';
 import VeBalForm from './components/VeBalForm/VeBalForm.vue';
+import UnlockPreviewModal from '../UnlockForm/components/UnlockPreviewModal/UnlockPreviewModal.vue';
 
 /**
  * COMPOSABLES
@@ -76,6 +78,47 @@ const isLoading = computed(() =>
     ? false
     : lockablePoolLoading.value
 );
+
+const isExpired = computed(() => veBalLockInfo.value?.isExpired);
+
+const hasExpiredLockWithTokens = computed(() => {
+  return (
+    isExpired.value &&
+    veBalLockInfo.value?.lockedAmount &&
+    parseFloat(veBalLockInfo.value.lockedAmount) > 0
+  );
+});
+
+/**
+ * STATE
+ */
+const showUnlockModal = ref(false);
+
+/**
+ * COMPUTED
+ */
+const totalLpTokens = computed(() =>
+  veBalLockInfo.value?.isExpired ? veBalLockInfo.value.lockedAmount : '0'
+);
+
+const fiatTotalLpTokens = computed(() => {
+  if (!lockablePool.value) return '0';
+  return bnum(lockablePool.value.totalLiquidity)
+    .div(lockablePool.value.totalShares)
+    .times(totalLpTokens.value)
+    .toString();
+});
+
+/**
+ * METHODS
+ */
+function handleUnlockClick() {
+  showUnlockModal.value = true;
+}
+
+function handleUnlockModalClose() {
+  showUnlockModal.value = false;
+}
 </script>
 
 <template>
@@ -135,6 +178,31 @@ const isLoading = computed(() =>
       "
       class="h-96"
     />
+    <!-- Expired Lock with Tokens - Must Withdraw First -->
+    <div v-else-if="hasExpiredLockWithTokens" class="space-y-4">
+      <div
+        class="p-6 rounded-lg border bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800"
+      >
+        <div class="flex items-start">
+          <BalIcon
+            name="alert-triangle"
+            class="flex-shrink-0 mt-0.5 mr-3 text-amber-500"
+          />
+          <div class="flex-1">
+            <h4 class="mb-2 font-semibold text-amber-800 dark:text-amber-200">
+              Withdraw Expired Lock Required
+            </h4>
+            <p class="mb-3 text-sm text-amber-700 dark:text-amber-300">
+              Your lock has expired and you still have tokens locked. You must
+              withdraw your tokens before creating a new lock.
+            </p>
+            <BalBtn color="gradient" size="sm" @click="handleUnlockClick">
+              Unlock Tokens
+            </BalBtn>
+          </div>
+        </div>
+      </div>
+    </div>
     <VeBalForm
       v-else-if="
         !shouldLockRvlvDirectly && lockablePool && lockablePoolTokenInfo
@@ -169,5 +237,23 @@ const isLoading = computed(() =>
         />
       </template>
     </template>
+
+    <!-- Unlock Preview Modal -->
+    <teleport to="#modal">
+      <UnlockPreviewModal
+        v-if="
+          showUnlockModal &&
+          lockablePool &&
+          lockablePoolTokenInfo &&
+          veBalLockInfo
+        "
+        :lockablePool="lockablePool"
+        :lockablePoolTokenInfo="lockablePoolTokenInfo"
+        :veBalLockInfo="veBalLockInfo"
+        :totalLpTokens="totalLpTokens"
+        :fiatTotalLpTokens="fiatTotalLpTokens"
+        @close="handleUnlockModalClose"
+      />
+    </teleport>
   </Col3Layout>
 </template>

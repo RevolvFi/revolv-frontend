@@ -21,6 +21,12 @@ import { configService } from '@/services/config/config.service';
 
 const SWAP_COST = import.meta.env.VITE_SWAP_COST || '100000';
 
+export interface SorSwapInfo extends SwapInfo {
+  tokenInUnderlying?: string;
+  tokenOutUnderlying?: string;
+  tokenInUnderlyingAmount?: BigNumber;
+  tokenOutUnderlyingAmount?: BigNumber;
+}
 export interface SorReturn {
   tokenIn: string;
   tokenOut: string;
@@ -28,7 +34,7 @@ export interface SorReturn {
   hasSwaps: boolean;
   returnAmount: BigNumber;
   marketSpNormalised: string;
-  result: SwapInfo;
+  result: SorSwapInfo;
 }
 
 interface FetchStatus {
@@ -158,18 +164,28 @@ export class SorManager {
       forceRefresh: true,
     };
 
-    // Get wrappers from config for both tokens
+    // Get wrappers from config for both tokens (only for exact input swaps)
     const wrappers = configService.network.tokens.Wrappers || [];
-    const vaultsIn = wrappers
-      .filter(w => w.underlying.toLowerCase() === v2TokenIn.toLowerCase())
-      .map(w => w.wrapper);
-    const vaultsOut = wrappers
-      .filter(w => w.underlying.toLowerCase() === v2TokenOut.toLowerCase())
-      .map(w => w.wrapper);
+    const vaultsIn =
+      swapType === SwapTypes.SwapExactIn
+        ? wrappers
+            .filter(w => w.underlying.toLowerCase() === v2TokenIn.toLowerCase())
+            .map(w => w.wrapper)
+        : [];
+    const vaultsOut =
+      swapType === SwapTypes.SwapExactIn
+        ? wrappers
+            .filter(
+              w => w.underlying.toLowerCase() === v2TokenOut.toLowerCase()
+            )
+            .map(w => w.wrapper)
+        : [];
 
     console.log('[SorManager] Found vaults', {
       vaultsIn,
       vaultsOut,
+      swapType,
+      includeWrappers: swapType === SwapTypes.SwapExactIn,
     });
 
     // Create array of all possible token combinations to try
@@ -240,15 +256,34 @@ export class SorManager {
       marketSpNormalised: bestSwapInfo.marketSp,
     });
 
+    // Check if the best swap uses wrappers
+    const usesWrapperIn = vaultsIn.includes(bestSwapInfo.tokenIn);
+    const usesWrapperOut = vaultsOut.includes(bestSwapInfo.tokenOut);
+
+    // Create result with additional wrapper info if needed
+    const result: SorSwapInfo = {
+      ...bestSwapInfo,
+      ...(usesWrapperIn && {
+        tokenInUnderlying: v2TokenIn,
+        tokenInUnderlyingAmount: amountScaled, // This is already in token decimals
+      }),
+      ...(usesWrapperOut && {
+        tokenOutUnderlying: v2TokenOut,
+        tokenOutUnderlyingAmount: bestReturnAmount, // This is already in token decimals
+      }),
+    };
+
     // Return the best swap route found, but keep the original token addresses in the return object
     return {
       tokenIn: v2TokenIn,
       tokenOut: v2TokenOut,
-      returnDecimals: tokenOutDecimals,
+      returnDecimals: SwapTypes.SwapExactIn
+        ? tokenOutDecimals
+        : tokenInDecimals,
       hasSwaps: bestSwapInfo.swaps.length > 0,
       returnAmount: bestReturnAmount,
       marketSpNormalised: bestSwapInfo.marketSp,
-      result: bestSwapInfo,
+      result,
     };
   }
 

@@ -17,7 +17,7 @@ const config: Config = {
   network: 'taiko',
   trustWalletNetwork: 'taiko',
   unknown: false,
-  visibleInUI: true,
+  visibleInUI: false,
   testNetwork: false,
   rpc: `https://rpc.mainnet.taiko.xyz`,
   ws: `wss://ws.mainnet.taiko.xyz`,

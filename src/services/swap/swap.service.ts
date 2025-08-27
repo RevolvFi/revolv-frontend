@@ -21,6 +21,7 @@ import { vaultService } from '@/services/contracts/vault.service';
 import { erc4626RelayerService } from '@/services/contracts/erc4626-relayer.service';
 
 import { walletService as walletServiceInstance } from '@/services/web3/wallet.service';
+import { SorSwapInfo } from '@/lib/utils/balancer/helpers/sor/sorManager';
 
 export type Address = string;
 
@@ -36,6 +37,10 @@ export interface SwapToken {
   type: SwapTokenType;
 }
 
+export type ERC4626SingleSwap = SingleSwap & {
+  tokenInUnderlyingAmount?: BigNumber;
+};
+
 export class SwapService {
   constructor(
     private readonly transactionDeadline: Ref<number>,
@@ -47,8 +52,7 @@ export class SwapService {
     tokenIn: SwapToken,
     tokenOut: SwapToken,
     swaps: SwapV2[],
-    tokenAddresses: string[],
-    isERC4626Swap?: boolean
+    tokenAddresses: string[]
   ): Promise<TransactionResponse> {
     if (isStETH(tokenIn.address, tokenOut.address)) {
       return this.lidoBatchSwap(tokenIn, tokenOut, swaps, tokenAddresses);
@@ -90,16 +94,6 @@ export class SwapService {
             ? tokenOut.amount.toString()
             : tokenIn.amount.toString();
 
-        if (isERC4626Swap) {
-          return erc4626RelayerService.swap(
-            single,
-            funds,
-            limit,
-            this.transactionDeadline.value,
-            overrides
-          );
-        }
-
         return vaultService.swap(
           single,
           funds,
@@ -109,23 +103,13 @@ export class SwapService {
         );
       }
 
+      console.log('tokenIn', tokenIn);
+      console.log('tokenOut', tokenOut);
       const limits: string[] = this.calculateLimits(
         [tokenIn],
         [tokenOut],
         tokenAddresses
       );
-
-      if (isERC4626Swap) {
-        return erc4626RelayerService.batchSwap(
-          swapKind,
-          swaps,
-          tokenAddresses,
-          funds,
-          limits,
-          this.transactionDeadline.value,
-          overrides
-        );
-      }
 
       return vaultService.batchSwap(
         swapKind,
@@ -138,6 +122,89 @@ export class SwapService {
       );
     } catch (e) {
       console.log('[Swapper] batchSwapV2 Error:', e);
+      return Promise.reject(e);
+    }
+  }
+
+  public async erc4626BatchSwap(
+    tokenIn: SwapToken,
+    tokenOut: SwapToken,
+    swapInfo: SorSwapInfo,
+    relayerSignature: string | undefined = undefined
+  ): Promise<TransactionResponse> {
+    console.log('[Swap Service] erc4626batchSwap');
+    const overrides: any = {};
+
+    if (isSameAddress(tokenIn.address, AddressZero)) {
+      overrides.value = tokenIn.amount;
+    }
+
+    const swapKind =
+      tokenOut.type === SwapTokenType.min
+        ? SwapType.SwapExactIn
+        : SwapType.SwapExactOut;
+
+    const funds = await this.getFundManagement();
+
+    const swaps = swapInfo.swaps;
+    const tokenAddresses = swapInfo.tokenAddresses;
+
+    try {
+      if (swaps.length == 1) {
+        const single: ERC4626SingleSwap = {
+          poolId: swaps[0].poolId,
+          kind: swapKind,
+          assetIn: tokenAddresses[swaps[0].assetInIndex],
+          assetOut: tokenAddresses[swaps[0].assetOutIndex],
+          amount: swaps[0].amount,
+          userData: swaps[0].userData,
+        };
+
+        if (swapInfo.tokenInUnderlying) {
+          single.tokenInUnderlyingAmount = swapInfo.tokenInUnderlyingAmount;
+        }
+
+        /*
+        See docs in iVault:
+        If the swap is 'given in' (the number of tokens to send to the Pool is known), it returns the amount of tokens
+        taken from the Pool, which must be greater than or equal to `limit`.
+        If the swap is 'given out' (the number of tokens to take from the Pool is known), it returns the amount of tokens
+        sent to the Pool, which must be less than or equal to `limit`.
+        */
+        const limit =
+          swapKind === SwapType.SwapExactIn
+            ? tokenOut.amount.toString()
+            : tokenIn.amount.toString();
+
+        return erc4626RelayerService.swap(
+          single,
+          funds,
+          limit,
+          this.transactionDeadline.value,
+          overrides,
+          relayerSignature
+        );
+      }
+
+      console.log('tokenIn', tokenIn);
+      console.log('tokenOut', tokenOut);
+      const limits: string[] = this.calculateLimits(
+        [tokenIn],
+        [tokenOut],
+        tokenAddresses
+      );
+
+      return erc4626RelayerService.batchSwap(
+        swapKind,
+        swapInfo,
+        funds,
+        limits,
+        this.transactionDeadline.value,
+        overrides,
+        relayerSignature
+      );
+    } catch (e) {
+      console.log('[Swapper] erc4626BatchSwap Error:', e);
       return Promise.reject(e);
     }
   }
