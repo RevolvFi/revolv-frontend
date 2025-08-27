@@ -17,7 +17,7 @@ module.exports = {
   theme: {
     fontFamily: {
       body: [
-        'Orbitron-Variable',
+        'Nunito-Variable',
         '-apple-system',
         'BlinkMacSystemFont',
         '"Segoe UI"',
