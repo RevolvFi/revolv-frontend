@@ -1,3 +1,4 @@
+import { computed } from 'vue';
 import { Pool } from '@/services/pool/types';
 import { TokenInfo } from '@/types/TokenList';
 
@@ -17,7 +18,7 @@ export function useLock({ enabled = true }: Options = {}) {
    * COMPOSABLES
    */
   const { lockablePoolId } = useVeBal();
-  const { getToken, balanceFor } = useTokens();
+  const { getToken, balanceFor, priceFor } = useTokens();
   console.log(lockablePoolId.value);
 
   /**
@@ -64,12 +65,14 @@ export function useLock({ enabled = true }: Options = {}) {
   // Total fiat value of locked tokens.
   const totalLockedValue = computed((): string => {
     if (shouldLockRvlvDirectly.value) {
-      // For RVLV direct locking, we need to get the RVLV token price and calculate fiat value
-      const rvlvToken = getToken(configService.network.tokens.Addresses.BAL);
-      if (rvlvToken && lock.value?.hasExistingLock) {
-        // This would need to be implemented based on how you get RVLV token price
-        // For now, returning the locked amount as a placeholder
-        return lock.value.lockedAmount;
+      // For RVLV direct locking, calculate fiat value using token price
+      if (lock.value?.hasExistingLock) {
+        const rvlvPrice = priceFor(configService.network.tokens.Addresses.BAL);
+        if (rvlvPrice) {
+          return bnum(lock.value.lockedAmount).times(rvlvPrice).toString();
+        }
+        // Fallback to 0 if price not available
+        return '0';
       }
       return '0';
     } else {

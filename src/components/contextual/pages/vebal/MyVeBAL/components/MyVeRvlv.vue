@@ -5,11 +5,11 @@ import { computed } from 'vue';
 import { PRETTY_DATE_FORMAT } from '@/components/forms/lock_actions/constants';
 import useNumbers, { FNumFormats } from '@/composables/useNumbers';
 import useVeBal from '@/composables/useVeBAL';
-// import { useTokens } from '@/providers/tokens.provider';
+import { useTokens } from '@/providers/tokens.provider';
 import { bnum } from '@/lib/utils';
 import { VeBalLockInfo } from '@/services/balancer/contracts/contracts/veBAL';
 import { veSymbol } from '@/composables/useNetwork';
-// import { configService } from '@/services/config/config.service';
+import { configService } from '@/services/config/config.service';
 
 /**
  * TYPES
@@ -59,11 +59,16 @@ const lockedUntil = computed(() => {
 const hasExistingLock = computed(() => props.veBalLockInfo?.hasExistingLock);
 const isExpired = computed(() => props.veBalLockInfo?.isExpired);
 
+const { priceFor } = useTokens();
+
+const rvlvPrice = computed(() => {
+  const price = priceFor(configService.network.tokens.Addresses.BAL);
+  return price || 0; // Fallback to 0 if price not available
+});
+
 const lockedRvlvFiatValue = computed(() => {
-  // Fixed RVLV price of $0.01 for now
-  const rvlvPrice = 0.01;
   return bnum(props.veBalLockInfo?.lockedAmount || '0')
-    .times(rvlvPrice)
+    .times(rvlvPrice.value)
     .toString();
 });
 </script>
