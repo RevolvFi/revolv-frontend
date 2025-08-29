@@ -353,10 +353,23 @@ export const erc4626PoolExit = async (
     priceImpact,
   });
 
+  // Sort tokens alphabetically as required by the pool contract
+  const sortedTokens = [...erc4626Pool.tokensList].sort((a, b) =>
+    a.toLowerCase() < b.toLowerCase() ? -1 : 1
+  );
+
+  console.log('Token ordering:', {
+    original: erc4626Pool.tokensList,
+    sorted: sortedTokens,
+    poolAddress: pool.address,
+  });
+
   // Create output references for wrapper tokens and store mapping
   const wrapperToReference = new Map<string, BigNumber>();
   const outputReferences = erc4626Pool.wrappers.map((wrapper, i) => {
-    const wrapperIndex = erc4626Pool.tokensList.indexOf(wrapper);
+    const wrapperIndex = sortedTokens.findIndex(token =>
+      isSameAddress(token, wrapper)
+    );
     const key = BigNumber.from(
       `0xba1000000000000000000000000000000000000000000000000000000000000${
         i + 1
@@ -388,8 +401,8 @@ export const erc4626PoolExit = async (
   }
 
   const exitPoolRequest = {
-    assets: erc4626Pool.tokensList,
-    minAmountsOut: erc4626Pool.tokensList.map(token => {
+    assets: sortedTokens,
+    minAmountsOut: sortedTokens.map(token => {
       if (isSameAddress(token, pool.address)) {
         return '0'; // BPT amount
       }

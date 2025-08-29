@@ -53,7 +53,7 @@ const {
 const { veBalTokenInfo } = useVeBal();
 const { isWalletReady, startConnectWithInjectedProvider, isMismatchedNetwork } =
   useWeb3();
-const { wrappedNativeAsset, nativeAsset, getToken } = useTokens();
+const { wrappedNativeAsset, getToken } = useTokens();
 const {
   isLoadingQuery,
   isSingleAssetJoin,
@@ -88,7 +88,6 @@ const excludedTokens = computed((): string[] => {
 });
 
 const joinTokensWithBalance = computed<string[]>(() => {
-  let shouldAddNativeAsset = false;
   const joinTokens = poolJoinTokens.value.filter(address => {
     // If it's the wrapped native asset address
     if (address && isSameAddress(address, wrappedNativeAsset.value.address)) {
@@ -97,20 +96,12 @@ const joinTokensWithBalance = computed<string[]>(() => {
         tokensWithBalance.value,
         wrappedNativeAsset.value.address
       );
-      // If no wrapped balance, replace with native token
-      if (!hasWrappedBalance) {
-        shouldAddNativeAsset = true;
-        return false;
-      }
-      return true;
+      // Only allow wrapped native token, never unwrapped
+      return hasWrappedBalance;
     }
     // For other tokens, check if user has balance
     return address ? includesAddress(tokensWithBalance.value, address) : false;
   });
-  // Only add native asset if it's not an ERC4626 pool
-  if (shouldAddNativeAsset && !isErc4626Pool.value) {
-    joinTokens.push(nativeAsset.address);
-  }
   return joinTokens;
 });
 
@@ -137,17 +128,15 @@ function getTokenInputLabel(address: string): string | undefined {
 }
 
 /**
- * If the address is the wrapped native asset, we want to give the option to use
- * the native asset instead.
+ * If the address is the wrapped native asset, we only allow wrapped tokens.
+ * Native unwrapped tokens are disabled.
  */
 function tokenOptions(address: string): string[] {
   if (isSingleAssetJoin.value) return [];
 
-  return includesAddress(
-    [wrappedNativeAsset.value.address, nativeAsset.address],
-    address
-  )
-    ? [nativeAsset.address, wrappedNativeAsset.value.address]
+  // Only allow wrapped native token, never unwrapped
+  return includesAddress([wrappedNativeAsset.value.address], address)
+    ? [wrappedNativeAsset.value.address]
     : [];
 }
 
