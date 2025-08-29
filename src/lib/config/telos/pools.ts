@@ -125,19 +125,19 @@ const pools: Pools = {
         '0x738471f8cb40aefc54a95e08c574619495958e31',
       ],
     }, // R-woUSDC.e-woUSDT
-    '0xd9f435165a1432e64c33547aaf1c76f6b7971dc8000000000000000000000018': {
-      underlying: [
-        '0xd102ce6a4db07d247fcc28f366a623df0938ca9e', // WTLOS
-      ],
-      wrappers: [
-        '0xd9d50bc52061bb29045da753776b1367fa6e3ad0', // woWTLOS
-      ],
-      tokensList: [
-        '0xd9f435165a1432e64c33547aaf1c76f6b7971dc8',
-        '0xb4b01216a5bc8f1c8a33cd990a1239030e60c905',
-        '0xd9d50bc52061bb29045da753776b1367fa6e3ad0',
-      ],
-    }, // R-STLOS-woWTLOS
+    // '0xd9f435165a1432e64c33547aaf1c76f6b7971dc8000000000000000000000018': {
+    //   underlying: [
+    //     '0xd102ce6a4db07d247fcc28f366a623df0938ca9e', // WTLOS
+    //   ],
+    //   wrappers: [
+    //     '0xd9d50bc52061bb29045da753776b1367fa6e3ad0', // woWTLOS
+    //   ],
+    //   tokensList: [
+    //     '0xd9f435165a1432e64c33547aaf1c76f6b7971dc8',
+    //     '0xb4b01216a5bc8f1c8a33cd990a1239030e60c905',
+    //     '0xd9d50bc52061bb29045da753776b1367fa6e3ad0',
+    //   ],
+    // }, // R-STLOS-woWTLOS
     '0x7629abad9d7e2d323584717d8dde5bbd3bce6df0000200000000000000000016': {
       underlying: [
         '0xf1815bd50389c46847f0bda824ec8da914045d14', // USDC.e

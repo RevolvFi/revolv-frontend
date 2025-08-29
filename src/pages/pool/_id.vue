@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import {
   PoolChart,
   PoolStatCards,
@@ -162,11 +162,9 @@ const titleTokens = computed<PoolToken[]>(() => {
 });
 
 const isPointsStakablePool = computed(() => {
-  if (!pool.value || POOLS.PointsGauges === undefined) return false;
+  if (!pool.value || !POOLS.PointsGauges) return false;
   return Object.keys(POOLS.PointsGauges).includes(poolId);
 });
-
-console.log('isPointsStakablePool', isPointsStakablePool);
 
 const isStakablePool = computed(
   (): boolean =>
