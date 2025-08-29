@@ -13,7 +13,7 @@ import useLockState from '../../../composables/useLockState';
  * COMPOSABLES
  */
 const { lockAmount } = useLockState();
-const { getToken, balanceFor } = useTokens();
+const { getToken, balanceFor, priceFor } = useTokens();
 const { fNum } = useNumbers();
 
 /**
@@ -27,11 +27,14 @@ const rvlvBalance = computed(() =>
   balanceFor(configService.network.tokens.Addresses.BAL)
 );
 
+const rvlvPrice = computed(() => {
+  const price = priceFor(configService.network.tokens.Addresses.BAL);
+  return price || 0; // Fallback to 0 if price not available
+});
+
 const lockAmountFiatValue = computed(() => {
-  // Fixed RVLV price of $0.01 for now
-  const rvlvPrice = 0.01;
   return bnum(lockAmount.value || '0')
-    .times(rvlvPrice)
+    .times(rvlvPrice.value)
     .toString();
 });
 

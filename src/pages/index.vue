@@ -222,7 +222,7 @@ const availableNetworks = ['telos', 'meter', 'artela'];
       class="p-4 w-full text-center bg-purple-600 dark:bg-purple-900"
     >
       <span class="text-white">
-        If you had liquidity on Symmetric Telos before March 28th, 2024, you can
+        If you had liquidity on Symmetric Telos before March 28th, 2025, you can
         withdraw it
         <a
           href="https://telos-v1.symm.fi"

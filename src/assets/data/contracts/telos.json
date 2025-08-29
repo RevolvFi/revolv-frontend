@@ -17,7 +17,7 @@
   "MockComposableStablePool": "0x88EcD4B0F3A685E8CE74572cC1916dEc2c6335B8",
   "MockWeightedPool": "0x8B9400Ad20C207678B4a7bFa2d6Cc8Fff5bc7fBc",
   "NoTokenAdminGauge": "0x3B526FB7f2283767ca6f4194Da93AFc5A71B12f0",
-  "NoTokenAdminGaugeFactory": "0xE6584CF31463c11aa79Dc376201925C934e0D8E2",
+  "NoTokenAdminGaugeFactory": "0x110f9bFBE4a8042375EC8De1384980fd7201fea5",
   "NullVotingEscrow": "0xB873BAf7d3B67c5E98eF173BCC14c3465FE7669c",
   "ProtocolFeePercentagesProvider": "0xd4f1972155E8d1e9C688fcC616b0F484A4233454",
   "ProtocolFeesCollector": "0x1d577bac8954Ec4b0E0192dd5B7cA13C93b2f503",
