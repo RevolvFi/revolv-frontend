@@ -130,15 +130,15 @@ function getTokenInputLabel(address: string): string | undefined {
 /**
  * If the address is the wrapped native asset, we only allow wrapped tokens.
  * Native unwrapped tokens are disabled.
+ * Return empty array when there's only one option to hide the dropdown.
  */
-function tokenOptions(address: string): string[] {
-  if (isSingleAssetJoin.value) return [];
+// function tokenOptions(address: string): string[] {
+//   if (isSingleAssetJoin.value) return [];
 
-  // Only allow wrapped native token, never unwrapped
-  return includesAddress([wrappedNativeAsset.value.address], address)
-    ? [wrappedNativeAsset.value.address]
-    : [];
-}
+//   // Only allow wrapped native token, never unwrapped
+//   // Return empty array to hide dropdown when there's only one option
+//   return [];
+// }
 
 /**
  * When changing tokens, clear the amount value
@@ -209,7 +209,7 @@ watch(
       v-model:amount="amountIn.value"
       :name="amountIn.address"
       :weight="tokenWeight(pool, amountIn.address)"
-      :options="tokenOptions(amountIn.address)"
+      :options="[]"
       :aria-label="'Amount of: ' + getTokenInputLabel(amountIn.address)"
       class="mb-4"
       :fixedToken="!isSingleAssetJoin"

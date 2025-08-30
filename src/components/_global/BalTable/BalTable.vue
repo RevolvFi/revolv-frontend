@@ -301,11 +301,14 @@ watch([() => props.data, () => props.isLoading], ([newData]) => {
       />
       <div
         v-else-if="!isLoading && !tableData.length"
-        class="flex justify-start items-center p-6 max-w-full h-24 bg-white/10 dark:bg-white/5 row-bg text-secondary"
+        class="flex justify-start items-center p-6 max-w-full h-24 bg-gray-850 row-bg text-secondary"
       >
         {{ noResultsLabel || $t('noResults') }}
       </div>
-      <table v-else class="w-full whitespace-normal bg-transparent table-fixed">
+      <table
+        v-else
+        class="w-full whitespace-normal bg-gray-850 table-fixed bal-table"
+      >
         <colgroup>
           <col
             v-for="column in filteredColumns"
@@ -322,7 +325,7 @@ watch([() => props.data, () => props.isLoading], ([newData]) => {
               column.align === 'right' ? 'text-left' : 'text-right',
               getHorizontalStickyClass(columnIndex),
               isColumnStuck ? 'isSticky' : '',
-              'bg-transparent p-0 m-0 h-0',
+              'p-0 m-0 h-0',
             ]"
           />
         </tr>
@@ -333,7 +336,10 @@ watch([() => props.data, () => props.isLoading], ([newData]) => {
         <BalTableRow
           v-for="(dataItem, index) in pinnedData"
           :key="getRowKey(dataItem, index)"
-          :class="getTableRowClass(dataItem, index)"
+          :class="[
+            getTableRowClass(dataItem, index),
+            'bg-gray-850 hover:!bg-gray-700',
+          ]"
           :data="dataItem"
           :columns="filteredColumns"
           :onRowClick="onRowClick"
@@ -356,11 +362,12 @@ watch([() => props.data, () => props.isLoading], ([newData]) => {
         >
           <BalTableRow
             v-if="!renderedRowsIdx || index <= renderedRowsIdx"
-            :class="
+            :class="[
               props.getTableRowClass
                 ? props.getTableRowClass(dataItem, index)
-                : undefined
-            "
+                : undefined,
+              'bg-gray-850 hover:!bg-gray-700',
+            ]"
             :data="dataItem"
             :columns="filteredColumns"
             :onRowClick="onRowClick"
@@ -410,8 +417,7 @@ watch([() => props.data, () => props.isLoading], ([newData]) => {
 .horizontalSticky {
   @apply z-10 opacity-95 xs:opacity-90;
 
-  /* No background - let the container's glass morphism show through */
-  background-color: transparent !important;
+  background-color: inherit;
   position: sticky;
   left: 0;
   width: 100%;
@@ -434,7 +440,7 @@ watch([() => props.data, () => props.isLoading], ([newData]) => {
 }
 
 .row-bg {
-  @apply bg-white/10 dark:bg-white/5 hover:bg-white/20 dark:hover:bg-white/10 transition-colors ease-in duration-300;
+  @apply hover:bg-white/20 dark:hover:bg-white/10 transition-colors ease-in duration-300;
 }
 
 .bal-table-pagination-btn {
@@ -448,23 +454,20 @@ watch([() => props.data, () => props.isLoading], ([newData]) => {
 .bal-table tbody tr {
   @apply transition-colors ease-in duration-300;
 
-  background-color: transparent !important;
+  background-color: #1e1e28 !important;
 }
 
-.bal-table tbody tr:nth-child(even) {
-  background-color: transparent !important;
-}
-
-.bal-table tbody tr:nth-child(odd) {
-  background-color: transparent !important;
+/* More specific targeting for table rows */
+table.bal-table tbody tr {
+  background-color: #1e1e28 !important;
 }
 
 /* Hover effect for table rows */
 .bal-table tbody tr:hover {
-  background-color: rgb(255 255 255 / 20%) !important;
+  background-color: #35353e !important;
 }
 
 .dark .bal-table tbody tr:hover {
-  background-color: rgb(255 255 255 / 10%) !important;
+  background-color: #35353e !important;
 }
 </style>
