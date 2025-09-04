@@ -464,7 +464,18 @@ export const erc4626PoolExit = async (
   const convertedAmountsOut = await Promise.all(
     erc4626Pool.wrappers.map(async (wrapper, i) => {
       const underlyingToken = erc4626Pool.underlying[i];
-      const wrapperAmount = estimatedAmountsOut[i];
+      // Find the correct index in tokensOut for this wrapper
+      const tokenIndex = tokensOut.findIndex(token =>
+        isSameAddress(token, wrapper)
+      );
+      if (tokenIndex === -1) {
+        console.warn(`Wrapper ${wrapper} not found in tokensOut`);
+        return {
+          token: underlyingToken,
+          amount: '0',
+        };
+      }
+      const wrapperAmount = estimatedAmountsOut[tokenIndex];
       const underlyingAmount = await convertERC4626Wrap(wrapper, {
         amount: BigNumber.from(wrapperAmount),
         isWrap: false,
