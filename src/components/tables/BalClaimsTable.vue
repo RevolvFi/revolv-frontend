@@ -19,7 +19,7 @@ import { GaugePool } from '@/composables/useClaimsData';
 import { Gauge } from '@/services/balancer/gauges/types';
 import PoolWarningTooltip from '@/components/pool/PoolWarningTooltip.vue';
 import useNetwork, { symmSymbol } from '@/composables/useNetwork';
-import { poolMetadata } from '@/lib/config/metadata';
+// import { poolMetadata } from '@/lib/config/metadata';
 
 /**
  * TYPES
@@ -146,12 +146,11 @@ function redirectToPool({ pool }: { pool: GaugePool }) {
       </template>
       <template #pillsColumnCell="{ pool }">
         <div class="flex items-center py-4 px-6">
-          <div v-if="poolMetadata(pool.id)" class="text-left">
+          <!-- <div v-if="poolMetadata(pool.id)" class="text-left">
             {{ poolMetadata(pool.id)!.name }}
-          </div>
+          </div> -->
 
           <TokenPills
-            v-else
             :tokens="orderedPoolTokens(pool, pool.tokens)"
             :isStablePool="isStableLike(pool.poolType)"
           />

@@ -13,7 +13,7 @@
   "BribeVault": "0xe529460ed1b8a55E283A10A5e3487D6924677A2d",
   "ComposableStablePoolFactory": "0xaC584a7CA52f852Be3fACb359F1959a3B698E6C1",
   "GaugeController": "0x2D2E6b240A758dccC1DD13e71f4136a482b84Ec9",
-  "L2BalancerPseudoMinter": "0x7924903f369e509e42E23fe8f519FCa41E4Afc26",
+  "L2BalancerPseudoMinter": "0xBDbAF8896232aBa0D12417bfAb434b4cb31f8d86",
   "MockComposableStablePool": "0x88EcD4B0F3A685E8CE74572cC1916dEc2c6335B8",
   "MockWeightedPool": "0x8B9400Ad20C207678B4a7bFa2d6Cc8Fff5bc7fBc",
   "NoTokenAdminGauge": "0x3B526FB7f2283767ca6f4194Da93AFc5A71B12f0",
