@@ -144,10 +144,9 @@ const gaugeTables = computed((): GaugeTable[] => {
 });
 
 const networkHasBalClaiming = computed(
-  () =>
-    !!configService.network.addresses.balancerMinter &&
-    configService.network.network !== 'telos'
+  () => !!configService.network.addresses.balancerMinter
 );
+console.log('networkHasBalClaiming', networkHasBalClaiming.value);
 
 /**
  * METHODS
@@ -191,7 +190,7 @@ function gaugeTitle(pool: GaugePool): string {
 // function rewardUSDValue(tokenAddress: string, amount: string): string {
 //   const token = getToken(tokenAddress);
 //   if (!token) return '0';
-//   if (token.symbol === 'tSYMM') {
+//   if (token.symbol === 'RVLV') {
 //     return fNum(
 //       bnum(amount).times(bbAUSDToken.getRate()).toString(),
 //       FNumFormats.fiat
@@ -396,7 +395,7 @@ onBeforeMount(async () => {
               <img
                 :src="buildNetworkIconURL(network.id as unknown as  Network)"
                 :alt="network.id"
-                class="w-6 h-6 mr-2 rounded-full shadow-sm"
+                class="mr-2 w-6 h-6 rounded-full shadow-sm"
               />
               {{ $t('pages.claim.btns.claimOn') }} {{ network.name }}
             </BalBtn>

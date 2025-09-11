@@ -26,6 +26,8 @@ const contracts: Contracts = {
   feeDistributorDeprecated: '',
   faucet: '',
   omniVotingEscrow: '',
+  bribeMarket: telos.BribeMarket,
+  bribeVault: telos.BribeVault,
 };
 
 export default contracts;

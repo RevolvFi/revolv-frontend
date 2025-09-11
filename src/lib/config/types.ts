@@ -69,6 +69,8 @@ export interface Contracts {
   faucet: string;
   gaugeRewardsHelper?: string;
   omniVotingEscrow?: string;
+  bribeMarket?: string;
+  bribeVault?: string;
 }
 
 export interface RateProviders {

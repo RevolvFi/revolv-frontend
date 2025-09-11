@@ -36,6 +36,8 @@ const PortfolioPage = () => import('@/pages/portfolio.vue');
 const RecoveryExitPage = () =>
   import('@/pages/recovery-exit/recovery-exit.vue');
 
+const IncentivizePage = () => import('@/pages/incentivize.vue');
+
 declare module 'vue-router' {
   interface RouteMeta {
     layout?: string;
@@ -157,6 +159,11 @@ const routes: RouteRecordRaw[] = [
     path: '/:networkSlug/claim',
     name: 'claim',
     component: ClaimPage,
+  },
+  {
+    path: '/:networkSlug/incentivize',
+    name: 'incentivize',
+    component: IncentivizePage,
   },
   {
     path: '/:networkSlug/points',
