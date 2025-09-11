@@ -144,9 +144,7 @@ const gaugeTables = computed((): GaugeTable[] => {
 });
 
 const networkHasBalClaiming = computed(
-  () =>
-    !!configService.network.addresses.balancerMinter &&
-    configService.network.network !== 'telos'
+  () => !!configService.network.addresses.balancerMinter
 );
 
 /**
@@ -396,7 +394,7 @@ onBeforeMount(async () => {
               <img
                 :src="buildNetworkIconURL(network.id as unknown as  Network)"
                 :alt="network.id"
-                class="w-6 h-6 mr-2 rounded-full shadow-sm"
+                class="mr-2 w-6 h-6 rounded-full shadow-sm"
               />
               {{ $t('pages.claim.btns.claimOn') }} {{ network.name }}
             </BalBtn>
