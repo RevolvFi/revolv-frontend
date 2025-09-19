@@ -26,18 +26,21 @@ const config: Config = {
   explorer: 'https://teloscan.io',
   explorerName: 'Teloscan',
   subgraph:
-    'https://api.goldsky.com/api/public/project_clnbo3e3c16lj33xva5r2aqk7/subgraphs/symmetric-telos2/prod/gn',
+    'https://telos.api.ormilabs.com/api/public/f187e851-60e9-43dd-978f-f43d0b1748eb/subgraphs/revolv-telos/1.0.0/gn',
+  // 'https://api.goldsky.com/api/public/project_clnbo3e3c16lj33xva5r2aqk7/subgraphs/symmetric-telos2/prod/gn',
   // 'https://telosapi.0xgraph.xyz/api/public/3d0109fa-bf83-48be-8595-24ecf0ed29fb/subgraphs/symmetric-telos/1.0.9/gn',
   balancerApi: '',
   poolsUrlV2:
     'https://storageapi.fleek.co/johngrantuk-team-bucket/poolsV2.json',
   subgraphs: {
     main: [
+      'https://telos.api.ormilabs.com/api/public/f187e851-60e9-43dd-978f-f43d0b1748eb/subgraphs/revolv-telos/1.0.0/gn',
       'https://api.goldsky.com/api/public/project_clnbo3e3c16lj33xva5r2aqk7/subgraphs/symmetric-telos2/prod/gn',
     ],
     aave: '',
     gauge:
-      'https://api.goldsky.com/api/public/project_clnbo3e3c16lj33xva5r2aqk7/subgraphs/symmetric-telos2-gauges/prod/gn',
+      'https://telos.api.ormilabs.com/api/public/f187e851-60e9-43dd-978f-f43d0b1748eb/subgraphs/revolv-gauges-telos/1.0.0/gn',
+    // 'https://api.goldsky.com/api/public/project_clnbo3e3c16lj33xva5r2aqk7/subgraphs/symmetric-telos2-gauges/prod/gn',
     blocks: '',
   },
   bridgeUrl: 'https://bridge.telos.net/bridge',

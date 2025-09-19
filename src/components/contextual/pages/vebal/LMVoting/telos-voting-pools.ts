@@ -5,6 +5,36 @@ import {
 import { ApiVotingPool } from '@/services/balancer/gauges/gauge-controller.decorator';
 
 export function telosVotingPools(testnet: 'telos'): ApiVotingPool[] {
+  const RVLV_STLOS: ApiVotingPool = {
+    chain: testnet as GqlChain,
+    id: '0x993f1754d02b64720803f0cc5550bf9a4ba2b89b000200000000000000000019',
+    address: '0x993f1754d02b64720803f0cc5550bf9a4ba2b89b',
+    type: GqlPoolMinimalType.Weighted,
+    symbol: 'R-80RVLV-20STLOS',
+    tokens: [
+      {
+        address: '0x98a5030a449d8833166c3f1d96db00ba2a082fbf',
+        weight: '0.8',
+        symbol: 'RVLV',
+        logoURI:
+          'https://github.com/RevolvFi/tokenlists/blob/main/src/assets/images/tokens/RVLV.png',
+      },
+      {
+        address: '0xb4b01216a5bc8f1c8a33cd990a1239030e60c905',
+        weight: '0.2',
+        symbol: 'STLOS',
+        logoURI:
+          'https://raw.githubusercontent.com/telosnetwork/token-list/main/logos/stlos.png',
+      },
+    ],
+    gauge: {
+      address: '0x2b142EF7e1a314f86aDe5921c8aE9590B5A61FDD',
+      isKilled: false,
+      relativeWeightCap: null,
+      addedTimestamp: 1705510584,
+    },
+  };
+
   const woUSDC_woUSDT: ApiVotingPool = {
     chain: testnet as GqlChain,
     id: '0x64ee13e072764094d46912046a92436b6a264729000000000000000000000017',
@@ -131,5 +161,11 @@ export function telosVotingPools(testnet: 'telos'): ApiVotingPool[] {
     },
   };
 
-  return [woUSDC_woUSDT, STLOS_woWTLOS, woUSDC_STLOS, WBTC_WETH_USDC_e];
+  return [
+    RVLV_STLOS,
+    woUSDC_woUSDT,
+    STLOS_woWTLOS,
+    woUSDC_STLOS,
+    WBTC_WETH_USDC_e,
+  ];
 }

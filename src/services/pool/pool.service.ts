@@ -20,7 +20,7 @@ import { captureBalancerException } from '@/lib/utils/errors';
 import { formatUnits } from '@ethersproject/units';
 import { subgraphRequest } from '@/lib/utils/subgraph';
 // import { telosVotingPools } from '@/components/contextual/pages/vebal/LMVoting/telos-voting-pools';
-import { configService } from '../config/config.service';
+// import { configService } from '../config/config.service';
 
 export default class PoolService {
   REWARD_PRICE: number | undefined;
@@ -75,6 +75,7 @@ export default class PoolService {
     try {
       const sdkApr = await getBalancerSDK().pools.apr(this.pool);
       if (sdkApr) apr = sdkApr;
+      console.log('apr', apr);
     } catch (error) {
       captureBalancerException({ error });
       console.error(`Failed to calc APR for: ${this.pool.id}`, error);
@@ -95,21 +96,21 @@ export default class PoolService {
         max: 0,
       };
     }
-    if (configService.network.chainId === 40) {
-      // const killedGauges = telosVotingPools('telos').filter(
-      //   pool => pool.gauge.isKilled === true
-      // );
-      // if (
-      //   killedGauges.find(
-      //     pool => pool.id.toLowerCase() === this.pool.id.toLowerCase()
-      //   )
-      // ) {
-      apr.stakingApr = {
-        min: 0,
-        max: 0,
-      };
-      // }
-    }
+    // if (configService.network.chainId === 40) {
+    //   // const killedGauges = telosVotingPools('telos').filter(
+    //   //   pool => pool.gauge.isKilled === true
+    //   // );
+    //   // if (
+    //   //   killedGauges.find(
+    //   //     pool => pool.id.toLowerCase() === this.pool.id.toLowerCase()
+    //   //   )
+    //   // ) {
+    //   apr.stakingApr = {
+    //     min: 0,
+    //     max: 0,
+    //   };
+    //   // }
+    // }
 
     if (
       // (rewards && rewards[timestamp] && rewards[timestamp][this.pool.id]) ||
