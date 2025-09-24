@@ -154,6 +154,7 @@ export interface Config {
     blocks: string;
   };
   bridgeUrl: string;
+  incentivesAPI?: string;
   supportsEIP1559: boolean;
   supportsElementPools: boolean;
   supportsVeBalSync?: boolean;

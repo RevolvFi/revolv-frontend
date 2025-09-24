@@ -108,11 +108,11 @@ export class ContractConcern extends TransactionConcern {
     block: number,
     overrides: any
   ): Promise<WalletErrorMetadata> {
-    let sender, chainId, calldata;
+    let sender, chainId;
     try {
       sender = await this.signer.getAddress();
       chainId = await this.signer.getChainId();
-      calldata = contract.interface.encodeFunctionData(action, params);
+      // calldata = contract.interface.encodeFunctionData(action, params);
     } catch (err) {
       console.error('Threw second error when collecting error metadata: ', err);
     }
@@ -120,7 +120,7 @@ export class ContractConcern extends TransactionConcern {
     const msgValue = overrides.value ? overrides.value.toString() : 0;
 
     return {
-      simulation: `https://dashboard.tenderly.co/balancer/v2/simulator/new?rawFunctionInput=${calldata}&block=${block}&blockIndex=0&from=${sender}&gas=8000000&gasPrice=0&value=${msgValue}&contractAddress=${contract.address}&network=${chainId}`,
+      simulation: '', //`https://dashboard.tenderly.co/balancer/v2/simulator/new?rawFunctionInput=${calldata}&block=${block}&blockIndex=0&from=${sender}&gas=8000000&gasPrice=0&value=${msgValue}&contractAddress=${contract.address}&network=${chainId}`,
       sender,
       action,
       block,

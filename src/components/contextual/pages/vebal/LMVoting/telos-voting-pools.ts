@@ -17,7 +17,7 @@ export function telosVotingPools(testnet: 'telos'): ApiVotingPool[] {
         weight: '0.8',
         symbol: 'RVLV',
         logoURI:
-          'https://github.com/RevolvFi/tokenlists/blob/main/src/assets/images/tokens/RVLV.png',
+          'https://raw.githubusercontent.com/RevolvFi/tokenlists/refs/heads/main/src/assets/images/tokens/RVLV.png',
       },
       {
         address: '0xb4b01216a5bc8f1c8a33cd990a1239030e60c905',
@@ -150,7 +150,8 @@ export function telosVotingPools(testnet: 'telos'): ApiVotingPool[] {
         address: '0xbab93b7ad7fe8692a878b95a8e689423437cc500',
         weight: '0.4',
         symbol: 'WETH',
-        logoURI: 'https://cryptologos.cc/logos/ethereum-eth-logo.png',
+        logoURI:
+          'https://raw.githubusercontent.com/RevolvFi/tokenlists/refs/heads/main/src/assets/images/tokens/RVLV.png',
       },
     ],
     gauge: {

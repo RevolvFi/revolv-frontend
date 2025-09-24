@@ -1,6 +1,8 @@
+<!-- eslint-disable @typescript-eslint/no-non-null-assertion -->
 <script setup lang="ts">
 import { computed, ref, onBeforeMount } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { utils } from 'ethers';
 
 import BalModal from '@/components/_global/BalModal/BalModal.vue';
 import BalCard from '@/components/_global/BalCard/BalCard.vue';
@@ -12,7 +14,6 @@ import BalIcon from '@/components/_global/BalIcon/BalIcon.vue';
 
 import { useTokens } from '@/providers/tokens.provider';
 import useNumbers, { FNumFormats } from '@/composables/useNumbers';
-import { VotingPool } from '@/composables/queries/useVotingPoolsQuery';
 import { TokenInfo } from '@/types/TokenList';
 import useWeb3 from '@/services/web3/useWeb3';
 import { TransactionBuilder } from '@/services/web3/transactions/transaction.builder';
@@ -23,9 +24,10 @@ import BribeMarketAbi from '@/lib/abi/BribeMarket.json';
 import { configService } from '@/services/config/config.service';
 import { parseUnits } from '@ethersproject/units';
 import { TransactionActionInfo } from '@/types/transactions';
+import { ApiVotingPool } from '@/services/balancer/gauges/gauge-controller.decorator';
 
 type Props = {
-  selectedPool: VotingPool;
+  selectedPool: ApiVotingPool;
   selectedToken: TokenInfo;
   incentiveAmount: string;
 };
@@ -93,13 +95,13 @@ const actions = computed((): TransactionActionInfo[] => {
 /**
  * METHODS
  */
-function formatPoolName(pool: VotingPool): string {
+function formatPoolName(pool: ApiVotingPool): string {
   const tokens = pool.tokens.map(token => ({
     ...token,
     ...getToken(token.address),
   }));
 
-  if (pool.poolType === 'Stable' || pool.poolType === 'ComposableStable') {
+  if (pool.type === 'STABLE') {
     return tokens.map(token => token.symbol).join(' / ');
   }
 
@@ -114,6 +116,14 @@ function formatPoolName(pool: VotingPool): string {
     .join(' / ');
 }
 
+function generateProposalHash(gaugeAddress: string): string {
+  // Generate keccak256(abi.encodePacked(gauge.address))
+  // For abi.encodePacked(address), we just need the address bytes
+  const hash = utils.solidityKeccak256(['address'], [gaugeAddress]);
+  console.log('hash', hash);
+  return hash;
+}
+
 async function depositBribe(): Promise<any> {
   const txBuilder = new TransactionBuilder(getSigner());
 
@@ -123,12 +133,12 @@ async function depositBribe(): Promise<any> {
     props.selectedToken.decimals
   );
 
-  // Create proposal hash from pool ID
-  const proposalHash = props.selectedPool.id;
+  // Generate proposal hash from gauge address
+  const proposalHash = generateProposalHash(props.selectedPool.gauge.address);
 
   // Call depositBribe function
   const tx = await txBuilder.contract.sendTransaction({
-    contractAddress: bribeMarketAddress.value,
+    contractAddress: bribeMarketAddress.value!,
     abi: BribeMarketAbi.abi,
     action: 'depositBribe',
     params: [
@@ -144,13 +154,9 @@ async function depositBribe(): Promise<any> {
     id: tx.hash,
     type: 'tx',
     action: 'invest',
-    summary: t(
-      'incentivize.transactionSummary',
-      'Deposit incentive for {pool}',
-      {
-        pool: poolName.value,
-      }
-    ),
+    summary: t('incentivize.depositSummary', {
+      pool: poolName.value,
+    }),
     details: {
       contractAddress: bribeMarketAddress.value,
       tokenAddress: props.selectedToken.address,
@@ -177,8 +183,8 @@ onBeforeMount(async () => {
         amount: props.incentiveAmount,
       },
     ],
-    spender: bribeVaultAddress.value,
-    actionType: ApprovalAction.Investing,
+    spender: bribeVaultAddress.value!,
+    actionType: ApprovalAction.Incentivize,
   });
   loadingApprovals.value = false;
 });
@@ -237,6 +243,16 @@ onBeforeMount(async () => {
               <span class="font-medium">
                 {{ fNum(incentiveAmount, FNumFormats.token) }}
                 {{ selectedToken.symbol }}
+              </span>
+            </div>
+
+            <!-- Gauge Information -->
+            <div class="flex justify-between items-center">
+              <span class="text-sm text-gray-600 dark:text-gray-400">
+                {{ $t('incentivize.gauge', 'Gauge') }}
+              </span>
+              <span class="text-xs font-mono">
+                {{ selectedPool.gauge.address }}
               </span>
             </div>
           </div>
