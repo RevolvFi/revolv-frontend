@@ -546,6 +546,7 @@
   "incentiveToken": "Incentive token",
   "incentivizedPool": "incentivized pool",
   "incentivize": {
+    "name": "Incentivize",
     "title": "Incentivize Pool Gauge",
     "description": "Add incentives to encourage voting for specific pool gauges",
     "selectPool": "Select Pool",

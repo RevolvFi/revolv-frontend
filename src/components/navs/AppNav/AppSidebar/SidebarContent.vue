@@ -79,6 +79,12 @@ const navLinks = [
     goal: Goals.ClickNavVebal,
     hide: !isVeBalSupported.value,
   },
+  {
+    label: t('incentivize.name'),
+    path: `/${networkSlug}/incentivize`,
+    goal: Goals.ClickNavIncentivize,
+    hide: !isVeBalSupported.value,
+  },
   // {
   //   label: 'Telos V1',
   //   path: 'https://telos-v1.symm.fi',
