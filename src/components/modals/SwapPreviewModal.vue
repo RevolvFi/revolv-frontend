@@ -304,8 +304,9 @@ const cowswapRelayerApproval = useRelayerApprovalTx(
 
 const lidoRelayerApproval = useRelayerApprovalTx(RelayerType.LIDO, isStETHSwap);
 
+// Update the ERC4626 relayer approval to use BATCH relayer type
 const erc4626RelayerApproval = useRelayerApprovalTx(
-  RelayerType.ERC4626,
+  RelayerType.BATCH, // Use BATCH instead of ERC4626
   isERC4626Swap
 );
 
@@ -315,7 +316,7 @@ const pools = computed<SubgraphPoolBase[]>(() => {
 
 const requiresBatchRelayerApproval = computed(
   () =>
-    props.swapping.isJoinExitSwap.value &&
+    (props.swapping.isJoinExitSwap.value || isERC4626Swap.value) &&
     !batchRelayerApproval.isUnlocked.value &&
     !batchRelayerSignature.value
 );
@@ -332,10 +333,9 @@ const requiresLidoRelayerApproval = computed(
     props.swapping.isBalancerSwap.value && !lidoRelayerApproval.isUnlocked.value
 );
 
+// Update the computed property to check for ERC4626 swaps
 const requiresErc4626RelayerApproval = computed(
-  () =>
-    props.swapping.isBalancerSwap.value &&
-    !erc4626RelayerApproval.isUnlocked.value
+  () => isERC4626Swap.value && !erc4626RelayerApproval.isUnlocked.value
 );
 
 const showBatchRelayerApprovalStep = computed(
@@ -361,9 +361,10 @@ const showLidoRelayerApprovalStep = computed(
       lidoRelayerApproval.approving.value)
 );
 
+// Update the showErc4626RelayerApprovalStep computed property
 const showErc4626RelayerApprovalStep = computed(
   () =>
-    !props.swapping.isJoinExitSwap.value &&
+    isERC4626Swap.value &&
     (requiresErc4626RelayerApproval.value ||
       erc4626RelayerApproval.init.value ||
       erc4626RelayerApproval.approved.value ||
@@ -388,10 +389,10 @@ const actions = computed((): TransactionActionInfo[] => {
 
   if (showCowswapRelayerApprovalStep.value) {
     actions.push(cowswapRelayerApproval.action.value);
-  } else if (showErc4626RelayerApprovalStep.value) {
-    actions.push(erc4626RelayerApproval.action.value);
   } else if (showLidoRelayerApprovalStep.value) {
     actions.push(lidoRelayerApproval.action.value);
+  } else if (showErc4626RelayerApprovalStep.value) {
+    actions.push(erc4626RelayerApproval.action.value);
   } else if (showBatchRelayerApprovalStep.value) {
     actions.push(batchRelayerApprovalAction.value);
   }
