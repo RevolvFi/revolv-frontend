@@ -2,6 +2,7 @@
 import useDebouncedRef from '@/composables/useDebouncedRed';
 import useVotingEscrowLocks from '@/composables/useVotingEscrowLocks';
 import useVotingPools from '@/composables/useVotingPools';
+import useIncentives from '@/composables/useIncentives';
 
 import useNetwork, {
   lpToken,
@@ -66,6 +67,13 @@ const {
   hasAllVotingPowerTimeLocked,
   loadRequestWithExistingVotes,
 } = useVoting();
+
+const {
+  incentivesByGauge,
+  getIncentivesForGauge,
+  getTotalIncentiveValue,
+  isLoading: isLoadingIncentives,
+} = useIncentives();
 
 /**
  * COMPUTED
@@ -363,6 +371,10 @@ watch(isRefetchingVotingPools, async () => {
       :noPoolsLabel="$t('noInvestments')"
       :filterText="tokenFilter"
       :selectVotesDisabled="selectVotesDisabled"
+      :incentivesByGauge="incentivesByGauge"
+      :getIncentivesForGauge="getIncentivesForGauge"
+      :getTotalIncentiveValue="getTotalIncentiveValue"
+      :isLoadingIncentives="isLoadingIncentives"
     />
     <div ref="intersectionSentinel" />
   </div>

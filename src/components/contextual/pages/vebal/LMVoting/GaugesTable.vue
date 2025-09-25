@@ -40,6 +40,7 @@ import {
   // hasUserVotes,
   isGaugeNew,
 } from '@/components/contextual/pages/vebal/voting-utils';
+import { useTokens } from '@/providers/tokens.provider';
 
 /**
  * TYPES
@@ -52,6 +53,10 @@ type Props = {
   filterText?: string;
   renderedRowsIdx: number;
   selectVotesDisabled: boolean;
+  incentivesByGauge?: Record<string, any[]>;
+  getIncentivesForGauge?: (gaugeAddress: string) => any[];
+  getTotalIncentiveValue?: (gaugeAddress: string) => number;
+  isLoadingIncentives?: boolean;
 };
 
 /**
@@ -73,6 +78,7 @@ const { t } = useI18n();
 const { upToLargeBreakpoint } = useBreakpoints();
 const { isWalletReady } = useWeb3();
 const { getIsGaugeExpired, toggleSelection, isSelected } = useVoting();
+const { getToken, priceFor } = useTokens();
 
 /**
  * DATA
@@ -124,6 +130,15 @@ const columns = computed((): ColumnDefinition<VotingPool>[] => [
     Cell: 'myVotesCell',
     cellClassName: 'font-numeric',
     hidden: !isWalletReady.value,
+  },
+  {
+    name: 'Incentives',
+    accessor: 'incentives',
+    align: 'right',
+    id: 'incentives',
+    Cell: 'incentivesCell',
+    width: 150,
+    noGrow: true,
   },
   {
     name: t('veBAL.liquidityMining.table.voteSelect'),
@@ -197,6 +212,42 @@ function getPickedTokens(tokens: VotingPool['tokens']) {
     )
     .map(item => item.address);
 }
+
+// Add this function to calculate total USD value for all incentives
+const getTotalIncentiveUSDValue = (incentives: any[]) => {
+  if (!incentives || incentives.length === 0) return '0';
+
+  const totalUSD = incentives.reduce((total, incentive) => {
+    const token = getToken(incentive.token);
+    if (!token) return total;
+
+    const price = priceFor(incentive.token);
+    if (!price) return total;
+
+    const amount = parseFloat(incentive.amount) / Math.pow(10, token.decimals);
+    return total + amount * price;
+  }, 0);
+
+  return totalUSD.toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+};
+
+const formatIncentiveAmount = (incentive: any) => {
+  const token = getToken(incentive.token);
+  if (!token) return '0';
+
+  const amount = parseFloat(incentive.amount) / Math.pow(10, token.decimals);
+  const formattedAmount = amount.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2, // Limit to 2 decimal places
+  });
+
+  return `${formattedAmount} ${token.symbol}`;
+};
 </script>
 
 <template>
@@ -337,6 +388,48 @@ function getPickedTokens(tokens: VotingPool['tokens']) {
           @click.stop
           @input="toggleSelection(pool)"
         />
+      </template>
+      <template #incentivesCell="pool: VotingPool">
+        <div
+          v-if="isLoadingIncentives"
+          class="flex justify-end items-center py-3 px-4"
+        >
+          <BalLoadingIcon size="sm" />
+        </div>
+        <div
+          v-else-if="
+            getIncentivesForGauge &&
+            getIncentivesForGauge(pool.gauge.address).length > 0
+          "
+          class="flex flex-col items-end py-3 px-4 space-y-1"
+        >
+          <!-- Total USD value at the top -->
+          <div class="font-medium">
+            {{
+              getTotalIncentiveUSDValue(
+                getIncentivesForGauge(pool.gauge.address)
+              )
+            }}
+          </div>
+
+          <!-- Individual token amounts below -->
+          <div class="flex flex-col items-end space-y-1">
+            <div
+              v-for="incentive in getIncentivesForGauge(pool.gauge.address)"
+              :key="incentive.proposal"
+              class="flex items-center text-xs text-gray-400"
+            >
+              <BalAsset :address="incentive.token" class="mr-1 w-3 h-3" />
+              <span>{{ formatIncentiveAmount(incentive) }}</span>
+            </div>
+          </div>
+        </div>
+        <div
+          v-else
+          class="flex justify-end items-center py-3 px-4 text-gray-400"
+        >
+          $0.00
+        </div>
       </template>
     </BalTable>
   </div>

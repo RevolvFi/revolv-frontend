@@ -69,6 +69,8 @@ export interface Contracts {
   faucet: string;
   gaugeRewardsHelper?: string;
   omniVotingEscrow?: string;
+  bribeMarket?: string;
+  bribeVault?: string;
 }
 
 export interface RateProviders {
@@ -152,6 +154,7 @@ export interface Config {
     blocks: string;
   };
   bridgeUrl: string;
+  incentivesAPI?: string;
   supportsEIP1559: boolean;
   supportsElementPools: boolean;
   supportsVeBalSync?: boolean;

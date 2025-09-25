@@ -27,7 +27,7 @@ export const relayerAddressMap = {
   [RelayerType.COWSWAP]: COW_RELAYER_CONTRACT_ADDRESS,
   [RelayerType.LIDO]: configService.network.addresses.lidoRelayer,
   [RelayerType.BATCH]: configService.network.addresses.batchRelayer,
-  [RelayerType.ERC4626]: configService.network.addresses.erc4626Relayer,
+  // [RelayerType.ERC4626]: configService.network.addresses.erc4626Relayer,
 };
 
 /**

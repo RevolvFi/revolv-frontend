@@ -91,6 +91,15 @@ function isActive(page: string): boolean {
       {{ veSymbol }}
     </DesktopLinkItem>
     <DesktopLinkItem
+      v-if="isVeBalSupported"
+      :to="{ name: 'incentivize', params: { networkSlug } }"
+      :active="isActive('incentivize')"
+      prefetch
+      @click="trackGoal(Goals.ClickNavIncentivize)"
+    >
+      {{ $t('incentivize.name') }}
+    </DesktopLinkItem>
+    <DesktopLinkItem
       v-if="isPointsSupported"
       :to="{ name: 'symm-points', params: { networkSlug } }"
       :active="isActive('symm-points')"

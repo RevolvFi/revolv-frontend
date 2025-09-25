@@ -146,6 +146,7 @@ const gaugeTables = computed((): GaugeTable[] => {
 const networkHasBalClaiming = computed(
   () => !!configService.network.addresses.balancerMinter
 );
+console.log('networkHasBalClaiming', networkHasBalClaiming.value);
 
 /**
  * METHODS
@@ -189,7 +190,7 @@ function gaugeTitle(pool: GaugePool): string {
 // function rewardUSDValue(tokenAddress: string, amount: string): string {
 //   const token = getToken(tokenAddress);
 //   if (!token) return '0';
-//   if (token.symbol === 'tSYMM') {
+//   if (token.symbol === 'RVLV') {
 //     return fNum(
 //       bnum(amount).times(bbAUSDToken.getRate()).toString(),
 //       FNumFormats.fiat
