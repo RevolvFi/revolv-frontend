@@ -151,7 +151,7 @@ export function telosVotingPools(testnet: 'telos'): ApiVotingPool[] {
         weight: '0.4',
         symbol: 'WETH',
         logoURI:
-          'https://raw.githubusercontent.com/RevolvFi/tokenlists/refs/heads/main/src/assets/images/tokens/RVLV.png',
+          'https://assets.coingecko.com/coins/images/279/standard/ethereum.png',
       },
     ],
     gauge: {
