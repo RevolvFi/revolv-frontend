@@ -192,6 +192,8 @@ async function submit(lockType: LockType, actionIndex: number) {
         props.lockEndDate
       );
     } else if (lockType === LockType.EXTEND_LOCK) {
+      console.log('Extending lock');
+      console.log('Lock end date', props.lockEndDate);
       tx = await balancerContractsService.veBAL.extendLock(
         getProvider(),
         props.lockEndDate

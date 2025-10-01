@@ -5,6 +5,7 @@
 import VeBalInfo from '@/components/contextual/pages/vebal/VeBalInfo.vue';
 import LMVoting from '@/components/contextual/pages/vebal/LMVoting/LMVoting.vue';
 import InlineLockForm from '@/components/forms/lock_actions/LockForm/components/InlineLockForm.vue';
+import ClaimTable from '@/components/tables/ClaimsTable.vue';
 import { isVeBalSupported, isGaugesSupported } from '@/composables/useVeBAL';
 
 import { provideUserStaking } from '@/providers/local/user-staking.provider';
@@ -47,13 +48,14 @@ console.log(isGaugesSupported.value);
             <!-- Right Column: Voter Rewards (Placeholder) -->
             <div>
               <h3 class="mb-4 text-xl font-semibold">Voter Rewards</h3>
-              <div
-                class="p-6 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
+              <!-- <div
+                class="p-6 bg-white rounded-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700"
               >
                 <p class="text-center text-gray-500 dark:text-gray-400">
                   Voter rewards claiming functionality coming soon...
                 </p>
-              </div>
+              </div> -->
+              <ClaimTable />
             </div>
           </div>
         </div>

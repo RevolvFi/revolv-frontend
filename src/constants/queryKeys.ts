@@ -171,6 +171,11 @@ const QUERY_KEYS = {
       'gaugePools',
       { poolIds },
     ],
+    Voter: (networkId: Ref<Network>, account: Ref<string>) => [
+      CLAIMS_ROOT_KEY,
+      'voter',
+      { networkId, account },
+    ],
   },
   Tokens: {
     PairPriceData: (
