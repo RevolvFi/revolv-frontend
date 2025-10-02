@@ -28,6 +28,7 @@ const contracts: Contracts = {
   omniVotingEscrow: '',
   bribeMarket: telos.BribeMarket,
   bribeVault: telos.BribeVault,
+  rewardDistributor: '0x40e2786869b59c5cbf309e76184d4d299069e2f5',
 };
 
 export default contracts;

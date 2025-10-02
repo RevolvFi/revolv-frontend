@@ -36,27 +36,19 @@ console.log(isGaugesSupported.value);
     <!-- Main Content Section -->
     <div class="py-8 xl:py-20 bg-gray-50 dark:bg-gray-850/50">
       <div v-if="isVeBalSupported" class="lg:container lg:mx-auto">
-        <!-- Two Column Layout: Lock Form and Voter Rewards -->
         <div class="px-4 mb-4">
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-            <!-- Left Column: Lock Form -->
-            <div>
-              <h3 class="mb-4 text-xl font-semibold">Lock Tokens</h3>
+          <!-- Lock Form Section -->
+          <div class="mb-8">
+            <h3 class="mb-4 text-xl font-semibold">Lock Tokens</h3>
+            <div class="max-w-md">
               <InlineLockForm />
             </div>
+          </div>
 
-            <!-- Right Column: Voter Rewards (Placeholder) -->
-            <div>
-              <h3 class="mb-4 text-xl font-semibold">Voter Rewards</h3>
-              <!-- <div
-                class="p-6 bg-white rounded-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700"
-              >
-                <p class="text-center text-gray-500 dark:text-gray-400">
-                  Voter rewards claiming functionality coming soon...
-                </p>
-              </div> -->
-              <ClaimTable />
-            </div>
+          <!-- Voter Rewards Section -->
+          <div>
+            <h3 class="mb-4 text-xl font-semibold">Voter Rewards</h3>
+            <ClaimTable />
           </div>
         </div>
       </div>
